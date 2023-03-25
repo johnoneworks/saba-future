@@ -1,0 +1,19 @@
+{
+  "name": "saba-future",
+  "version": "1.0.0",
+  "description": "This is going to be the saba future platform!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnoneworks/saba-future.git"
+  },
+  "author": "John Huang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnoneworks/saba-future/issues"
+  },
+  "homepage": "https://github.com/johnoneworks/saba-future#readme"
+}
