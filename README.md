@@ -48,3 +48,5 @@ This will be the awesome prediction market that will be the future for us
         - Last Accept time
         - Resolve Time
         - Markets[(amount, maker, odds)]
+        - constructor()
+        - 
