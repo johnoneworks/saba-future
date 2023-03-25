@@ -38,9 +38,14 @@ This will be the awesome prediction market that will be the future for us
     - Open Market (Player)
         - According to event, player can open, e.g. 50 SURE for 80 SURE on "yes"
     - Take Market (Player)
-        - For opened market, player can take it up => basically exchange
+        - For opened market, player can take it all up => basically exchange
     - Event Resolve
         - Transfer SURE tokens to players accordingly
+
+### Backlog
+    - Real Matic
+    - Partial taking of market
+    - Cancel market(only the part not yet taken)
 
 ## Contracts
     - Event
@@ -48,5 +53,6 @@ This will be the awesome prediction market that will be the future for us
         - Last Accept time
         - Resolve Time
         - Markets[(amount, maker, odds)]
-        - constructor()
-        - 
+        - Constructor()
+        - CreateMarket((amount, maker, odds))
+        - ResolveEvent()
