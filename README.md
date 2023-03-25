@@ -46,6 +46,7 @@ This will be the awesome prediction market that will be the future for us
     - Real Matic
     - Partial taking of market
     - Cancel market(only the part not yet taken)
+    - Event Creation by Player
 
 ## Contracts
     - Event
