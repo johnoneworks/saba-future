@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/johnoneworks/saba-future/issues"
   },
-  "homepage": "https://github.com/johnoneworks/saba-future#readme"
+  "homepage": "https://github.com/johnoneworks/saba-future#readme",
+  "devDependencies": {
+    "hardhat": "^2.13.0"
+  }
 }

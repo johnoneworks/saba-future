@@ -17,6 +17,7 @@ This will be the awesome predict market that will be the future for us
 
 ## MVP Stories
     - Two roles within platform: Admin & Players
+        - Admin will be in charge of creating and resolving markets
+        - Player will be able to place bet on the yes/no resovlement of markets
     - Sign Up
-        - Admin will be in charge of creating and resolving markets 
         - Players can sign up "magically" with just an email
