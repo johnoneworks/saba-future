@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/johnoneworks/saba-future#readme",
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "hardhat": "^2.13.0"
   }
 }
