@@ -12,6 +12,7 @@ This will be the awesome predict market that will be the future for us
         - highly recommend nvm
     - Alchemy Account
     - Hardhat
+        - `npm install --save-dev hardhat`
 
 
 ## MVP Stories
