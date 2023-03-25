@@ -13,7 +13,13 @@ This will be the awesome prediction market that will be the future for us
     - Alchemy Account
     - Hardhat
         - `npm install --save-dev hardhat`
+    - Metamask
 
+# Resources
+    - Faucets (free test network tokens)
+        - https://mumbaifaucet.com/
+        - https://goerlifaucet.com/
+        - https://sepoliafaucet.com/
 
 ## MVP Stories
     - Two roles within platform: Admin & Players
@@ -23,9 +29,22 @@ This will be the awesome prediction market that will be the future for us
         - Admin will get credentials manually from platform owner
         - Players can sign up "magically" with just an email
         - After signing up, the player will get 100 SURE(SabaFuture) tokens
-    - Create Market (Admin)
-        - Required info
-            - Description of a Yes/No event, e.g. Will Tesla Model3 prices go under 30k USD this year
+    - Create Event (Admin)
+        - Info
+            - Description of a Yes/No event, e.g. Will Lakers win tomorrow
             - Details(optional)
             - Last Accept time
             - Resolve Time
+    - Open Market (Player)
+        - According to event, player can open, e.g. 50 SURE for 80 SURE on "yes"
+    - Take Market (Player)
+        - For opened market, player can take it up => basically exchange
+    - Event Resolve
+        - Transfer SURE tokens to players accordingly
+
+## Contracts
+    - Event
+        - Description
+        - Last Accept time
+        - Resolve Time
+        - Markets[(amount, maker, odds)]
