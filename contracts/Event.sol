@@ -15,5 +15,7 @@ contract Prediction {
     uint public lastMarketOperationTime;
     uint public resolveTime;
     string public description;
+    Market[] public markets;
+
     
 }
