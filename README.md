@@ -47,6 +47,7 @@ This will be the awesome prediction market that will be the future for us
     - Partial taking of market
     - Cancel market(only the part not yet taken)
     - Event Creation by Player
+    - Automatic event resolvement
 
 ## Contracts
     - Event
@@ -57,3 +58,4 @@ This will be the awesome prediction market that will be the future for us
         - Constructor()
         - CreateMarket((amount, maker, odds))
         - ResolveEvent()
+        - TakeMarket((amount, taker))
