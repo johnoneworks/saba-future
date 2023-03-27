@@ -15,6 +15,13 @@ This will be the awesome prediction market that will be the future for us
         - `npm install --save-dev hardhat`
     - Metamask
 
+# Usage
+    - Compile Contract
+        - `npx hardhat compile`
+    - Deploy
+        - to mumbai
+            - `npx hardhat run scripts/deploy.js --network mumbai`
+
 # Resources
     - Faucets (free test network tokens)
         - https://mumbaifaucet.com/
