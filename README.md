@@ -60,10 +60,12 @@ This will be the awesome prediction market that will be the future for us
 
 ## Contracts
     - Prediction
+        - Owner // the admin role person(s)
         - Description
         - Last Accept time
         - Resolve Time
-        - Markets[(amount, maker, odds)]
+        - Markets[(amount, maker, taker?, odds)] // just use decimal odds for now
+
         - Constructor()
         - CreateMarket((amount, maker, odds))
         - ResolvePrediction()

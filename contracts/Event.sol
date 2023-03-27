@@ -5,6 +5,15 @@ pragma solidity ^0.8.9;
 // import "hardhat/console.sol";
 
 contract Prediction {
+    struct Market {
+        address payable maker;
+        address payable taker;
+        ufixed decimalOddsForTrueResult;
+    }
+
     address payable public owner;
+    uint public lastMarketOperationTime;
+    uint public resolveTime;
+    string public description;
     
 }
