@@ -27,6 +27,8 @@ This will be the awesome prediction market that will be the future for us
         - https://mumbaifaucet.com/
         - https://goerlifaucet.com/
         - https://sepoliafaucet.com/
+    - ethers doc
+        - https://docs.ethers.org/v6/
 
 ## MVP Stories
     - Two roles within platform: Admin & Players
