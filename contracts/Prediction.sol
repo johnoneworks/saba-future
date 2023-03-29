@@ -18,6 +18,19 @@ contract Prediction {
     Market[] public markets;
 
     constructor(uint _lastMarketOperationTime, uint _resolveTime, string _description) payable {
+        require(
+            block.timestamp < _resolveTime,
+            "Prediction resolve time should be in the future"
+        );
+        require(
+            block.timestamp < _lastMarketOperationTime,
+            "Market operation time should be in the future"
+        );
+        require(
+            _lastMarketOperationTime < _resolveTime,
+            "No market operations after resolving"
+        );
+
         owner = payable(msg.sender);
         lastMarketOperationTime = _lastMarketOperationTime;
         resolveTime = _resolveTime;
