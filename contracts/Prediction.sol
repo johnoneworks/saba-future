@@ -8,7 +8,8 @@ contract Prediction {
     struct Market {
         address payable maker;
         address payable taker;
-        ufixed decimalOddsForTrueResult;
+        uint amount;
+        int oddsForTrueResult; // 100 == 1 decimal odd
     }
 
     address payable public owner;
@@ -17,7 +18,7 @@ contract Prediction {
     string public description;
     Market[] public markets;
 
-    constructor(uint _lastMarketOperationTime, uint _resolveTime, string _description) payable {
+    constructor(uint _lastMarketOperationTime, uint _resolveTime, string memory _description) payable {
         require(
             block.timestamp < _resolveTime,
             "Prediction resolve time should be in the future"
@@ -35,5 +36,11 @@ contract Prediction {
         lastMarketOperationTime = _lastMarketOperationTime;
         resolveTime = _resolveTime;
         description = _description;
+    }
+
+    function createMarket(uint _amount, int _oddsForTrueResult) public {
+        address maker = msg.sender;
+        uint amount = _amount;
+        int oddsForTrueResult = _oddsForTrueResult;
     }
 }
