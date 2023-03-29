@@ -17,5 +17,10 @@ contract Prediction {
     string public description;
     Market[] public markets;
 
-    
+    constructor(uint _lastMarketOperationTime, uint _resolveTime, string _description) payable {
+        owner = payable(msg.sender);
+        lastMarketOperationTime = _lastMarketOperationTime;
+        resolveTime = _resolveTime;
+        description = _description;
+    }
 }

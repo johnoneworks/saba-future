@@ -57,6 +57,7 @@ This will be the awesome prediction market that will be the future for us
     - Cancel market(only the part not yet taken)
     - Prediction Creation by Player
     - Automatic prediction resolvement
+    - Total Pool Betting
 
 ## Contracts
     - Prediction
