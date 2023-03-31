@@ -68,5 +68,19 @@ contract SureToken {
         require(numTokens <= balances[_owner]);
         require(numTokens <= allowed[_owner][msg.sender]);
         balances[_owner] = balances[_owner] - numTokens;
+        allowed[_owner][msg.sender] = allowed[_owner][msg.sender] - numTokens;
+        balances[_buyer] = balances[_buyer] + numTokens;
+        emit Transfer(_owner, _buyer, numTokens);
+        return true;
+    }
+
+    function buy(uint256 numOfTokens) public payable returns (bool) {
+        require(numOfTokens <= balances[owner]);
+        require(onwer != msg.sender);
+        require(msg.value == (numOfTokens / 10**decimals) * 0.000000001 ether);
+        balances[msg.sender] = balances[msg.sender] + numOfTokens;
+        balances[owner] = balances[owner] - numOfTokens;
+        emit Transfer(owner, msg.sender, numOfTokens);
+        return true;
     }
 }
