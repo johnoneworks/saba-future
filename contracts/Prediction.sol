@@ -38,9 +38,4 @@ contract Prediction {
         description = _description;
     }
 
-    function createMarket(uint _amount, int _oddsForTrueResult) public {
-        address maker = msg.sender;
-        uint amount = _amount;
-        int oddsForTrueResult = _oddsForTrueResult;
-    }
 }

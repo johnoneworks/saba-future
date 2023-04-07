@@ -21,6 +21,8 @@ This will be the awesome prediction market that will be the future for us
     - Deploy
         - to mumbai
             - `npx hardhat run scripts/deploy.js --network mumbai`
+        - to hardhat network
+            - `npx hardhat run scripts/deploy.js`
 
 # Resources
     - Faucets (free test network tokens)
