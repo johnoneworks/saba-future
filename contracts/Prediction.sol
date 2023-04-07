@@ -9,7 +9,8 @@ contract Prediction {
         address payable maker;
         address payable taker;
         uint amount;
-        int oddsForTrueResult; // 100 == 1 decimal odd
+        uint oddsForTrueResult; // 100 == 1 decimal odd
+        bool makerOnTrue;
     }
 
     address payable public owner;
@@ -38,4 +39,37 @@ contract Prediction {
         description = _description;
     }
 
+    function createMarket(uint _amount, uint _odds, bool _makerOnTrue) public {
+        Market memory market;
+        market.maker = payable(msg.sender);
+        market.amount = _amount;
+        market.oddsForTrueResult = _odds;
+        market.makerOnTrue = _makerOnTrue;
+        markets.push(market);
+    }
+
+    function takeMarket(uint _amount, uint _odds) public {
+        for (uint i = 0; i < markets.length; i++) {
+            if (
+                    markets[i].amount == _amount && 
+                    markets[i].oddsForTrueResult == _odds &&
+                    markets[i].taker == address(0x0)
+                ) {
+                markets[i].taker = payable(msg.sender);
+                return;
+            }
+        }
+    }
+
+    function resolvePrediction(bool _result) public {
+        for (uint i = 0; i < markets.length; i++) {
+            uint poolAmount = ( markets[i].amount * markets[i].oddsForTrueResult ) / 100;
+            if (_result) {
+                // markets[i].makerOnTrue ? toMaker : toTaker;
+            } else {
+                // markets[i].makerOnTrue ? toTaker : toMaker;
+            }
+
+        }
+    }
 }

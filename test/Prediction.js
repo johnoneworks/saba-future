@@ -16,7 +16,9 @@ describe("Prediction", function () {
                 resolveTime,
                 description 
             );
-            expect(prediction).to.be.an("object");
+            expect(await prediction.resolveTime()).to.equal(resolveTime) &&
+            expect(await prediction.lastMarketOperationTime()).to.equal(lastMarketOperationTime) &&
+            expect(await prediction.description()).to.equal(description);
         });
 
         it("Should revert when resolve time is before the creation time", async function() {

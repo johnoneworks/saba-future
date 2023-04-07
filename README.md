@@ -70,6 +70,6 @@ This will be the awesome prediction market that will be the future for us
         - Markets[(amount, maker, taker?, odds)] // just use decimal odds for now
 
         - Constructor()
-        - CreateMarket((amount, maker, odds))
+        - CreateMarket((amount, odds))
         - ResolvePrediction()
-        - TakeMarket((amount, taker))
+        - TakeMarket(market)
