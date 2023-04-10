@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
+// this one is following some tutorial
+// made by hand
 contract SureToken {
     uint256 public totalSupply_;
     string public name;

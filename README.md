@@ -71,5 +71,5 @@ This will be the awesome prediction market that will be the future for us
 
         - Constructor()
         - CreateMarket((amount, odds))
-        - ResolvePrediction()
-        - TakeMarket(market)
+        - ResolvePrediction(result)
+        - TakeMarket(amount, odds)

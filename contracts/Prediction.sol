@@ -6,6 +6,7 @@ pragma solidity ^0.8.9;
 
 contract Prediction {
     struct Market {
+        uint256 id;
         address payable maker;
         address payable taker;
         uint amount;
@@ -14,10 +15,12 @@ contract Prediction {
     }
 
     address payable public owner;
+    address public sureToken; // not sure if this is needed
     uint public lastMarketOperationTime;
     uint public resolveTime;
     string public description;
-    Market[] public markets;
+   // mapping(uint256 => Market) public markets;
+   Market[] public markets;
 
     constructor(uint _lastMarketOperationTime, uint _resolveTime, string memory _description) payable {
         require(
