@@ -64,11 +64,12 @@ contract Prediction {
         }
     }
 
-    function resolvePrediction(bool _result) public {
+    function resolvePrediction(bool _result) public view {
         for (uint i = 0; i < markets.length; i++) {
             uint poolAmount = ( markets[i].amount * markets[i].oddsForTrueResult ) / 100;
             if (_result) {
                 // markets[i].makerOnTrue ? toMaker : toTaker;
+                poolAmount++; // just to resolve the warning for the time being
             } else {
                 // markets[i].makerOnTrue ? toTaker : toMaker;
             }
