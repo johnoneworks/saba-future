@@ -104,6 +104,50 @@ contract PredictionWorld2 {
         require(_value <= ERC20(sureToken2).allowance(msg.sender, address(this)), "Not allowed to spend this amount.");
         Market storage market = markets[_marketId];
         ERC20(sureToken2).transferFrom(msg.sender, address(this), _value);
+        AmountAdded memory amountAdded = AmountAdded(
+            msg.sender,
+            _value,
+            block.timestamp
+        );
 
+        market.totalNoAmount += _value;
+        market.totalAmount += _value;
+        market.noCount.push(amountAdded);
     }
+
+    function distributeWinningAmount(uint256 _marketId, bool eventOutcome) public payable {
+        require(msg.sender == owner, "Unauthorized");
+
+        Market storage market = markets[_marketId];
+        if (eventOutcome) {
+            for (uint256 i = 0; i < market.yesCount.length; i++) {
+                // split all No bets with the Yessers
+                uint256 winAmount = (market.totalNoAmount * (market.yesCount[i].amount / market.totalYesAmount));
+                winAmounts[market.yesCount[i].user] += (winAmount + market.yesCount[i].amount);
+                winAddresses.push(market.yesCount[i].user);
+            }
+
+            for (uint256 i = 0; i < winAddresses.length; i++) {
+                address payable _address = payable(winAddresses[i]);
+                ERC20(sureToken2).transfer(_address, winAmounts[_address]);
+                delete winAmounts[_address];
+            }
+            delete winAddresses;
+        } else {
+            for (uint256 i = 0; i < market.noCount.length; i++) {
+                uint256 winAmount = (market.totalYesAmount * (market.noCount[i].amount / market.totalNoAmount));
+                winAmounts[market.noCount[i].user] += (winAmount + market.noCount[i].amount);
+                winAddresses.push(market.noCount[i].user);
+            }
+
+            for (uint256 i = 0; i < winAddresses.length; i++) {
+                address payable _address = payable(winAddresses[i]);
+                ERC20(sureToken2).transfer(_address, winAmounts[_address]);
+            }
+            delete winAddresses;
+        }
+        market.marketClosed = true;
+    }
+
+        
  }
