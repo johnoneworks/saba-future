@@ -6,7 +6,6 @@ This will be the awesome prediction market that will be the future for us
 
 # Tech Overview
     - Utilize Polygon Chain (L2 sidechain of Ethereum) for web3 deployment
-    - hardhat folder & nextjs folder
 
 # Prerequisite
     - npm (16.16.0)
