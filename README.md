@@ -32,6 +32,8 @@ This will be the awesome prediction market that will be the future for us
         - https://sepoliafaucet.com/
     - ethers doc
         - https://docs.ethers.org/v6/
+    - remix
+        - https://medium.com/coinmonks/interact-with-a-live-deployed-smart-contract-using-remix-ide-1ea7e3fde52f
 
 ## MVP Stories
     - Two roles within platform: Admin & Players
