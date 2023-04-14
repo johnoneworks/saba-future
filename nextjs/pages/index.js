@@ -8,13 +8,14 @@ import Filter from "../components/Filter";
 import styles from "../styles/Home.module.css";
 import { sureToken2Address, predictionWorld2Address } from "../config";
 import SURE from "../utils/SureToken2.json";
+import PredictionWorld from "../utils/PredictionWorld2.json";
 
 export default function Home() {
   const [amount, setAmount] = useState(0);
+  const [markets, setMarkets] = useState([]);
 
   const getAmount = async () => {
     try {
-      console.log("here");
       const { ethereum } = window;
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
@@ -26,15 +27,46 @@ export default function Home() {
 
       let amount = await sureToken2Contract.balanceOf("0x99e9624508534FC190B233CB1D3a9b755B5D312d");
       setAmount(Number(amount));
-      console.log(`amount: ${amount}, ${typeof(amount)}`);
+      //console.log(`amount: ${amount}, ${typeof(amount)}`);
     } catch (error) {
       console.log(`Error getting amount, ${error}`);
     }
-    
   }
+
+  const getMarkets = async () => {
+    try {
+      const { ethereum } = window;
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const predictionWorldContract = new ethers.Contract(
+        predictionWorld2Address,
+        PredictionWorld.abi,
+        signer
+      );
+
+      let marketCount = await predictionWorldContract.totalMarkets();
+      let markets = [];
+      for (let i = 0; i < marketCount; i++) {
+        let market = await predictionWorldContract.markets(i);
+        //console.log(`market: ${market.timestamp}, ${Array.isArray(market)}`);
+        //Object.keys(market).map(key => console.log(key));
+        console.log(market.description);
+        markets.push({
+          id: market.id,
+          description: market.description,
+          totalAmount: market.totalAmount,
+        });
+      }
+      console.log(markets[0].description);
+      setMarkets(markets);
+  } catch (error) {
+    console.log(`Error getting markets, ${error}`);
+  }
+}
 
   useEffect(() => {
 		getAmount();
+    getMarkets();
 	}, []);
 
   return (
@@ -83,13 +115,17 @@ export default function Home() {
               onChange={() => {}}
             />
           </div>
+          You have: {amount} SURE tokens
+          <br />
           <span className="font-bold my-3 text-lg">Market</span>
           <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-            SURE: {sureToken2Address}
-            <br />
-            You have: {amount}
-            <br />
-            PredictionWorld: {predictionWorld2Address}
+            {markets.map((market) => {
+              return (
+                <div>
+                  {`Market ${market.id + 1}, ${market.description}`}
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>
