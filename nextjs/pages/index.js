@@ -55,9 +55,11 @@ export default function Home() {
           id: market.id,
           description: market.description,
           totalAmount: market.totalAmount,
+          totalYesAmount: market.totalYesAmount,
+          totalNoAmount: market.totalNoAmount,
         });
       }
-      console.log(markets[0].description);
+      //console.log(markets[0].description);
       setMarkets(markets);
   } catch (error) {
     console.log(`Error getting markets, ${error}`);
@@ -125,6 +127,9 @@ export default function Home() {
                   <MarketCard 
                     id={market.id}
                     title={market.description}
+                    totalAmount={market.totalAmount}
+                    totalYesAmount={market.totalYesAmount}
+                    totalNoAmount={market.totalNoAmount}
                   />
                 </div>
               );
