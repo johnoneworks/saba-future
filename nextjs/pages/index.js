@@ -39,7 +39,12 @@ export default function Home() {
             />
           </div>
           <div className="flex flex-row space-x-2 md:space-x-5 items-center flex-wrap mt-4">
-            <Filter />
+            <Filter 
+              list={["All", "Crypto", "Football", "Covid 19", "OneSeal"]}
+              activeItem="All"
+              category="Category"
+              onChange={() => {}}
+            />
           </div>
         </div>
       </main>
