@@ -99,7 +99,7 @@ export default function Navbar() {
                     ) : (
                         <div
                             className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
-                            onClick={connectWallet}
+                            onClick={connectWallet} // original code is load all data
                         >
                             <span className="text-lg text-white">Connect</span>
                         </div>
