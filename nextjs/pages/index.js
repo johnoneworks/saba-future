@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 export default function Home() {
   const [currentAccount, setCurrentAccount] = useState("");
-  const [correctNetwork, setCorrectNetwork] = useState(false);
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -59,6 +58,10 @@ export default function Home() {
 		}
 	}
 
+  useEffect(() => {
+		checkIfWalletIsConnected();
+	}, []);
+
   return (
     <div className='flex flex-col items-center pt-32 bg-[#0B132B] text-[#d3d3d3] min-h-screen'>
       <div className='trasition hover:rotate-180 hover:scale-105 transition duration-500 ease-in-out'>
@@ -83,7 +86,7 @@ export default function Home() {
           Connect Wallet
         </button>
       ) : (
-        <>valid account</>
+        <>{currentAccount}</>
       )}
     </div>
 	);
