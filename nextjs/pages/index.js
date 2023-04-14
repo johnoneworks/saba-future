@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import axios from "axios";
 
 import Navbar from "../components/Navbar";
 import Filter from "../components/Filter";
@@ -9,6 +8,7 @@ import styles from "../styles/Home.module.css";
 import { sureToken2Address, predictionWorld2Address } from "../config";
 import SURE from "../utils/SureToken2.json";
 import PredictionWorld from "../utils/PredictionWorld2.json";
+import MarketCard from "../components/MarketCard";
 
 export default function Home() {
   const [amount, setAmount] = useState(0);
@@ -122,7 +122,10 @@ export default function Home() {
             {markets.map((market) => {
               return (
                 <div>
-                  {`Market ${market.id + 1}, ${market.description}`}
+                  <MarketCard 
+                    id={market.id}
+                    title={market.description}
+                  />
                 </div>
               );
             })}
