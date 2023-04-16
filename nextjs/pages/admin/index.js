@@ -1,9 +1,12 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { ethers } from "ethers";
 
 
 import Navbar from "../../components/Navbar";
+import { predictionWorld2Address } from "@/config";
+import PredictionWorld from "../../utils/PredictionWorld2.json";
 
 export default function Admin() {
 
@@ -11,6 +14,28 @@ export default function Admin() {
     const [description, setDescription] = useState("");
     const [resolverUrl, setResolverUrl] = useState("");
     const [timestamp, setTimestamp]= useState(Date());
+
+    const handleSubmit = async () => {
+        try {
+            const { ethereum } = window;
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const predictionWorldContract = new ethers.Contract(
+                predictionWorld2Address,
+                PredictionWorld.abi,
+                signer
+            );
+
+            await predictionWorldContract.createMarket(
+                title,
+                description,
+                resolverUrl,
+                timestamp
+            );
+        } catch (error) {
+            console.log(`Error creating market: ${error}`);
+        }
+    }
 
     return (
         <>
@@ -68,6 +93,14 @@ export default function Admin() {
                             className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
                             autoComplete="off"
                         />
+                        <button
+                            className="mt-5 rounded-lg py-3 text-center w-full bg-green-500 text-white font-bold"
+                            onClick={() => {
+                            handleSubmit();
+                            }}
+                        >
+                            Create Market
+                        </button>
                     </div>
                 </main>
             </div>
