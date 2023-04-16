@@ -1,51 +1,46 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { Magic } from "magic-sdk"
+import { useState, useEffect, useContext } from 'react';
 import { ethers } from "ethers";
+import { magic } from '../lib/magic';
+import { UserContext } from '../lib/UserContext';
 
 export default function Navbar() {
   const router = useRouter();
   const [account, setAccount] = useState("");
+  const [user, setUser] = useContext(UserContext);
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
     if (ethereum) {
       console.log(`Got the ethereum object: ${ethereum}`);
+      const accounts = await ethereum.request({ method: "eth_accounts" });
+      if (accounts.length !== 0) {
+        console.log(`Found authorized Account: ${accounts[0]}`);
+        setAccount(accounts[0]);
+      } else {
+        console.log("No authorized account found");
+      }
     } else {
       console.log("No Wallet found. Connect Wallet");
-    }
-
-    const accounts = await ethereum.request({ method: "eth_accounts" });
-
-    if (accounts.length !== 0) {
-      console.log(`Found authorized Account: ${accounts[0]}`);
-      setAccount(accounts[0]);
-    } else {
-      console.log("No authorized account found");
     }
   }
 
   const connectWallet = async () => {
 
     try {
-      // polgyon mainnet
-      const magic = new Magic('pk_live_A4477760AE601D2D', {
-          network: {
-              // rpcUrl: 'https://polygon-rpc.com/', // or https://matic-mumbai.chainstacklabs.com for testnet
-              // chainId: 137 // or 80001 for polygon testnet
-              rpcUrl: 'https://matic-mumbai.chainstacklabs.com/',
-              chainId: 80001
-          }
-      });
-
       const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
       const accounts = await magic.wallet.connectWithUI();
 
-      console.log('Found account', accounts[0]);
-      setCurrentAccount(accounts[0]);
+      let userMetadata = await magic.user.getMetadata();
+      await setUser(userMetadata);
+
+      console.log('Found account', accounts);
+      setAccount(accounts[0]);
     } catch (error) {
-      console.log(`Error connecting to metamask: ${error}`);
+      alert('Error connecting to the wallet');
+      console.log(`Error connecting to the wallet: ${error}`);
+      console.error(error);
     }
 
     // try {
@@ -88,6 +83,10 @@ export default function Navbar() {
     checkIfWalletIsConnected();
   }, []);
 
+  
+  console.log('user');
+  console.log(user);
+
   return (
     <>
       <nav className="w-full h-16 mt-auto max-w-5xl">
@@ -113,20 +112,20 @@ export default function Navbar() {
               </div>
             )}
 
-          {account ? (
+          {user && user.publicAddress ? (
             <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer">
               <span className="text-lg text-white">
-                {account.substr(0, 10)}...
+                {user.publicAddress.substr(0, 10)}...
               </span>
             </div>
           ) : (
-            <div
-              className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
-              onClick={connectWallet} // original code is load all data
-            >
-              <span className="text-lg text-white">Connect</span>
-            </div>
-          )}
+              <div
+                className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
+                onClick={connectWallet} // original code is load all data
+              >
+                <span className="text-lg text-white">Connect</span>
+              </div>
+            )}
         </div>
       </nav>
     </>
@@ -138,8 +137,8 @@ const TabButton = ({ title, isActive, url }) => {
     <Link href={url} passHref>
       <div
         className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
-            ? "border-blue-700 text-blue-700 text-lg font-semibold"
-            : "border-white text-gray-400 text-lg"
+          ? "border-blue-700 text-blue-700 text-lg font-semibold"
+          : "border-white text-gray-400 text-lg"
           }`}
       >
         <span>{title}</span>

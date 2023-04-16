@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.17",
+    "@magic-ext/oauth": "^10.2.0",
     "@types/json5": "^2.2.0",
     "autoprefixer": "10.4.14",
     "axios": "^1.3.5",
