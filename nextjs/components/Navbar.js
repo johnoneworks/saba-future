@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { Magic } from "magic-sdk"
+import { ethers } from "ethers";
 
 export default function Navbar() {
   const router = useRouter();
@@ -25,40 +27,61 @@ export default function Navbar() {
   }
 
   const connectWallet = async () => {
+
     try {
-      const { ethereum } = window;
-
-      if (!ethereum) {
-        console.log('Metamask not detected');
-        return;
-      }
-      let chainId = await ethereum.request({ method: 'eth_chainId' });
-      console.log(`Connected to chain: ${chainId}`);
-
-      const mumbaiChainId = '0x13881';
-
-      const devChainId = 1337;
-      const localhostChainId = `0x${Number(devChainId).toString(16)}`;
-
-      await ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: mumbaiChainId }],
+      // polgyon mainnet
+      const magic = new Magic('pk_live_A4477760AE601D2D', {
+          network: {
+              // rpcUrl: 'https://polygon-rpc.com/', // or https://matic-mumbai.chainstacklabs.com for testnet
+              // chainId: 137 // or 80001 for polygon testnet
+              rpcUrl: 'https://matic-mumbai.chainstacklabs.com/',
+              chainId: 80001
+          }
       });
 
-      console.log(`Connected to chain: ${chainId}`);
-
-      if (chainId !== mumbaiChainId && chainId !== localhostChainId) {
-        alert('You are not connected to the Mumbai Testnet!');
-        return;
-      }
-
-      const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+      const provider = new ethers.providers.Web3Provider(magic.rpcProvider);
+      const accounts = await magic.wallet.connectWithUI();
 
       console.log('Found account', accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
       console.log(`Error connecting to metamask: ${error}`);
     }
+
+    // try {
+    //   const { ethereum } = window;
+
+    //   if (!ethereum) {
+    //     console.log('Metamask not detected');
+    //     return;
+    //   }
+    //   let chainId = await ethereum.request({ method: 'eth_chainId' });
+    //   console.log(`Connected to chain: ${chainId}`);
+
+    //   const mumbaiChainId = '0x13881';
+
+    //   const devChainId = 1337;
+    //   const localhostChainId = `0x${Number(devChainId).toString(16)}`;
+
+    //   await ethereum.request({
+    //     method: 'wallet_switchEthereumChain',
+    //     params: [{ chainId: mumbaiChainId }],
+    //   });
+
+    //   console.log(`Connected to chain: ${chainId}`);
+
+    //   if (chainId !== mumbaiChainId && chainId !== localhostChainId) {
+    //     alert('You are not connected to the Mumbai Testnet!');
+    //     return;
+    //   }
+
+    //   const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+
+    //   console.log('Found account', accounts[0]);
+    //   setCurrentAccount(accounts[0]);
+    // } catch (error) {
+    //   console.log(`Error connecting to metamask: ${error}`);
+    // }
   }
 
   useEffect(() => {
