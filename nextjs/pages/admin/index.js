@@ -1,9 +1,17 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+
 
 import Navbar from "../../components/Navbar";
 
 export default function Admin() {
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [resolverUrl, setResolverUrl] = useState("");
+    const [timestamp, setTimestamp]= useState(Date());
+
     return (
         <>
             <div className="flex flex-col justify-center items-center h-full p-5">
@@ -19,6 +27,47 @@ export default function Admin() {
                     </Link>
                     <div className="w-full flex flex-col pt-1 border border-gray-300 p-5 rounded-lg ">
                         <span className="text-lg font-semibold mt-4">Add New Market</span>
+                        <span className="text-lg font mt-6 mb-1">Market Title</span>
+                        <input
+                            type="input"
+                            name="title"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
+                            placeholder="Title"
+                            autoComplete="off"
+                        />
+                        <span className="text-lg font mt-6 mb-1">Market Description</span>
+                        <textarea
+                            name="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
+                            placeholder="Description"
+                            autoComplete="off"
+                        >
+                        </textarea>
+                        <span className="text-lg font mt-6 mb-1">Resolve URL</span>
+                        <input
+                            type="input"
+                            name="resolverUrl"
+                            value={resolverUrl}
+                            onChange={(e) => setResolverUrl(e.target.value)}
+                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
+                            placeholder="URL"
+                            autoComplete="off"
+                        />
+                        <span className="text-lg font mt-6 mb-1">End Date</span>
+                        <input
+                            type="date"
+                            name="timestamp"
+                            // value={timestamp}
+                            onChange={(e) => {
+                                setTimestamp(e.target.valueAsDate?.getTime());
+                            }}
+                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
+                            autoComplete="off"
+                        />
                     </div>
                 </main>
             </div>
