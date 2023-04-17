@@ -1,14 +1,49 @@
 import Head from "next/head";
 import Img from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import { useRouter } from "next/router";
+import moment from "moment";
 
 import Navbar from "../../components/Navbar";
+import { predictionWorld2Address } from "@/config";
+import PredictionWorld from "../../utils/PredictionWorld2.json";
 
 
 export default function Detail() {
+    const router = useRouter();
+    const { id } = router.query;
+
     const [market, setMarket] = useState({
-        title: "title of market"
+        title: "title of market",
+        endTimestamp: "1681681545"
     });
+
+    const getMarket = async () => {
+        try {
+            const { ethereum } = window;
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const predictionWorldContract = new ethers.Contract(
+                predictionWorld2Address,
+                PredictionWorld.abi,
+                signer
+            );
+
+            const market = await predictionWorldContract.markets(id);
+            setMarket({
+                title: market.market,
+                endTimestamp: market.endTimestamp
+            });
+
+        } catch (error) {
+            console.log(`Error getting market detail, ${error}`);
+        }
+    }
+
+    useEffect(() => {
+        getMarket();
+    }, []);
 
     return(
         <div className="flex flex-col justify-center items-center h-full">
@@ -39,7 +74,21 @@ export default function Detail() {
                                 </span>
                             </div>
                         </div>
+                        <div className="flex flex-row items-center space-x-4 ml-3">
+                            <div className="flex flex-col justify-start bg-gray-100 p-3">
+                                <span className="text-xs font-light text-gray-500 whitespace-nowrap">
+                                    Market Ends on
+                                </span>
+                                <span className="text-base font-semibold text-black whitespace-nowrap">
+                                    {market?.endTimestamp
+                                      ? moment.unix(market.endTimestamp).format("MMMM D, YYYY")
+                                      : "N/A"
+                                    }
+                                </span>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </main>
         </div>
