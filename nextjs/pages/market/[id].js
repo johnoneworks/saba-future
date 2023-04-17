@@ -16,8 +16,10 @@ export default function Detail() {
 
     const [market, setMarket] = useState({
         title: "title of market",
-        endTimestamp: "1681681545"
+        endTimestamp: "1681681545",
+        totalAmount: 20
     });
+    const [selected, setSelected] = useState("YES");
 
     const getMarket = async () => {
         try {
@@ -33,7 +35,8 @@ export default function Detail() {
             const market = await predictionWorldContract.markets(id);
             setMarket({
                 title: market.market,
-                endTimestamp: market.endTimestamp
+                endTimestamp: market.endTimestamp,
+                totalAmount: market.totalAmount
             });
 
         } catch (error) {
@@ -86,9 +89,40 @@ export default function Detail() {
                                     }
                                 </span>
                             </div>
+                            <div className="flex flex-col justify-start bg-gray-100 p-3">
+                                <span className="text-xs font-light text-gray-500 whitespace-nowrap">
+                                    Total Volume
+                                </span>
+                                <span className="text-base font-semibold text-black whitespace-nowrap">
+                                    {`${market?.totalAmount} SURE`}
+                                </span>
+                            </div>
                         </div>
                     </div>
-
+                    <div className="flex flex-col space-y-3">
+                        <div className="w-full flex flex-row mt-5">
+                            <div className="w-2/3 border rounded-lg p-1 pb-4 border-gray-300 mr-2">
+                                Some chart container
+                            </div>
+                            <div className="w-1/3 rounded-lg border border-gray-300 ml-2">
+                                <div className="flex flex-col items-start p-6">
+                                    <span className="text-lg font-bold m-auto pb-2">Buy</span>
+                                    <hr className="text-black w-full py-2" />
+                                    <span className="text-base">Pick Outcome</span>
+                                    <div
+                                        className={`w-full py-2 px-2 ${
+                                            selected == "YES"
+                                            ? "bg-green-500 text-white"
+                                            : "bg-gray-100"
+                                        } mt-2 cursor-pointer`}
+                                        onClick={() => setSelected("YES")}
+                                    >
+                                        <span className="font-bold">YES</span>{" "}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
