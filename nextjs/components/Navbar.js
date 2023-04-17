@@ -79,6 +79,22 @@ export default function Navbar() {
     // }
   }
 
+  const showProfile = async () => {
+    const walletInfo = await magic.wallet.getInfo();
+    const walletType = walletInfo.walletType;
+    if (walletType === "magic") {
+      await magic.wallet.showUI();
+    };
+  }
+
+  const logout = async () => {
+    // Call Magic's logout method, reset the user state, and route to the login page
+    magic.user.logout().then(() => {
+      setUser(null);
+      router.push('/');
+    });
+  }
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -112,12 +128,21 @@ export default function Navbar() {
               </div>
             )}
 
-          {user && user.publicAddress ? (
-            <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer">
-              <span className="text-lg text-white">
-                {user.publicAddress.substr(0, 10)}...
-              </span>
-            </div>
+          {user ? (
+            user.publicAddress ?
+              <div className="flex flex-row">
+                <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer mr-3" onClick={showProfile}>
+                  <span className="text-lg text-white">
+                    {user.publicAddress.substr(0, 10)}...
+                  </span>
+                </div>
+                <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer" onClick={logout}>
+                  <span className="text-lg text-white">
+                    Logout
+                  </span>
+                </div>
+              </div> :
+              'Loading...'
           ) : (
               <div
                 className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
