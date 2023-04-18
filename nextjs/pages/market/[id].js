@@ -17,9 +17,12 @@ export default function Detail() {
     const [market, setMarket] = useState({
         title: "title of market",
         endTimestamp: "1681681545",
-        totalAmount: 20
+        totalAmount: 0,
+        totalYesAmount: 0,
+        totalNoAmount: 0
     });
     const [selected, setSelected] = useState("YES");
+    const [input, setInput] = useState("")
 
     const getMarket = async () => {
         try {
@@ -33,10 +36,13 @@ export default function Detail() {
             );
 
             const market = await predictionWorldContract.markets(id);
+            console.log(market);
             setMarket({
                 title: market.market,
                 endTimestamp: market.endTimestamp,
-                totalAmount: market.totalAmount
+                totalAmount: market.totalAmount,
+                totalYesAmount: market.totalYesAmount,
+                totalNoAmount: market.totalNoAmount
             });
 
         } catch (error) {
@@ -118,6 +124,46 @@ export default function Detail() {
                                         onClick={() => setSelected("YES")}
                                     >
                                         <span className="font-bold">YES</span>{" "}
+                                        
+                                        {!market?.totalAmount
+                                            ? `0`
+                                            : (
+                                                (market?.totalYesAmount * 100) /
+                                                market?.totalAmount
+                                            ).toFixed(2)}
+                                        %
+                                    </div>
+                                    <div
+                                        className={`w-full py-2 px-2 ${
+                                            selected == "NO"
+                                            ? "bg-green-500 text-white"
+                                            : "bg-gray-100"
+                                        } mt-2 cursor-pointer`}
+                                        onClick={() => setSelected("NO")}
+                                    >
+                                        <span className="font-bold">No</span>{" "}
+                                        {!market?.totalAmount
+                                            ? `0`
+                                            : (
+                                                (market?.totalNoAmount * 100) /
+                                                market?.totalAmount
+                                            ).toFixed(2)}
+                                        %
+                                    </div>
+                                    <span className="text-sm mt-5 mb-4">How much?</span>
+                                    <div className="w-full border border-gray-300 flex flex-row items-center">
+                                        <input
+                                            type="search"
+                                            name="q"
+                                            value={input}
+                                            onChange={(e) => setInput(e.target.value)}
+                                            className="w-full py-2 px-2 text-base text-gray-700 border-gray-300 rounded-md focus:outline-none"
+                                            placeholder="0"
+                                            autoComplete="off"
+                                        />
+                                        <span className="whitespace-nowrap text-sm font-semibold">
+                                            SURE{"| "}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
