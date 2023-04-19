@@ -7,16 +7,16 @@
 const hre = require("hardhat");
 
 async function main() {
-  const SureToken2 = await hre.ethers.getContractFactory("SureToken2");
-  const sureToken2 = await SureToken2.deploy();
-  await sureToken2.deployed();
+  const SureToken = await hre.ethers.getContractFactory("SureToken3");
+  const sureToken = await SureToken.deploy();
+  await sureToken.deployed();
 
-  console.log(`SURE Token(2) contract deployed to ${sureToken2.address}`);
+  console.log(`SURE Token(3) contract deployed to ${sureToken.address}`);
 
-  const PredictionWorld2 = await hre.ethers.getContractFactory("PredictionWorld2");
-  const predictionWorld2 = await PredictionWorld2.deploy(sureToken2.address);
-  await predictionWorld2.deployed();
-  console.log(`PredictionWorld(2) contract deployed to ${predictionWorld2.address}`);
+  const PredictionWorld = await hre.ethers.getContractFactory("PredictionWorld3");
+  const predictionWorld = await PredictionWorld.deploy(sureToken.address);
+  await predictionWorld.deployed();
+  console.log(`PredictionWorld(3) contract deployed to ${predictionWorld.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
