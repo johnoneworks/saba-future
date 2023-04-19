@@ -62,6 +62,11 @@ export default function Detail() {
                 SureToken.abi,
                 signer
             );
+            const predictionWorldContract = new ethers.Contract(
+                predictionWorld2Address,
+                PredictionWorld.abi,
+                signer
+            );
             const accounts = await ethereum.request({ method: "eth_accounts" });
             const account = accounts[0];
             let balance = await sureTokenContract.balanceOf(account);
@@ -71,8 +76,15 @@ export default function Detail() {
 
             if (input && selected === "YES") {
                 if (parseInt(input) < balance) {
+                    // TODO => this is not working
                     await sureTokenContract.approve(predictionWorld2Address, input);
                     await predictionWorldContract.addYesBet(id, input);
+                }
+            } else if (input && selected === "NO") {
+                if (parseInt(input) < balance) {
+                    // TODO => this is not working
+                    await sureTokenContract.appove(predictionWorld2Address, input);
+                    await predictionWorldContract.addNoBet(id, input);
                 }
             }
 
