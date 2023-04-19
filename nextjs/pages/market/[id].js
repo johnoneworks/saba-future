@@ -6,8 +6,9 @@ import { useRouter } from "next/router";
 import moment from "moment";
 
 import Navbar from "../../components/Navbar";
-import { predictionWorld2Address } from "@/config";
+import { predictionWorld2Address, sureToken2Address } from "@/config";
 import PredictionWorld from "../../utils/PredictionWorld2.json";
+import SureToken from "../../utils/SureToken2.json";
 
 
 export default function Detail() {
@@ -22,7 +23,8 @@ export default function Detail() {
         totalNoAmount: 0
     });
     const [selected, setSelected] = useState("YES");
-    const [input, setInput] = useState("")
+    const [input, setInput] = useState("");
+    const [button, setButton] = useState("Trade");
 
     const getMarket = async () => {
         try {
@@ -49,6 +51,35 @@ export default function Detail() {
             console.log(`Error getting market detail, ${error}`);
         }
     }
+
+    const handleTrade = async () => {
+        try {
+            const { ethereum } = window;
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const sureTokenContract = new ethers.Contract(
+                sureToken2Address,
+                SureToken.abi,
+                signer
+            );
+            const accounts = await ethereum.request({ method: "eth_accounts" });
+            const account = accounts[0];
+            let balance = await sureTokenContract.balanceOf(account);
+            console.log(`balance of account: ${balance}`);
+            console.log(`input: ${input}`);
+            setButton("Please wait");
+
+            if (input && selected === "YES") {
+                if (parseInt(input) < balance) {
+                    await sureTokenContract.approve(predictionWorld2Address, input);
+                    await predictionWorldContract.addYesBet(id, input);
+                }
+            }
+
+        } catch (error) {
+            console.log(`Error trading: ${error}`);
+        }
+    };
 
     useEffect(() => {
         getMarket();
@@ -164,7 +195,17 @@ export default function Detail() {
                                         <span className="whitespace-nowrap text-sm font-semibold">
                                             SURE{"| "}
                                         </span>
+                                        <span className="text-sm font-semibold text-blue-700 mx-2 underline cursor-pointer">
+                                            Max
+                                        </span>
                                     </div>
+                                    <button
+                                        className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
+                                        onClick={handleTrade}
+                                        disabled={button !== "Trade"}
+                                    >
+                                        {button}
+                                    </button>
                                 </div>
                             </div>
                         </div>
