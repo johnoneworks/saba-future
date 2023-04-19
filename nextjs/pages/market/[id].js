@@ -44,7 +44,9 @@ export default function Detail() {
                 endTimestamp: market.endTimestamp,
                 totalAmount: market.totalAmount,
                 totalYesAmount: market.totalYesAmount,
-                totalNoAmount: market.totalNoAmount
+                totalNoAmount: market.totalNoAmount,
+                description: market.description,
+                resolverUrl: market.resolverUrl,
             });
 
         } catch (error) {
@@ -87,6 +89,8 @@ export default function Detail() {
                     await predictionWorldContract.addNoBet(id, input);
                 }
             }
+            await getMarket();
+            setButton("Trade");
 
         } catch (error) {
             console.log(`Error trading: ${error}`);
@@ -220,6 +224,18 @@ export default function Detail() {
                                     </button>
                                 </div>
                             </div>
+                        </div>
+                        <div className="w-2/3 flex flex-col">
+                            <span className="text-base font-semibold py-3">
+                                Description
+                            </span>
+                            <span>{market?.description}</span>
+                            <span className="text-base my-3 py-2 bg-gray-100 rounded-xl px-3">
+                                Resolution Source : {" "}
+                                <a className="text-blue-700" href={market?.resolverUrl}>
+                                    {market?.resolverUrl}
+                                </a>
+                            </span>
                         </div>
                     </div>
                 </div>
