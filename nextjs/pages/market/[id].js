@@ -38,10 +38,13 @@ export default function Detail() {
             );
 
             const market = await predictionWorldContract.markets(id);
-            console.log(market);
+            //console.log(market);
+            // handle millisecond time stamp
+            console.log(market.endTimestamp);
+            const date = moment.unix(market.endTimestamp / 1000).format("MMMM D, YYYY");
             setMarket({
                 title: market.question,
-                endTimestamp: market.endTimestamp,
+                endTimestamp: date,
                 totalAmount: market.totalAmount,
                 totalYesAmount: market.totalYesAmount,
                 totalNoAmount: market.totalNoAmount,
@@ -123,7 +126,7 @@ export default function Detail() {
                             </div>
                             <div className="flex flex-col justify-start w-1/2 space-y-1">
                                 <span className="text-xs font-light text-gray-500 whitespace-nowrap">
-                                    Some placeholder
+                                    Some placeholder - should be tags or something
                                 </span>
                                 <span className="text-lg font-semibold whitespace-nowrap">
                                     {market?.title}
@@ -137,7 +140,7 @@ export default function Detail() {
                                 </span>
                                 <span className="text-base font-semibold text-black whitespace-nowrap">
                                     {market?.endTimestamp
-                                      ? moment.unix(market.endTimestamp).format("MMMM D, YYYY")
+                                      ? market.endTimestamp.toLocaleString()
                                       : "N/A"
                                     }
                                 </span>
