@@ -5,13 +5,13 @@ import { ethers } from "ethers";
 import Navbar from "../components/Navbar";
 import Filter from "../components/Filter";
 import styles from "../styles/Home.module.css";
-import { sureToken2Address, predictionWorld2Address } from "../config";
-import SURE from "../utils/SureToken2.json";
-import PredictionWorld from "../utils/PredictionWorld2.json";
+import { sureToken3Address, predictionWorld3Address } from "../config";
+import SURE from "../utils/abis/SureToken3.json";
+import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import MarketCard from "../components/MarketCard";
 
 export default function Home() {
-  const [amount, setAmount] = useState(0);
+  const [balance, setBalance] = useState(0);
   const [markets, setMarkets] = useState([]);
 
   const getAmount = async () => {
@@ -19,15 +19,16 @@ export default function Home() {
       const { ethereum } = window;
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
-      const sureToken2Contract = new ethers.Contract(
-        sureToken2Address,
+      const sureTokenContract = new ethers.Contract(
+        sureToken3Address,
         SURE.abi,
         signer
       );
+      const account = await signer.getAddress();
+      //console.log("Account:", await signer.getAddress());
 
-      let amount = await sureToken2Contract.balanceOf("0x99e9624508534FC190B233CB1D3a9b755B5D312d");
-      setAmount(Number(amount));
-      //console.log(`amount: ${amount}, ${typeof(amount)}`);
+      let balance = await sureTokenContract.balanceOf(account);
+      setBalance(ethers.utils.commify(balance));
     } catch (error) {
       console.log(`Error getting amount, ${error}`);
     }
@@ -39,21 +40,20 @@ export default function Home() {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const predictionWorldContract = new ethers.Contract(
-        predictionWorld2Address,
+        predictionWorld3Address,
         PredictionWorld.abi,
         signer
       );
 
       let marketCount = await predictionWorldContract.totalMarkets();
+      console.log(marketCount);
       let markets = [];
       for (let i = 0; i < marketCount; i++) {
         let market = await predictionWorldContract.markets(i);
-        //console.log(`market: ${market.timestamp}, ${Array.isArray(market)}`);
-        //Object.keys(market).map(key => console.log(key));
-        console.log(market.description);
         markets.push({
           id: market.id,
-          description: market.description,
+          question: market.question,
+          imageHas: market.creatorImageHash,
           totalAmount: market.totalAmount,
           totalYesAmount: market.totalYesAmount,
           totalNoAmount: market.totalNoAmount,
@@ -117,7 +117,7 @@ export default function Home() {
               onChange={() => {}}
             />
           </div>
-          You have: {amount} SURE tokens
+          You have: {balance} SURE tokens
           <br />
           <span className="font-bold my-3 text-lg">Market</span>
           <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
@@ -126,7 +126,8 @@ export default function Home() {
                 <div>
                   <MarketCard 
                     id={market.id}
-                    title={market.description}
+                    key={market.id}
+                    title={market.question}
                     totalAmount={market.totalAmount}
                     totalYesAmount={market.totalYesAmount}
                     totalNoAmount={market.totalNoAmount}

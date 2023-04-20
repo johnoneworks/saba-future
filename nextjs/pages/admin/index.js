@@ -5,11 +5,11 @@ import { ethers } from "ethers";
 
 
 import Navbar from "../../components/Navbar";
-import { predictionWorld2Address } from "@/config";
-import PredictionWorld from "../../utils/PredictionWorld2.json";
+import { predictionWorld3Address } from "@/config";
+import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
 
 export default function Admin() {
-
+    const [submitButtonText, setSubmitButtonText] = useState("Create Market");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [resolverUrl, setResolverUrl] = useState("");
@@ -17,21 +17,25 @@ export default function Admin() {
 
     const handleSubmit = async () => {
         try {
+            setSubmitButtonText("Creating");
+            console.log(`We got here`);
             const { ethereum } = window;
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const predictionWorldContract = new ethers.Contract(
-                predictionWorld2Address,
+                predictionWorld3Address,
                 PredictionWorld.abi,
                 signer
             );
 
             await predictionWorldContract.createMarket(
                 title,
+                "", // just a fake string for image hash
                 description,
                 resolverUrl,
                 timestamp
             );
+            setSubmitButtonText("Create Market");
         } catch (error) {
             console.log(`Error creating market: ${error}`);
         }
@@ -99,7 +103,7 @@ export default function Admin() {
                             handleSubmit();
                             }}
                         >
-                            Create Market
+                            {submitButtonText}
                         </button>
                     </div>
                 </main>

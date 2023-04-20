@@ -7,8 +7,8 @@ import moment from "moment";
 
 import Navbar from "../../components/Navbar";
 import { predictionWorld2Address, sureToken2Address } from "@/config";
-import PredictionWorld from "../../utils/PredictionWorld2.json";
-import SureToken from "../../utils/SureToken2.json";
+import PredictionWorld from "../../utils/abis/PredictionWorld2.json";
+import SureToken from "../../utils/abis/SureToken2.json";
 
 
 export default function Detail() {
