@@ -6,9 +6,9 @@ import { useRouter } from "next/router";
 import moment from "moment";
 
 import Navbar from "../../components/Navbar";
-import { predictionWorld2Address, sureToken2Address } from "@/config";
-import PredictionWorld from "../../utils/abis/PredictionWorld2.json";
-import SureToken from "../../utils/abis/SureToken2.json";
+import { predictionWorld3Address, sureToken3Address } from "@/config";
+import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
+import SureToken from "../../utils/abis/SureToken3.json";
 
 
 export default function Detail() {
@@ -32,7 +32,7 @@ export default function Detail() {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const predictionWorldContract = new ethers.Contract(
-                predictionWorld2Address,
+                predictionWorld3Address,
                 PredictionWorld.abi,
                 signer
             );
@@ -40,7 +40,7 @@ export default function Detail() {
             const market = await predictionWorldContract.markets(id);
             console.log(market);
             setMarket({
-                title: market.market,
+                title: market.question,
                 endTimestamp: market.endTimestamp,
                 totalAmount: market.totalAmount,
                 totalYesAmount: market.totalYesAmount,
@@ -60,12 +60,12 @@ export default function Detail() {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const sureTokenContract = new ethers.Contract(
-                sureToken2Address,
+                sureToken3Address,
                 SureToken.abi,
                 signer
             );
             const predictionWorldContract = new ethers.Contract(
-                predictionWorld2Address,
+                predictionWorld3Address,
                 PredictionWorld.abi,
                 signer
             );
@@ -79,13 +79,13 @@ export default function Detail() {
             if (input && selected === "YES") {
                 if (parseInt(input) < balance) {
                     // TODO => this is not working
-                    await sureTokenContract.approve(predictionWorld2Address, input);
+                    await sureTokenContract.approve(predictionWorld3Address, input);
                     await predictionWorldContract.addYesBet(id, input);
                 }
             } else if (input && selected === "NO") {
                 if (parseInt(input) < balance) {
                     // TODO => this is not working
-                    await sureTokenContract.appove(predictionWorld2Address, input);
+                    await sureTokenContract.appove(predictionWorld3Address, input);
                     await predictionWorldContract.addNoBet(id, input);
                 }
             }
