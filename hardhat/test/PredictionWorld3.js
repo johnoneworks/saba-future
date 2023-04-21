@@ -131,7 +131,7 @@ describe("PredictionWorld3", function () {
       expect(noBets[0].amount).to.equal(dummyNoBet1.marketValue);
     });
 
-    it("Should distribute winning amount", async function () {
+    it("Should distribute YES winning amount", async function () {
       
       // There are 3 persons => other1, other2, other3
       // All of they has 1000 Sure Token.
@@ -188,6 +188,59 @@ describe("PredictionWorld3", function () {
       expect(await sureToken.balanceOf(other1.address)).is.equal(defaultTokenValue.add(other1WinAmount));
       expect(await sureToken.balanceOf(other2.address)).is.equal(defaultTokenValue.add(other2WinAmount));
       expect(await sureToken.balanceOf(other3.address)).is.equal(defaultTokenValue.sub(totalLoseAmount));
+    });
+
+    it("Should distribute NO winning amount", async function () {
+      
+      // There are 3 persons => other1, other2, other3
+      // All of they has 1000 Sure Token.
+      // 
+      // other1 add yes bet with 100.
+      // other2 add yes bet with 50.
+      // other3 add no bet with 30.
+      //
+      // The result is "Yes", so
+      // other1 lose 100 and final balance is 900.
+      // other2 lose 50 and final balance is 950.
+      // other3 win 150 and final balance is 1150.
+
+      const { predictionWorld, sureToken, other1, other2, other3, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+      const defaultTokenValue = ethers.BigNumber.from(100);
+      await sureToken.transfer(other1.address, defaultTokenValue);
+      await sureToken.transfer(other2.address, defaultTokenValue);
+      await sureToken.transfer(other3.address, defaultTokenValue);
+
+      // Create a market1
+      await predictionWorld.createMarket(
+        dummyMarket1.question,
+        dummyMarket1.creatorImageHash,
+        dummyMarket1.description,
+        dummyMarket1.resolverUrl,
+        dummyMarket1.endTimestamp
+      );
+
+      // It should approve the allowance first.
+      const other1TokenContract = sureToken.connect(other1);
+      await other1TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
+      const other2TokenContract = sureToken.connect(other2);
+      await other2TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet2.marketValue.toString(), decimals));
+      const other3TokenContract = sureToken.connect(other3);
+      await other3TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyNoBet1.marketValue.toString(), decimals));
+
+      const other1PredictionContract = predictionWorld.connect(other1);
+      await other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
+      const other2PredictionContract = predictionWorld.connect(other2);
+      await other2PredictionContract.addYesBet(dummyYesBet2.marketId, dummyYesBet2.marketValue);
+      const other3PredictionContract = predictionWorld.connect(other3);
+      await other3PredictionContract.addNoBet(dummyNoBet1.marketId, dummyNoBet1.marketValue);
+
+      distributeWinningAmount = await predictionWorld.distributeWinningAmount(0, false);
+
+      expect(await sureToken.balanceOf(predictionWorld.address)).is.equal(0);
+      expect(await sureToken.balanceOf(other1.address)).is.equal(defaultTokenValue.sub(dummyYesBet1.marketValue));
+      expect(await sureToken.balanceOf(other2.address)).is.equal(defaultTokenValue.sub(dummyYesBet2.marketValue));
+      expect(await sureToken.balanceOf(other3.address)).is.equal(defaultTokenValue.add(dummyYesBet1.marketValue.add(dummyYesBet2.marketValue)));
     });
 
   });
