@@ -6,11 +6,13 @@ import styles from "../styles/Home.module.css";
 import Navbar from "@/components/Navbar";
 import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../utils/abis/PredictionWorld3.json";
+import PortfolioMarketCard from "@/components/PortfolioMarketCard";
 
 
 
 export default function Portfolio() {
     const [portfolioValue, setPortfolioValue] = useState(0);
+    const [personalBetInfo, setPersonalBetInfo] = useState([]);
     
 
     const getMarkets = async () => {
@@ -60,11 +62,27 @@ export default function Portfolio() {
                 });
                 marketBets["1"].forEach((bet) => {
                     if (bet[0].toLowerCase() == account.toLowerCase()) {
-                        
+                        personalizedBetInfo.push({
+                            id: i.toString(),
+                            noAmount: bet[1].toString(),
+                            timestamp: bet[2].toString(),
+                        });
+                        totalBetAmount += parseInt(bet[1]);
                     }
                 });
             }
-
+            setPortfolioValue(totalBetAmount);
+            for (let i = 0; i < personalizedBetInfo.length; i++) {
+                let market = markets.find((market) => market.id == personalizedBetInfo[i].id);
+                personalizedBetInfo[i].title = market?.title;
+                personalizedBetInfo[i].imageHash = market?.imageHash;
+                personalizedBetInfo[i].totalAmount = market?.totalAmount;
+                personalizedBetInfo[i].totalYesAmount = market?.totalYesAmount;
+                personalizedBetInfo[i].totalNoAmount = market?.totalNoAmount;
+                personalizedBetInfo[i].marketClosed = market?.marketClosed;
+                personalizedBetInfo[i].endTimestamp = market?.endTimestamp;
+            }
+            setPersonalBetInfo(personalizedBetInfo);
         } catch (error) {
             console.log(`Error getting markets, ${error}`);
         }
@@ -88,10 +106,17 @@ export default function Portfolio() {
                         <div className="flex flex-col items-center">
                             <h1 className="text-white opacity-50 text-lg">Portfolio Value</h1>
                             <h1 className="text-white text-4xl font-bold">
-
+                                {portfolioValue}{ " SURE" }
                             </h1>
                         </div>
                     </div>
+                    <span className="font-bold my-3 text-lg">Your Market Positions</span>
+                    {personalBetInfo.map((market) => (
+                        <PortfolioMarketCard 
+                            title={market.title}
+                            totalYesAmount={market.totalYesAmount}
+                            totalNoAmount={market.totalNoAmount}                        />
+                    ))}
                 </div>
             </main>
         </div>
