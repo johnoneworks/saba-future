@@ -4,11 +4,14 @@ import { ethers } from "ethers";
 
 import styles from "../styles/Home.module.css";
 import Navbar from "@/components/Navbar";
-import { predictionWorld2Address } from "@/config";
-import PredictionWorld from "../utils/PredictionWorld2.json";
+import { predictionWorld3Address } from "@/config";
+import PredictionWorld from "../utils/abis/PredictionWorld3.json";
+
+
 
 export default function Portfolio() {
     const [portfolioValue, setPortfolioValue] = useState(0);
+    
 
     const getMarkets = async () => {
         try {
@@ -16,26 +19,54 @@ export default function Portfolio() {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const predictionWorldContract = new ethers.Contract(
-                predictionWorld2Address,
+                predictionWorld3Address,
                 PredictionWorld.abi,
                 signer
             );
+
+            const accounts = await ethereum.request({ method: "eth_accounts" });
+            const account = accounts[0];
 
             let marketCount = await predictionWorldContract.totalMarkets();
             let markets = [];
             for (let i = 0; i < marketCount; i++) {
                 let market = await predictionWorldContract.markets(i);
-                
-                console.log("*****");
-                console.log(i);
-                console.log(market.id);
                 markets.push({
-                    id: market.id
+                    id: market.id,
+                    title: market.question,
+                    imageHash: "", // temp holder
+                    totalAmount: market.totalAmount,
+                    totalYesAmount: market.totalYesAmount,
+                    totalNoAmount: market.totalNoAmount,
+                    hasResolved: market.marketClosed,
+                    endTimestamp: market.endTimestamp,
+                });
+            }
+            console.log(`markets size: ${markets.length}`);
+
+            let personalizedBetInfo = [];
+            let totalBetAmount = 0;
+            for (let i = 0; i < markets.length; i++) {
+                let marketBets = await predictionWorldContract.getBets(i);
+                marketBets["0"].forEach((bet) => {
+                    if (bet[0].toLowerCase() == account.toLowerCase()) {
+                        personalizedBetInfo.push({
+                            id: i.toString(),
+                            yesAmount: bet[1].toString(),
+                            timestamp: bet[2].toString(),
+                        });
+                        totalBetAmount += parseInt(bet[1]);
+                    }
+                });
+                marketBets["1"].forEach((bet) => {
+                    if (bet[0].toLowerCase() == account.toLowerCase()) {
+                        
+                    }
                 });
             }
 
         } catch (error) {
-            console.log(`Error getting amount, ${error}`);
+            console.log(`Error getting markets, ${error}`);
         }
     }
 
