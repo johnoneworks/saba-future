@@ -2,7 +2,6 @@ const { time, loadFixture } = require("@nomicfoundation/hardhat-network-helpers"
 
 const { expect } = require("chai");
 
-
 describe("PredictionWorld3", function () {
 
   async function deploySurePredictionWorldFixture() {
@@ -132,7 +131,7 @@ describe("PredictionWorld3", function () {
     });
 
     it("Should distribute YES winning amount", async function () {
-      
+
       // There are 3 persons => other1, other2, other3
       // All of they has 1000 Sure Token.
       // 
@@ -191,7 +190,7 @@ describe("PredictionWorld3", function () {
     });
 
     it("Should distribute NO winning amount", async function () {
-      
+
       // There are 3 persons => other1, other2, other3
       // All of they has 1000 Sure Token.
       // 
@@ -244,4 +243,70 @@ describe("PredictionWorld3", function () {
     });
 
   });
+
+  describe("Check Parameters", function () {
+
+    it("Should revert if market creator is not owner", async function () {
+      const { predictionWorld, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+      const other1PredictionContract = predictionWorld.connect(other1);
+      await expect(other1PredictionContract.createMarket(
+        dummyMarket1.question,
+        dummyMarket1.creatorImageHash,
+        dummyMarket1.description,
+        dummyMarket1.resolverUrl,
+        dummyMarket1.endTimestamp
+      )).to.be.revertedWith("Unauthorized");
+    });
+
+    it("Should revert if without amount", async function () {
+      const { predictionWorld, sureToken, other1, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+      const defaultTokenValue = ethers.BigNumber.from(1);
+      await sureToken.transfer(other1.address, defaultTokenValue);
+      
+      // Create a market1
+      await predictionWorld.createMarket(
+        dummyMarket1.question,
+        dummyMarket1.creatorImageHash,
+        dummyMarket1.description,
+        dummyMarket1.resolverUrl,
+        dummyMarket1.endTimestamp
+      );
+
+      // It should approve the allowance first.
+      // const other1TokenContract = sureToken.connect(other1);
+      // await other1TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
+      const other1PredictionContract = predictionWorld.connect(other1);
+      
+      await expect(
+        other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue)
+      ).to.be.revertedWith("Not allowed to spend this amount.");
+
+      await expect(
+        other1PredictionContract.addNoBet(dummyYesBet1.marketId, dummyYesBet1.marketValue)
+      ).to.be.revertedWith("Not allowed to spend this amount.");
+    });
+
+    it("Should revert if distributer is not owner", async function () {
+      const { predictionWorld, sureToken, other1, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+      // Create a market1
+      await predictionWorld.createMarket(
+        dummyMarket1.question,
+        dummyMarket1.creatorImageHash,
+        dummyMarket1.description,
+        dummyMarket1.resolverUrl,
+        dummyMarket1.endTimestamp
+      );
+
+      // It should approve the allowance first.
+      const other1PredictionContract = predictionWorld.connect(other1);
+      
+      await expect(
+        other1PredictionContract.distributeWinningAmount(0, true)
+      ).to.be.revertedWith("Unauthorized");
+    });
+
+  });
+
 });
