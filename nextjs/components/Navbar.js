@@ -9,9 +9,9 @@ export default function Navbar() {
     const checkIfWalletIsConnected = async () => {
         const { ethereum } = window;
         if (ethereum) {
-        console.log(`Got the ethereum object: ${ethereum}`);
+            console.log(`Got the ethereum object: ${ethereum}`);
         } else {
-        console.log("No Wallet found. Connect Wallet");
+            console.log("No Wallet found. Connect Wallet");
         }
 
         const accounts = await ethereum.request({ method: "eth_accounts" });
