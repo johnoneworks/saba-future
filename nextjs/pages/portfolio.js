@@ -42,6 +42,7 @@ export default function Portfolio() {
                     totalNoAmount: market.totalNoAmount,
                     hasResolved: market.marketClosed,
                     endTimestamp: market.endTimestamp,
+                    timestamp: market.timestamp
                 });
             }
             console.log(`markets size: ${markets.length}`);
@@ -81,6 +82,7 @@ export default function Portfolio() {
                 personalizedBetInfo[i].totalNoAmount = market?.totalNoAmount;
                 personalizedBetInfo[i].marketClosed = market?.marketClosed;
                 personalizedBetInfo[i].endTimestamp = market?.endTimestamp;
+                personalizedBetInfo[i].timestamp = market?.timestamp;
             }
             setPersonalBetInfo(personalizedBetInfo);
         } catch (error) {
@@ -116,7 +118,9 @@ export default function Portfolio() {
                             title={market.title}
                             totalYesAmount={market.totalYesAmount}
                             totalNoAmount={market.totalNoAmount}
-                            endTimestamp={market.endTimestamp}                        />
+                            endTimestamp={market.endTimestamp}
+                            timestamp={market.timestamp}                     
+                        />
                     ))}
                 </div>
             </main>
