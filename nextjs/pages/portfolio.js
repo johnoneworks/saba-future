@@ -115,7 +115,8 @@ export default function Portfolio() {
                         <PortfolioMarketCard 
                             title={market.title}
                             totalYesAmount={market.totalYesAmount}
-                            totalNoAmount={market.totalNoAmount}                        />
+                            totalNoAmount={market.totalNoAmount}
+                            endTimestamp={market.endTimestamp}                        />
                     ))}
                 </div>
             </main>

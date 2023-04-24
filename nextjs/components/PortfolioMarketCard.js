@@ -1,9 +1,12 @@
 import Img from "next/image";
+import moment from "moment";
+
 
 export default function PortfolioMarketCard({
     title,
     totalYesAmount,
-    totalNoAmount
+    totalNoAmount,
+    endTimestamp
 }) {
     return (
         <div className="w-full overflow-hidden my-2">
@@ -28,6 +31,20 @@ export default function PortfolioMarketCard({
                     <div className="flex flex-col space-y-1">
                         <span className="text-xs text-gray-500 font-light">
                             Amount Added
+                        </span>
+                        <span className="text-base">
+                            {totalYesAmount.toString()}{" SURE on Yes"}
+                            <hr />
+                            {totalNoAmount.toString()}{" SURE on No"}
+                        </span>
+                    </div>
+                    <div className="flex flex-col space-y-1">
+                        <span className="text-xs text-gray-500 font-light">Added On</span>
+                        <span className="text-base">
+                            {endTimestamp
+                                ? moment.unix(endTimestamp / 1000).format("MMMM D, YYYY")
+                                : "N/A"
+                            }
                         </span>
                     </div>
                 </div>
