@@ -82,13 +82,13 @@ export default function Detail() {
             if (input && selected === "YES") {
                 if (parseInt(input) < balance) {
                     // TODO => this is not working
-                    await sureTokenContract.approve(predictionWorld3Address, input);
+                    await sureTokenContract.approve(predictionWorld3Address, input, {gasLimit: 500000});
                     await predictionWorldContract.addYesBet(id, input);
                 }
             } else if (input && selected === "NO") {
                 if (parseInt(input) < balance) {
                     // TODO => this is not working
-                    await sureTokenContract.approve(predictionWorld3Address, input);
+                    await sureTokenContract.approve(predictionWorld3Address, input, {gasLimit: 500000});
                     await predictionWorldContract.addNoBet(id, input);
                 }
             }
