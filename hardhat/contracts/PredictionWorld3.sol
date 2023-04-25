@@ -186,6 +186,7 @@ contract PredictionWorld3 {
             if (earlyBirds[msg.sender]) {
                 return false;
             } else {
+                earlyBirdCount += 1;
                 earlyBirds[msg.sender] = true;
                 return true;
             }
