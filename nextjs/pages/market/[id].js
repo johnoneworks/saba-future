@@ -102,7 +102,7 @@ export default function Detail() {
 
     useEffect(() => {
         getMarket();
-    }, []);
+    }, [router.isReady]);
 
     return(
         <div className="flex flex-col justify-center items-center h-full">
