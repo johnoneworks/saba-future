@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { AccountContext } from '../contexts/AccountContext';
 
 export default function Navbar() {
   const router = useRouter();
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useContext(AccountContext);
 
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -115,8 +116,8 @@ const TabButton = ({ title, isActive, url }) => {
     <Link href={url} passHref>
       <div
         className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
-            ? "border-blue-700 text-blue-700 text-lg font-semibold"
-            : "border-white text-gray-400 text-lg"
+          ? "border-blue-700 text-blue-700 text-lg font-semibold"
+          : "border-white text-gray-400 text-lg"
           }`}
       >
         <span>{title}</span>
