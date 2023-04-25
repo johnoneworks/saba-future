@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Hardhat Test",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "runtimeExecutable": "${workspaceFolder}/hardhat/node_modules/.bin/hardhat",
+      "args": [
+        "test",
+        "test/PredictionWorld3.js"
+      ],
+      "cwd": "${workspaceFolder}/hardhat"
+    }
+  ]
+}
