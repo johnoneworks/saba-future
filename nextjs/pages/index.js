@@ -53,7 +53,7 @@ export default function Home() {
         markets.push({
           id: market.id,
           question: market.question,
-          imageHas: market.creatorImageHash,
+          imageHash: market.creatorImageHash,
           totalAmount: market.totalAmount,
           totalYesAmount: market.totalYesAmount,
           totalNoAmount: market.totalNoAmount,
