@@ -55,7 +55,7 @@ export default function Navbar() {
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 
       console.log('Found account', accounts[0]);
-      setCurrentAccount(accounts[0]);
+      setAccount(accounts[0]);
     } catch (error) {
       console.log(`Error connecting to metamask: ${error}`);
     }
