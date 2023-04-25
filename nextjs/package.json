@@ -9,7 +9,6 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "next lint",
-    "prepare": "husky install"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.14",
