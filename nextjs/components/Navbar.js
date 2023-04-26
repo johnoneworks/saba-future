@@ -1,127 +1,127 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { AccountContext } from '../contexts/AccountContext';
 
 export default function Navbar() {
-    const router = useRouter();
-    const [account, setAccount] = useState("");
+  const router = useRouter();
+  const [account, setAccount] = useContext(AccountContext);
 
-    const checkIfWalletIsConnected = async () => {
-        const { ethereum } = window;
-        if (ethereum) {
-            console.log(`Got the ethereum object: ${ethereum}`);
-        } else {
-            console.log("No Wallet found. Connect Wallet");
-        }
-
-        const accounts = await ethereum.request({ method: "eth_accounts" });
-
-        if (accounts.length !== 0) {
-        console.log(`Found authorized Account: ${accounts[0]}`);
-        setAccount(accounts[0]);
-        } else {
-        console.log("No authorized account found");
-        }
+  const checkIfWalletIsConnected = async () => {
+    const { ethereum } = window;
+    if (ethereum) {
+      console.log(`Got the ethereum object: ${ethereum}`);
+    } else {
+      console.log("No Wallet found. Connect Wallet");
     }
 
-    const connectWallet = async () => {
-		try {
-			const { ethereum } = window;
+    const accounts = await ethereum.request({ method: "eth_accounts" });
 
-			if (!ethereum) {
-				console.log('Metamask not detected');
-				return;
-			}
-			let chainId = await ethereum.request({ method: 'eth_chainId' });
-			console.log(`Connected to chain: ${chainId}`);
+    if (accounts.length !== 0) {
+      console.log(`Found authorized Account: ${accounts[0]}`);
+      setAccount(accounts[0]);
+    } else {
+      console.log("No authorized account found");
+    }
+  }
 
-			const mumbaiChainId = '0x13881';
+  const connectWallet = async () => {
+    try {
+      const { ethereum } = window;
 
-			const devChainId = 1337;
-			const localhostChainId = `0x${Number(devChainId).toString(16)}`;
+      if (!ethereum) {
+        console.log('Metamask not detected');
+        return;
+      }
+      let chainId = await ethereum.request({ method: 'eth_chainId' });
+      console.log(`Connected to chain: ${chainId}`);
 
-            await ethereum.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: mumbaiChainId }],
-            });
+      const mumbaiChainId = '0x13881';
 
-            console.log(`Connected to chain: ${chainId}`);
+      const devChainId = 1337;
+      const localhostChainId = `0x${Number(devChainId).toString(16)}`;
 
-			if (chainId !== mumbaiChainId && chainId !== localhostChainId) {
-				alert('You are not connected to the Mumbai Testnet!');
-				return;
-			}
+      await ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: mumbaiChainId }],
+      });
 
-			const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+      console.log(`Connected to chain: ${chainId}`);
 
-			console.log('Found account', accounts[0]);
-			setCurrentAccount(accounts[0]);
-		} catch (error) {
-			console.log(`Error connecting to metamask: ${error}`);
-		}
-	}
+      if (chainId !== mumbaiChainId && chainId !== localhostChainId) {
+        alert('You are not connected to the Mumbai Testnet!');
+        return;
+      }
 
-    useEffect(() => {
-		checkIfWalletIsConnected();
-	}, []);
+      const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 
-    return (
-        <>
-            <nav className="w-full h-16 mt-auto max-w-5xl">
-                <div className="flex flex-row justify-between items-center h-full">
-                    <Link href="/" passHref>
-                        <span className="font-semibold text-xl cursor-pointer">
-                            Prediction World
-                        </span>
-                    </Link>
-                    {!router.asPath.includes("/market") &&
-                     !router.asPath.includes("/admin") && (
-                        <div className="flex flex-row items-center justify-center h-full">
-                            <TabButton
-                                title="Market"
-                                isActive={router.asPath === "/"}
-                                url={"/"}
-                            />
-                            <TabButton
-                                title="Portfolio"
-                                isActive={router.asPath === "/portfolio"}
-                                url={"/portfolio"}
-                            />
-                        </div>
-                    )}
+      console.log('Found account', accounts[0]);
+      setAccount(accounts[0]);
+    } catch (error) {
+      console.log(`Error connecting to metamask: ${error}`);
+    }
+  }
 
-                    {account ? (
-                        <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer">
-                            <span className="text-lg text-white">
-                                {account.substr(0, 10)}...
-                            </span>
-                        </div>
-                    ) : (
-                        <div
-                            className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
-                            onClick={connectWallet} // original code is load all data
-                        >
-                            <span className="text-lg text-white">Connect</span>
-                        </div>
-                    )}
-                </div>
-            </nav>
-        </>
-    );
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, []);
+
+  return (
+    <>
+      <nav className="w-full h-16 mt-auto max-w-5xl">
+        <div className="flex flex-row justify-between items-center h-full">
+          <Link href="/" passHref>
+            <span className="font-semibold text-xl cursor-pointer">
+              Prediction World
+            </span>
+          </Link>
+          {!router.asPath.includes("/market") &&
+            !router.asPath.includes("/admin") && (
+              <div className="flex flex-row items-center justify-center h-full">
+                <TabButton
+                  title="Market"
+                  isActive={router.asPath === "/"}
+                  url={"/"}
+                />
+                <TabButton
+                  title="Portfolio"
+                  isActive={router.asPath === "/portfolio"}
+                  url={"/portfolio"}
+                />
+              </div>
+            )}
+
+          {account ? (
+            <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer">
+              <span className="text-lg text-white">
+                {account.substr(0, 10)}...
+              </span>
+            </div>
+          ) : (
+            <div
+              className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
+              onClick={connectWallet} // original code is load all data
+            >
+              <span className="text-lg text-white">Connect</span>
+            </div>
+          )}
+        </div>
+      </nav>
+    </>
+  );
 }
 
 const TabButton = ({ title, isActive, url }) => {
-    return (
-        <Link href={url} passHref>
-            <div
-                className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${
-                    isActive 
-                    ? "border-blue-700 text-blue-700 text-lg font-semibold" 
-                    : "border-white text-gray-400 text-lg" 
-                }`}
-            >
-                <span>{title}</span>
-            </div>
-        </Link>
-    );
+  return (
+    <Link href={url} passHref>
+      <div
+        className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
+          ? "border-blue-700 text-blue-700 text-lg font-semibold"
+          : "border-white text-gray-400 text-lg"
+          }`}
+      >
+        <span>{title}</span>
+      </div>
+    </Link>
+  );
 };

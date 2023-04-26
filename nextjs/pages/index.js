@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 
 import Navbar from "../components/Navbar";
@@ -9,8 +9,10 @@ import { sureToken3Address, predictionWorld3Address } from "../config";
 import SURE from "../utils/abis/SureToken3.json";
 import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import MarketCard from "../components/MarketCard";
+import { AccountContext } from '../contexts/AccountContext';
 
 export default function Home() {
+  const [account] = useContext(AccountContext);
   const [balance, setBalance] = useState(0);
   const [markets, setMarkets] = useState([]);
 
@@ -35,6 +37,7 @@ export default function Home() {
   }
 
   const getMarkets = async () => {
+    console.log("Start to get markets.");
     try {
       const { ethereum } = window;
       const provider = new ethers.providers.Web3Provider(ethereum);
@@ -61,15 +64,15 @@ export default function Home() {
       }
       //console.log(markets[0].description);
       setMarkets(markets);
-  } catch (error) {
-    console.log(`Error getting markets, ${error}`);
+    } catch (error) {
+      console.log(`Error getting markets, ${error}`);
+    }
   }
-}
 
   useEffect(() => {
-		getAmount();
+    getAmount();
     getMarkets();
-	}, []);
+  }, [account]);
 
   return (
     <div className={styles.container}>
@@ -104,17 +107,17 @@ export default function Home() {
             />
           </div>
           <div className="flex flex-row space-x-2 md:space-x-5 items-center flex-wrap mt-4">
-            <Filter 
+            <Filter
               list={["All", "Crypto", "Football", "Covid 19", "OneSeal"]}
               activeItem="All"
               category="Category"
-              onChange={() => {}}
+              onChange={() => { }}
             />
-            <Filter 
+            <Filter
               list={["Volume", "Newest", "Expiring"]}
               activeItem="Volume"
               category="Sort By"
-              onChange={() => {}}
+              onChange={() => { }}
             />
           </div>
           You have: {balance} SURE tokens
@@ -124,7 +127,7 @@ export default function Home() {
             {markets.map((market) => {
               return (
                 <div>
-                  <MarketCard 
+                  <MarketCard
                     id={market.id}
                     key={market.id}
                     title={market.question}

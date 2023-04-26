@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Img from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import moment from "moment";
@@ -9,11 +9,13 @@ import Navbar from "../../components/Navbar";
 import { predictionWorld3Address, sureToken3Address } from "@/config";
 import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
 import SureToken from "../../utils/abis/SureToken3.json";
+import { AccountContext } from '@/contexts/AccountContext';
 
 
 export default function Detail() {
     const router = useRouter();
     const { id } = router.query;
+    const [account] = useContext(AccountContext);
 
     const [market, setMarket] = useState({
         title: "title of market",
@@ -82,13 +84,13 @@ export default function Detail() {
             if (input && selected === "YES") {
                 if (parseInt(input) < balance) {
                     // TODO => this is not working
-                    await sureTokenContract.approve(predictionWorld3Address, input);
+                    await sureTokenContract.approve(predictionWorld3Address, input, {gasLimit: 500000});
                     await predictionWorldContract.addYesBet(id, input);
                 }
             } else if (input && selected === "NO") {
                 if (parseInt(input) < balance) {
                     // TODO => this is not working
-                    await sureTokenContract.approve(predictionWorld3Address, input);
+                    await sureTokenContract.approve(predictionWorld3Address, input, {gasLimit: 500000});
                     await predictionWorldContract.addNoBet(id, input);
                 }
             }
@@ -102,7 +104,7 @@ export default function Detail() {
 
     useEffect(() => {
         getMarket();
-    }, []);
+    }, [router.isReady, account]);
 
     return(
         <div className="flex flex-col justify-center items-center h-full">
