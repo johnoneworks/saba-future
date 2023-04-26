@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "hardhat/console.sol";
 
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
@@ -10,10 +11,18 @@ contract PredictionWorld3 {
     address public owner;
     address public sureToken;
     uint256 public totalMarkets = 0;
+    // Early Bird Limit (Get the SURE when first play)
+    uint32 public earlyBirdLimit;
+    // Early Bird Token Value
+    uint256 public earlyBirdTokenValue;
+    // Early Bird Actually Count (Current count)
+    uint32 public earlyBirdCount;
     
-    constructor(address _sureToken) {
+    constructor(address _sureToken, uint32 _earlyBirdLimit, uint256 _earlyBirdTokenValue) {
         owner = msg.sender;
         sureToken = _sureToken;
+        earlyBirdLimit = _earlyBirdLimit;
+        earlyBirdTokenValue = _earlyBirdTokenValue;
     }
 
     mapping(uint256 => Market) public markets;
@@ -92,6 +101,10 @@ contract PredictionWorld3 {
 
     function addYesBet(uint256 _marketId, uint256 _value) public payable {
         require(_value <= ERC20(sureToken).allowance(msg.sender, address(this)), "Not allowed to spend this amount.");
+        if (checkEarlyBird()) {
+            address payable _address = payable(msg.sender);
+            ERC20(sureToken).transfer(_address, earlyBirdTokenValue);
+        }
         Market storage market = markets[_marketId];
         ERC20(sureToken).transferFrom(msg.sender, address(this), _value);
         Bet memory bet = Bet(
@@ -107,6 +120,10 @@ contract PredictionWorld3 {
 
     function addNoBet(uint256 _marketId, uint256 _value) public payable {
         require(_value <= ERC20(sureToken).allowance(msg.sender, address(this)), "Not allowed to spend this amount.");
+        if (checkEarlyBird()) {
+            address payable _address = payable(msg.sender);
+            ERC20(sureToken).transfer(_address, earlyBirdTokenValue);
+        }
         Market storage market = markets[_marketId];
         ERC20(sureToken).transferFrom(msg.sender, address(this), _value);
         Bet memory bet = Bet(
@@ -132,8 +149,9 @@ contract PredictionWorld3 {
         if (eventOutcome) {
             for (uint256 i = 0; i < market.yesBets.length; i++) {
                 // split all No bets with the Yessers
-                uint256 winAmount = (market.totalNoAmount * (market.yesBets[i].amount / market.totalYesAmount));
+                uint256 winAmount = (market.totalNoAmount * market.yesBets[i].amount / market.totalYesAmount);
                 winAmounts[market.yesBets[i].user] += (winAmount + market.yesBets[i].amount);
+                console.log("%s win %s", market.yesBets[i].user, winAmounts[market.yesBets[i].user]);
                 winAddresses.push(market.yesBets[i].user);
             }
 
@@ -145,7 +163,7 @@ contract PredictionWorld3 {
             delete winAddresses;
         } else {
             for (uint256 i = 0; i < market.noBets.length; i++) {
-                uint256 winAmount = (market.totalYesAmount * (market.noBets[i].amount / market.totalNoAmount));
+                uint256 winAmount = (market.totalYesAmount * market.noBets[i].amount / market.totalNoAmount);
                 winAmounts[market.noBets[i].user] += (winAmount + market.noBets[i].amount);
                 winAddresses.push(market.noBets[i].user);
             }
@@ -159,5 +177,19 @@ contract PredictionWorld3 {
         market.marketClosed = true;
     }
 
-        
+    mapping(address => bool) earlyBirds;
+  
+    function checkEarlyBird() public returns(bool) {
+        if (earlyBirdCount >= earlyBirdLimit) {
+            return false;
+        } else {
+            if (earlyBirds[msg.sender]) {
+                return false;
+            } else {
+                earlyBirdCount += 1;
+                earlyBirds[msg.sender] = true;
+                return true;
+            }
+        }
+    }      
  }
