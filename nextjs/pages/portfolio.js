@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 
 import styles from "../styles/Home.module.css";
@@ -7,10 +7,11 @@ import Navbar from "@/components/Navbar";
 import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import PortfolioMarketCard from "@/components/PortfolioMarketCard";
-
+import { AccountContext } from '../contexts/AccountContext';
 
 
 export default function Portfolio() {
+  const [account] = useContext(AccountContext);
   const [portfolioValue, setPortfolioValue] = useState(0);
   const [personalBetInfo, setPersonalBetInfo] = useState([]);
 
@@ -92,7 +93,7 @@ export default function Portfolio() {
 
   useEffect(() => {
     getMarkets();
-  }, []);
+  }, [account]);
 
   return (
     <div className={styles.container}>

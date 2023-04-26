@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
 
 import Navbar from "../components/Navbar";
