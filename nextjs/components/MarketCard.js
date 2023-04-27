@@ -23,7 +23,7 @@ export default function MarketCard({ id, title, totalAmount, totalYesAmount, tot
                         <div className="flex flex-col space-y-1">
                             <span className="text-xs text-gray-500 font-light">Volume</span>
                             <span className="text-sm">
-                                {totalAmount}{" "}
+                                {totalAmount.toString()}{" "}
                                 SURE
                             </span>
                         </div>
@@ -31,7 +31,7 @@ export default function MarketCard({ id, title, totalAmount, totalYesAmount, tot
                             <span className="text-xs text-gray-500 font-light">Yes</span>
                             <div className="px-1 bg-gray-200 text-center rounded-sm">
                                 <span className="text-xs font-medium text-blue-700">
-                                    {totalYesAmount}{" "}
+                                    {totalYesAmount.toString()}{" "}
                                     SURE
                                 </span>
                             </div>
@@ -40,7 +40,7 @@ export default function MarketCard({ id, title, totalAmount, totalYesAmount, tot
                             <span className="text-xs text-gray-500 font-light">No</span>
                             <div className="px-1 bg-gray-200 text-center rounded-sm">
                                 <span className="text-xs font-medium text-blue-700">
-                                    {totalNoAmount}{" "}
+                                    {totalNoAmount.toString()}{" "}
                                     SURE
                                 </span>
                             </div>

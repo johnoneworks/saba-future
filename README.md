@@ -17,7 +17,8 @@ This will be the awesome prediction market that will be the future for us
     - Metamask
 
 ## MVP Stories
-    - Two roles within platform: Admin & Players
+    - Two roles within platform: Admin(PredictionWorld contract owner) & Players(everyone else)
+        - US1: Admin can create market
         - Admin will be in charge of creating and resolving markets
         - Player will be able to place bets(Yes/No) on the markets
     - Sign Up/ Sign In
