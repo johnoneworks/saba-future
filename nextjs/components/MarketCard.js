@@ -31,7 +31,7 @@ export default function MarketCard({ id, title, totalAmount, totalYesAmount, tot
                             <span className="text-xs text-gray-500 font-light">Yes</span>
                             <div className="px-1 bg-gray-200 text-center rounded-sm">
                                 <span className="text-xs font-medium text-blue-700">
-                                    {parseFloat(ethers.utils.formatEther(totalYesAmount)).toFixed(2)}{" "}
+                                    {totalYesAmount}{" "}
                                     SURE
                                 </span>
                             </div>
@@ -40,7 +40,7 @@ export default function MarketCard({ id, title, totalAmount, totalYesAmount, tot
                             <span className="text-xs text-gray-500 font-light">No</span>
                             <div className="px-1 bg-gray-200 text-center rounded-sm">
                                 <span className="text-xs font-medium text-blue-700">
-                                    {parseFloat(ethers.utils.formatEther(totalNoAmount)).toFixed(2)}{" "}
+                                    {totalNoAmount}{" "}
                                     SURE
                                 </span>
                             </div>

@@ -49,10 +49,12 @@ export default function Home() {
       );
 
       let marketCount = await predictionWorldContract.totalMarkets();
-      console.log(marketCount);
+      console.log(`marketCount: ${marketCount}`);
       let markets = [];
       for (let i = 0; i < marketCount; i++) {
         let market = await predictionWorldContract.markets(i);
+        console.log(i);
+        console.log(`market.id: ${market.question}`);
         markets.push({
           id: market.id,
           question: market.question,
