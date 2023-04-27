@@ -23,7 +23,7 @@ export default function MarketCard({ id, title, totalAmount, totalYesAmount, tot
                         <div className="flex flex-col space-y-1">
                             <span className="text-xs text-gray-500 font-light">Volume</span>
                             <span className="text-sm">
-                                {parseFloat(ethers.utils.formatEther(totalAmount)).toFixed(2)}{" "}
+                                {totalAmount}{" "}
                                 SURE
                             </span>
                         </div>

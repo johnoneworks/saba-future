@@ -14,7 +14,9 @@ async function main() {
   console.log(`SURE Token(3) contract deployed to ${sureToken.address}`);
 
   const PredictionWorld = await hre.ethers.getContractFactory("PredictionWorld3");
-  const predictionWorld = await PredictionWorld.deploy(sureToken.address, 100, 1000);
+  const numOfEarlyBirdsAllowed = 100;
+  const amountOfTokenForEarlyBird = 1000;
+  const predictionWorld = await PredictionWorld.deploy(sureToken.address, numOfEarlyBirdsAllowed, amountOfTokenForEarlyBird);
   await predictionWorld.deployed();
   console.log(`PredictionWorld(3) contract deployed to ${predictionWorld.address}`);
 }
