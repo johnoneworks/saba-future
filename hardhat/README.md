@@ -9,6 +9,7 @@ This is the part with the smart contract related functions
             - `npx hardhat run scripts/deploy.js --network mumbai`
         - to hardhat network
             - `npx hardhat run scripts/deploy.js`
+    - copy the ~/harhat/artifacts/contracts/PredictionWorld3.json & ~/harhat/artifacts/contracts/SureToken3.json to ~/nextjs/utils/abis
 
 # Resources
     - Faucets (free test network tokens)
