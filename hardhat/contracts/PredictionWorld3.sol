@@ -12,17 +12,17 @@ contract PredictionWorld3 {
     address public sureToken;
     uint256 public totalMarkets = 0;
     // Early Bird Limit (Get the SURE when first play)
-    uint32 public earlyBirdLimit;
-    // Early Bird Token Value
-    uint256 public earlyBirdTokenValue;
+    uint32 public numOfEarlyBirdsAllowed;
+    // Early Bird Free Amount
+    uint256 public amountOfFreeTokenForEarlyBird;
     // Early Bird Actually Count (Current count)
-    uint32 public earlyBirdCount;
+    uint32 public currentEarlyBirdCount;
     
-    constructor(address _sureToken, uint32 _earlyBirdLimit, uint256 _earlyBirdTokenValue) {
+    constructor(address _sureToken, uint32 _numOfEarlyBirdsAllowed, uint256 _amountOfFreeTokenForEarlyBird) {
         owner = msg.sender;
         sureToken = _sureToken;
-        earlyBirdLimit = _earlyBirdLimit;
-        earlyBirdTokenValue = _earlyBirdTokenValue;
+        numOfEarlyBirdsAllowed = _numOfEarlyBirdsAllowed;
+        amountOfFreeTokenForEarlyBird = _amountOfFreeTokenForEarlyBird;
     }
 
     mapping(uint256 => Market) public markets;
@@ -103,7 +103,7 @@ contract PredictionWorld3 {
         require(_value <= ERC20(sureToken).allowance(msg.sender, address(this)), "Not allowed to spend this amount.");
         if (checkEarlyBird()) {
             address payable _address = payable(msg.sender);
-            ERC20(sureToken).transfer(_address, earlyBirdTokenValue);
+            ERC20(sureToken).transfer(_address, amountOfFreeTokenForEarlyBird);
         }
         Market storage market = markets[_marketId];
         ERC20(sureToken).transferFrom(msg.sender, address(this), _value);
@@ -122,7 +122,7 @@ contract PredictionWorld3 {
         require(_value <= ERC20(sureToken).allowance(msg.sender, address(this)), "Not allowed to spend this amount.");
         if (checkEarlyBird()) {
             address payable _address = payable(msg.sender);
-            ERC20(sureToken).transfer(_address, earlyBirdTokenValue);
+            ERC20(sureToken).transfer(_address, amountOfFreeTokenForEarlyBird);
         }
         Market storage market = markets[_marketId];
         ERC20(sureToken).transferFrom(msg.sender, address(this), _value);
@@ -180,13 +180,13 @@ contract PredictionWorld3 {
     mapping(address => bool) earlyBirds;
   
     function checkEarlyBird() public returns(bool) {
-        if (earlyBirdCount >= earlyBirdLimit) {
+        if (currentEarlyBirdCount >= numOfEarlyBirdsAllowed) {
             return false;
         } else {
             if (earlyBirds[msg.sender]) {
                 return false;
             } else {
-                earlyBirdCount += 1;
+                currentEarlyBirdCount += 1;
                 earlyBirds[msg.sender] = true;
                 return true;
             }
