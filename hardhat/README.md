@@ -1,19 +1,5 @@
-# saba-future
-This will be the awesome prediction market that will be the future for us
-
-# Vision
-    - Any resolvable prediction (event) can allow market exchanges
-
-# Tech Overview
-    - Utilize Polygon Chain (L2 sidechain of Ethereum) for web3 deployment
-
-# Prerequisite
-    - npm (16.16.0)
-        - highly recommend nvm
-    - Alchemy Account
-    - Hardhat
-        - `npm install --save-dev hardhat`
-    - Metamask
+# Intro
+This is the part with the smart contract related functions
 
 # Usage
     - Compile Contract
@@ -31,27 +17,8 @@ This will be the awesome prediction market that will be the future for us
         - https://sepoliafaucet.com/
     - ethers doc
         - https://docs.ethers.org/v6/
-
-## MVP Stories
-    - Two roles within platform: Admin & Players
-        - Admin will be in charge of creating and resolving predictions
-        - Player will be able to make markets on the predictions
-    - Sign Up/ Sign In
-        - Admin will get credentials manually from platform owner
-        - Players can sign up "magically" with just an email
-        - After signing up, the player will get 100 SURE(SabaFuture) tokens
-    - Create Prediction (Admin)
-        - Info
-            - Description of a Yes/No prediction, e.g. Will Lakers win tomorrow
-            - Details(optional)
-            - Last Accept time
-            - Resolve Time
-    - Open Market (Player)
-        - According to prediction, player can open, e.g. 50 SURE for 80 SURE on "yes"
-    - Take Market (Player)
-        - For opened market, player can take it all up => basically exchange
-    - Event Resolve
-        - Transfer SURE tokens to players accordingly
+    - remix
+        - https://medium.com/coinmonks/interact-with-a-live-deployed-smart-contract-using-remix-ide-1ea7e3fde52f
 
 ### Backlog
     - Real Matic

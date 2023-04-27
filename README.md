@@ -16,29 +16,10 @@ This will be the awesome prediction market that will be the future for us
         - `npm install --save-dev hardhat`
     - Metamask
 
-# Usage
-    - Compile Contract
-        - `npx hardhat compile`
-    - Deploy
-        - to mumbai
-            - `npx hardhat run scripts/deploy.js --network mumbai`
-        - to hardhat network
-            - `npx hardhat run scripts/deploy.js`
-
-# Resources
-    - Faucets (free test network tokens)
-        - https://mumbaifaucet.com/
-        - https://goerlifaucet.com/
-        - https://sepoliafaucet.com/
-    - ethers doc
-        - https://docs.ethers.org/v6/
-    - remix
-        - https://medium.com/coinmonks/interact-with-a-live-deployed-smart-contract-using-remix-ide-1ea7e3fde52f
-
 ## MVP Stories
     - Two roles within platform: Admin & Players
-        - Admin will be in charge of creating and resolving predictions
-        - Player will be able to make markets on the predictions
+        - Admin will be in charge of creating and resolving markets
+        - Player will be able to place bets(Yes/No) on the markets
     - Sign Up/ Sign In
         - Admin will get credentials manually from platform owner
         - Players can sign up "magically" with just an email
