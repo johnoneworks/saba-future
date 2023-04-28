@@ -17,8 +17,12 @@ This will be the awesome prediction market that will be the future for us
     - Metamask
 
 ## MVP Stories
+    - US1: Admin can create market
+    - US2: New Player start with zero tokens
+    - US3: Admin can transfer tokens to New(Any) Player
+    - US4: Player with SURE can place bet on market
+
     - Two roles within platform: Admin(PredictionWorld contract owner) & Players(everyone else)
-        - US1: Admin can create market
         - Admin will be in charge of creating and resolving markets
         - Player will be able to place bets(Yes/No) on the markets
     - Sign Up/ Sign In
