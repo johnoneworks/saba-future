@@ -116,6 +116,8 @@ export default function Portfolio() {
           <span className="font-bold my-3 text-lg">Your Market Positions</span>
           {personalBetInfo.map((market) => (
             <PortfolioMarketCard
+              id={market.id}
+              key={market.id}
               title={market.title}
               totalYesAmount={market.totalYesAmount}
               totalNoAmount={market.totalNoAmount}
