@@ -82,7 +82,7 @@ export default function Detail() {
       setButton("Please wait");
 
       if (input && selected === "YES") {
-        if (parseInt(input) < balance) {
+        // if (parseInt(input) < balance) {
           try {
             await sureTokenContract.approve(predictionWorld3Address, input, { gasLimit: 500000 });
             console.log("we got here");
@@ -90,12 +90,12 @@ export default function Detail() {
           } catch (error) {
             console.log(`Error: ${error}`);
           }
-        }
+        // }
       } else if (input && selected === "NO") {
-        if (parseInt(input) < balance) {
+        // if (parseInt(input) < balance) {
           await sureTokenContract.approve(predictionWorld3Address, input, { gasLimit: 500000 });
           await predictionWorldContract.addNoBet(id, input);
-        }
+        // }
       }
       await getMarket();
       setButton("Trade");
