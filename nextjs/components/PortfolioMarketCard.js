@@ -9,7 +9,8 @@ export default function PortfolioMarketCard({
   totalYesAmount,
   totalNoAmount,
   timestamp,
-  endTimestamp
+  endTimestamp,
+  hasResolved,
 }) {
 
 
@@ -32,7 +33,7 @@ export default function PortfolioMarketCard({
           <div className="flex flex-row flex-nowrap justify-between items-center">
             <div className="flex flex-col space-y-1">
               <span className="text-sm text-gray-500 font-light">Outcome</span>
-              <span className="text-base">{totalYesAmount ? "YES" : "NO"}</span>{/*TODO: this seems wrong */}
+              <span className="text-base">{hasResolved ? "Finished" : "In progress"}</span>{/*TODO: this seems wrong */}
             </div>
             <div className="flex flex-col space-y-1">
               <span className="text-xs text-gray-500 font-light">

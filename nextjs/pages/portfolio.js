@@ -81,7 +81,7 @@ export default function Portfolio() {
         personalizedBetInfo[i].totalAmount = market?.totalAmount;
         personalizedBetInfo[i].totalYesAmount = market?.totalYesAmount;
         personalizedBetInfo[i].totalNoAmount = market?.totalNoAmount;
-        personalizedBetInfo[i].marketClosed = market?.marketClosed;
+        personalizedBetInfo[i].hasResolved = market?.hasResolved;
         personalizedBetInfo[i].endTimestamp = market?.endTimestamp;
         personalizedBetInfo[i].timestamp = market?.timestamp;
       }
@@ -123,6 +123,7 @@ export default function Portfolio() {
               totalNoAmount={market.totalNoAmount}
               endTimestamp={market.endTimestamp}
               timestamp={market.timestamp}
+              hasResolved={market.hasResolved}
             />
           ))}
         </div>
