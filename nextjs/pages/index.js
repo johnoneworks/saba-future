@@ -62,6 +62,7 @@ export default function Home() {
           totalAmount: market.totalAmount,
           totalYesAmount: market.totalYesAmount,
           totalNoAmount: market.totalNoAmount,
+          marketClosed: market.marketClosed,
         });
       }
       //console.log(markets[0].description);
@@ -126,7 +127,25 @@ export default function Home() {
           <br />
           <span className="font-bold my-3 text-lg">Market</span>
           <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-            {markets.map((market) => {
+            Open Markets
+            {markets.filter((market) => !market.marketClosed).map((market) => {
+              return (
+                <div>
+                  <MarketCard
+                    id={market.id}
+                    key={market.id}
+                    title={market.question}
+                    totalAmount={market.totalAmount}
+                    totalYesAmount={market.totalYesAmount}
+                    totalNoAmount={market.totalNoAmount}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
+            Closed Markets
+            {markets.filter((market) => market.marketClosed).map((market) => {
               return (
                 <div>
                   <MarketCard
