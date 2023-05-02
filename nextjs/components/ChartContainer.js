@@ -1,11 +1,13 @@
 import { ethers } from "ethers";
-import { useEffect } from "react";
-import Plotly from 'plotly.js-dist-min';
+import { useState, useEffect } from "react";
+//import Plotly from 'plotly.js-dist-min';
 
 import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 
 export default function ChartContainer({ questionId }) {
+    const [yesInfo, setYesInfo] = useState({});
+
     const getBets = async () => {
         try {
             const { ethereum } = window;
@@ -31,9 +33,9 @@ export default function ChartContainer({ questionId }) {
             // yes bets
             bets["0"].forEach((bet) => {
                 yesBets.time.push(new Date(parseInt(bet.timestamp + "000")));
-                let currentSum = yesBets.amount.reduce((a, b) => a + b, 0);
-                yesBets.amount.push(currentSum + bet.amount.toNumber());
+                yesBets.amount.push(bet.amount.toNumber());
             });
+            setYesInfo(yesBets);
             // no bets
             bets["1"].forEach((bet) => {
                 noBets.time.push(new Date(parseInt(bet.timestamp + "000")));
@@ -60,7 +62,7 @@ export default function ChartContainer({ questionId }) {
                 title: "Yes / No Graph",
             };
 
-            Plotly.newPlot("myDiv", chartData, layout, { displayModeBar: false });
+            //Plotly.newPlot("myDiv", chartData, layout, { displayModeBar: false });
         } catch(error) {
             console.log(`Error getting bets, ${error}`);
         }
@@ -72,7 +74,10 @@ export default function ChartContainer({ questionId }) {
 
     return (
         <>
-            <div id="myDiv"></div>
+            <div>
+                Yes Info
+                
+            </div>
         </>
     );
 }
