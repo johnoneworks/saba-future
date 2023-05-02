@@ -22,6 +22,7 @@ This will be the awesome prediction market that will be the future for us
     - US3: Admin can transfer tokens to New(Any) Player
     - US4: Player with SURE can place bet on market
         - note, need to transfer token to PredictionWorld
+    - US5: Admin can settle markets
 
     - Two roles within platform: Admin(PredictionWorld contract owner) & Players(everyone else)
         - Admin will be in charge of creating and resolving markets

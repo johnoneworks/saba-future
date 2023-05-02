@@ -28,7 +28,7 @@ export default function PortfolioMarketCard({
         await predictionWorldContract.distributeWinningAmount(id, true);
     }
     const onNo = async () => {
-        await predictionWorldContract.distributeWinningAmount(id, true);
+        await predictionWorldContract.distributeWinningAmount(id, false);
     }
 
     return (
