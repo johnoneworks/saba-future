@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useContext } from "react";
 import { AccountContext } from '../contexts/AccountContext';
+import { sureToken3Address } from "../config";
 
 export default function Navbar() {
   const router = useRouter();
@@ -26,26 +27,53 @@ export default function Navbar() {
   }
 
   const connectWallet = async () => {
+
+    const { ethereum } = window;
+
+    if (!ethereum) {
+      console.log('Metamask not detected');
+      return;
+    }
+
+    const mumbaiChainId = '0x13881';
+    const devChainId = 1337;
+    const localhostChainId = `0x${Number(devChainId).toString(16)}`;
+
+    let isConnected = false;
     try {
-      const { ethereum } = window;
-
-      if (!ethereum) {
-        console.log('Metamask not detected');
-        return;
-      }
-      let chainId = await ethereum.request({ method: 'eth_chainId' });
-      console.log(`Connected to chain: ${chainId}`);
-
-      const mumbaiChainId = '0x13881';
-
-      const devChainId = 1337;
-      const localhostChainId = `0x${Number(devChainId).toString(16)}`;
-
       await ethereum.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: mumbaiChainId }],
       });
+      isConnected = true;
+    } catch (switchError) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        try {
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: mumbaiChainId,
+                chainName: "Matic(Polygon) Mumbai Testnet",
+                nativeCurrency: { name: "tMATIC", symbol: "tMATIC", decimals: 18 },
+                rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
+                blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+              },
+            ],
+          });
+          isConnected = true;
+        } catch (addError) {
+          console.error(addError);
+        }
+      } else {
+        console.error(switchError);
+      }
+    }
 
+    if (isConnected === true) {
+
+      let chainId = await ethereum.request({ method: 'eth_chainId' });
       console.log(`Connected to chain: ${chainId}`);
 
       if (chainId !== mumbaiChainId && chainId !== localhostChainId) {
@@ -54,11 +82,39 @@ export default function Navbar() {
       }
 
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-
       console.log('Found account', accounts[0]);
+      
+      await addSureTokenToMetamask();
+      console.log('Success to add Sure token to Metamask.');
+      
       setAccount(accounts[0]);
+    } else {
+      alert("Fail to connect the Metamask!");
+    }
+  }
+
+  const addSureTokenToMetamask = async () => {
+    try {
+      // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+      const wasAdded = await ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20', // Initially only supports ERC20, but eventually more!
+          options: {
+            address: sureToken3Address, // The address that the token is at.
+            symbol: 'SURE', // A ticker symbol or shorthand, up to 5 chars.
+            decimals: 18, // The number of decimals in the token
+          },
+        },
+      });
+    
+      if (wasAdded) {
+        console.log('Thanks for your interest!');
+      } else {
+        console.log('Your loss!');
+      }
     } catch (error) {
-      console.log(`Error connecting to metamask: ${error}`);
+      console.log(error);
     }
   }
 
