@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import moment from "moment";
 
 import Navbar from "../../components/Navbar";
+import ChartContainer from "@/components/ChartContainer";
 import { predictionWorld3Address, sureToken3Address } from "@/config";
 import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
 import SureToken from "../../utils/abis/SureToken3.json";
@@ -163,7 +164,7 @@ export default function Detail() {
                     <div className="flex flex-col space-y-3">
                         <div className="w-full flex flex-row mt-5">
                             <div className="w-2/3 border rounded-lg p-1 pb-4 border-gray-300 mr-2">
-                                Some chart container
+                                <ChartContainer questionId={id} />
                             </div>
                             <div className="w-1/3 rounded-lg border border-gray-300 ml-2">
                                 <div className="flex flex-col items-start p-6">

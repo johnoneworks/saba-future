@@ -21,6 +21,7 @@ This will be the awesome prediction market that will be the future for us
     - US2: New Player start with zero tokens
     - US3: Admin can transfer tokens to New(Any) Player
     - US4: Player with SURE can place bet on market
+        - note, need to transfer token to PredictionWorld
 
     - Two roles within platform: Admin(PredictionWorld contract owner) & Players(everyone else)
         - Admin will be in charge of creating and resolving markets
