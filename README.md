@@ -16,35 +16,28 @@ This will be the awesome prediction market that will be the future for us
         - `npm install --save-dev hardhat`
     - Metamask
 
-## MVP Stories
-    - US1: Admin can create market
-    - US2: New Player start with zero tokens
-    - US3: Admin can transfer tokens to New(Any) Player
-    - US4: Player with SURE can place bet on market
-        - note, need to transfer token to PredictionWorld
-    - US5: Admin can settle markets
-
-    - Terminology
-        - 3 Roles
+## Terminology
+    - 3 Roles
             - Owner (PredictionWorld contract creator)
             - Admin (Will be owner by default) - create/resolve markets
             - Player - make bets * owner and admin can do so too
-    - Sign Up/ Sign In
-        - Admin will get credentials manually from platform owner
-        - Players can sign up "magically" with just an email
-        - After signing up, the player will get 100 SURE(SabaFuture) tokens
-    - Create Prediction (Admin)
-        - Info
-            - Description of a Yes/No prediction, e.g. Will Lakers win tomorrow
-            - Details(optional)
-            - Last Accept time
-            - Resolve Time
-    - Open Market (Player)
-        - According to prediction, player can open, e.g. 50 SURE for 80 SURE on "yes"
-    - Take Market (Player)
-        - For opened market, player can take it all up => basically exchange
-    - Event Resolve
-        - Transfer SURE tokens to players accordingly
+    - Create Prediction (Owner/Admin)
+        - check /hardhat/contracts/PredictionWorld3.sol
+    - Place Bet
+        - check /hardhat/contracts/PredictionWorld3.sol
+    - Event Resolve(settle market)
+        - check /hardhat/contracts/PredictionWorld3.sol
+
+## MVP Stories
+    - Functioning
+        - US1: Admin can create market
+        - US2: New Player start with zero tokens
+        - US3: Admin can transfer tokens to New(Any) Player
+        - US4: Player with SURE can place bet on market
+            - note, need to transfer token to PredictionWorld
+        - US5: Admin can settle markets(distributeWinning)
+
+    - US6: 
 
 ### Backlog
     - Real Matic
@@ -54,16 +47,5 @@ This will be the awesome prediction market that will be the future for us
     - Automatic prediction resolvement
     - Total Pool Betting
     - Rake for a setup contract
-
-## Contracts
-    - Prediction
-        - Owner // the admin role person(s)
-        - Description
-        - Last Accept time
-        - Resolve Time
-        - Markets[(amount, maker, taker?, odds)] // just use decimal odds for now
-
-        - Constructor()
-        - CreateMarket((amount, odds))
-        - ResolvePrediction(result)
-        - TakeMarket(amount, odds)
+    - Social Signup
+    - Show correct SURE token
