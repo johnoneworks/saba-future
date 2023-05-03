@@ -39,9 +39,9 @@ This will be the awesome prediction market that will be the future for us
 
     - Not yet functioning
         - US8: Show correct SURE token - web and wallet show the same numbers
-        - US6: First time users can just use a social login to enter
-        - US7: First time users will see 100 SURE tokens in balance
-        - US9: Users don't have to have matic to place bet
+        - US6: First time players can just use a social login to enter
+        - US7: First time players will see 100 SURE tokens in balance
+        - US9: Players don't have to have matic to place bet
 
 ### Backlog
     - Seamless Signup
@@ -55,8 +55,9 @@ This will be the awesome prediction market that will be the future for us
     - Real Matic
     - Player specific resolve list
     - Tags for prediction categories
+    - Refactor
 
-    - Backbacklog XD
+#### Backbacklog XD
         - Partial taking of market
         - Cancel market(only the part not yet taken)
         - Prediction Creation by Player
