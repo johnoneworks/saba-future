@@ -38,11 +38,13 @@ This will be the awesome prediction market that will be the future for us
         - US5: Admin can settle markets(distributeWinning)
 
     - Not yet functioning
+        - US8: Show correct SURE token - web and wallet show the same numbers
         - US6: First time users can just use a social login to enter
+        - US7: First time users will see 100 SURE tokens in balance
+        - US9: Users don't have to have matic to place bet
 
 ### Backlog
     - Seamless Signup
-    - Show correct SURE token
     - Show actual winnings for players
     - Show outcome as Yes/No
     - Map wallet account with a name
@@ -51,6 +53,8 @@ This will be the awesome prediction market that will be the future for us
     - Oracle
         - Automatic prediction resolvement
     - Real Matic
+    - Player specific resolve list
+    - Tags for prediction categories
 
     - Backbacklog XD
         - Partial taking of market
