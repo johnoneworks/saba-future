@@ -37,7 +37,8 @@ This will be the awesome prediction market that will be the future for us
             - note, need to transfer token to PredictionWorld
         - US5: Admin can settle markets(distributeWinning)
 
-    - US6: 
+    - Not yet functioning
+        - US6: 
 
 ### Backlog
     - Real Matic
