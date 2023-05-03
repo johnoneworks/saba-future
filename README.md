@@ -24,9 +24,11 @@ This will be the awesome prediction market that will be the future for us
         - note, need to transfer token to PredictionWorld
     - US5: Admin can settle markets
 
-    - Two roles within platform: Admin(PredictionWorld contract owner) & Players(everyone else)
-        - Admin will be in charge of creating and resolving markets
-        - Player will be able to place bets(Yes/No) on the markets
+    - Terminology
+        - 3 Roles
+            - Owner (PredictionWorld contract creator)
+            - Admin (Will be owner by default) - create/resolve markets
+            - Player - make bets * owner and admin can do so too
     - Sign Up/ Sign In
         - Admin will get credentials manually from platform owner
         - Players can sign up "magically" with just an email
@@ -51,6 +53,7 @@ This will be the awesome prediction market that will be the future for us
     - Prediction Creation by Player
     - Automatic prediction resolvement
     - Total Pool Betting
+    - Rake for a setup contract
 
 ## Contracts
     - Prediction
