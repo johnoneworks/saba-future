@@ -29,20 +29,27 @@ contract PredictionWorld3 {
 
     struct Market {
         uint256 id;
-        string question;
-        uint256 timestamp;
-        uint256 endTimestamp;
-        address createdBy;
-        string creatorImageHash;
+        Info info;
         Bet[] yesBets;
         Bet[] noBets;
         uint256 totalAmount;
         uint256 totalYesAmount;
         uint256 totalNoAmount;
         bool marketClosed;
+        bool outcome;
+    }
+
+    struct Info {
+        string question;
+        uint256 timestamp;
+        uint256 endTimestamp;
+        address createdBy;
+        string creatorImageHash;
         string description;
         string resolverUrl;
     }
+    
+    // Market public s;
 
     struct Bet {
         address user;
@@ -76,16 +83,16 @@ contract PredictionWorld3 {
 
         Market storage market = markets[totalMarkets];
         market.id = totalMarkets++;
-        market.question = _question;
-        market.creatorImageHash = _creatorImageHash;
-        market.timestamp = timestamp;
-        market.createdBy = msg.sender;
+        market.info.question = _question;
+        market.info.creatorImageHash = _creatorImageHash;
+        market.info.timestamp = timestamp;
+        market.info.createdBy = msg.sender;
         market.totalAmount = 0;
         market.totalYesAmount = 0;
         market.totalNoAmount = 0;
-        market.description = _description;
-        market.resolverUrl = _resolverUrl;
-        market.endTimestamp = _endTimestamp;
+        market.info.description = _description;
+        market.info.resolverUrl = _resolverUrl;
+        market.info.endTimestamp = _endTimestamp;
 
         emit MarketCreated(
             totalMarkets,
@@ -174,6 +181,7 @@ contract PredictionWorld3 {
             }
             delete winAddresses;
         }
+        market.outcome = eventOutcome;
         market.marketClosed = true;
     }
 
