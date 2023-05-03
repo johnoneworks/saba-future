@@ -38,15 +38,24 @@ This will be the awesome prediction market that will be the future for us
         - US5: Admin can settle markets(distributeWinning)
 
     - Not yet functioning
-        - US6: 
+        - US6: First time users can just use a social login to enter
 
 ### Backlog
-    - Real Matic
-    - Partial taking of market
-    - Cancel market(only the part not yet taken)
-    - Prediction Creation by Player
-    - Automatic prediction resolvement
-    - Total Pool Betting
-    - Rake for a setup contract
-    - Social Signup
+    - Seamless Signup
     - Show correct SURE token
+    - Show actual winnings for players
+    - Show outcome as Yes/No
+    - Map wallet account with a name
+    - Filter & searches
+    - Rake for resolvement
+    - Oracle
+        - Automatic prediction resolvement
+    - Real Matic
+
+    - Backbacklog XD
+        - Partial taking of market
+        - Cancel market(only the part not yet taken)
+        - Prediction Creation by Player
+        - Total Pool Betting
+    
+    
