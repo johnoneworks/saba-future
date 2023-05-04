@@ -2,11 +2,16 @@ import { useState, useCallback, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { ethers } from "ethers";
 import SocialLogin from "@biconomy/web3-auth";
+import SmartAccount from "@biconomy/smart-account";
+import { ChainId } from "@biconomy/core-types";
 
 export default function SmartContractWallet() {
     const [provider, setProvider] = useState(undefined);
     const [account, setAccount] = useState("");
+    const [smartAccount, setSmartAccount] = useState(null);
     const [socialLoginSDK, setSocialLoginSDK] = useState(null);
+    const [smartContractWalletAddress, setSmartContractWalletAddress] = useState("");
+    const [smartContractWalletLoading, setSmartContractWalletLoading] = useState(false);
 
     const connectWeb3 = useCallback(async () => {
         console.log("here");
@@ -33,6 +38,7 @@ export default function SmartContractWallet() {
         // no biconomy SDK, initialize it
         const sdk = new SocialLogin();
         const chainId = 80001; // mumbai
+        // according to document, will need to whitelistUrl for deployment
         await sdk.init({
             chainId: ethers.utils.hexValue(chainId),
         });
@@ -75,7 +81,28 @@ export default function SmartContractWallet() {
 
         await socialLoginSDK.logout();
         socialLoginSDK.hideWallet();
+        setProvider(undefined);
+        setAccount(undefined);
+        setSmartContractWalletAddress("");
     };
+
+    useEffect(() => {
+        async function setupSmartAccount() {
+            setSmartContractWalletAddress("");
+            setSmartContractWalletLoading(true);
+            // from docs I need the Dapp API key
+            const smartAccount = new SmartAccount(provider, {
+                activeNetworkId: ChainId.POLYGON_MUMBAI,
+                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+            });
+            await smartAccount.init();
+            const context = smartAccount.getSmartAccountContext();
+            setSmartContractWalletAddress(context.baseWallet.getAddress());
+            setSmartAccount(smartAccount);
+            setSmartContractWalletLoading(false);
+        }
+
+    }, [account, provider]);
 
     return (
         <div className={styles.container}>
