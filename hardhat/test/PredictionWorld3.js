@@ -80,11 +80,11 @@ describe("PredictionWorld3", function () {
 
       // Check the content of the market.
       const market = await predictionWorld.markets(0);
-      expect(market.question).to.equal(dummyMarket1.question);
-      expect(market.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
-      expect(market.description).to.equal(dummyMarket1.description);
-      expect(market.resolverUrl).to.equal(dummyMarket1.resolverUrl);
-      expect(market.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+      expect(market.info.question).to.equal(dummyMarket1.question);
+      expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+      expect(market.info.description).to.equal(dummyMarket1.description);
+      expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+      expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
     });
 
     it("Should create bets with valid params", async function () {
@@ -192,6 +192,9 @@ describe("PredictionWorld3", function () {
       expect(await sureToken.balanceOf(other1.address)).is.equal(earlyBirdTokenValue.add(other1WinAmount));
       expect(await sureToken.balanceOf(other2.address)).is.equal(earlyBirdTokenValue.add(other2WinAmount));
       expect(await sureToken.balanceOf(other3.address)).is.equal(earlyBirdTokenValue.sub(totalLoseAmount));
+
+      const market = await predictionWorld.markets(0);
+      expect(market.outcome).is.equal(true);
     });
 
     it("Should distribute NO winning amount", async function () {
@@ -240,6 +243,9 @@ describe("PredictionWorld3", function () {
       expect(await sureToken.balanceOf(other1.address)).is.equal(earlyBirdTokenValue.sub(dummyYesBet1.marketValue));
       expect(await sureToken.balanceOf(other2.address)).is.equal(earlyBirdTokenValue.sub(dummyYesBet2.marketValue));
       expect(await sureToken.balanceOf(other3.address)).is.equal(earlyBirdTokenValue.add(dummyYesBet1.marketValue.add(dummyYesBet2.marketValue)));
+
+      const market = await predictionWorld.markets(0);
+      expect(market.outcome).is.equal(false);
     });
 
   });
