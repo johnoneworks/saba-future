@@ -73,7 +73,7 @@ export default function SmartContractWallet() {
         };
     }, [account, connectWeb3, socialLoginSDK]);
 
-    const diconnectWeb3 = async () => {
+    const disconnectWeb3 = async () => {
         if (!socialLoginSDK || !socialLoginSDK.web3auth) {
             console.error("Biconomy SDK not initialized");
             return;
@@ -101,6 +101,10 @@ export default function SmartContractWallet() {
             setSmartAccount(smartAccount);
             setSmartContractWalletLoading(false);
         }
+        if (!!provider && !!account) {
+            setupSmartAccount();
+            console.log(`Provider: ${provider}`);
+        }
 
     }, [account, provider]);
 
@@ -108,6 +112,24 @@ export default function SmartContractWallet() {
         <div className={styles.container}>
             <main className={styles.main}>
                 <h1>Biconomy Login</h1>
+                <button onClick={!account ? connectWeb3 : disconnectWeb3}>
+                    {!account ? "Connect Wallet" : "Disconnect Wallet"}
+                </button>
+                {account && (
+                    <div>
+                        <h2>EOA Address</h2>
+                        <p>{account}</p>
+                    </div>
+                )}
+
+                {smartContractWalletLoading && <h2>Loading Smart Account...</h2>}
+
+                {smartContractWalletAddress && (
+                    <div>
+                        <h2>Smart Account Address</h2>
+                        <p>{smartContractWalletAddress}</p>
+                    </div>
+                )}
             </main>
         </div>
     );
