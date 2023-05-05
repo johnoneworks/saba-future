@@ -11,6 +11,8 @@ This will be the awesome prediction market that will be the future for us
 # Prerequisite
     - npm (16.16.0)
         - highly recommend nvm
+    - yarn (1.22.15)
+        - there are some module relationships that is using yarn
     - Alchemy Account
     - Hardhat
         - `npm install --save-dev hardhat`

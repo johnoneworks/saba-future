@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import SocialLogin from "@biconomy/web3-auth";
 import SmartAccount from "@biconomy/smart-account";
 import { ChainId } from "@biconomy/core-types";
+import Head from "next/head";
 
 export default function SmartContractWallet() {
     const [provider, setProvider] = useState(undefined);
