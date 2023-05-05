@@ -45,16 +45,16 @@ export default function Detail() {
       const market = await predictionWorldContract.markets(id);
       //console.log(market);
       // handle millisecond time stamp
-      console.log(market.endTimestamp);
-      const date = moment.unix(market.endTimestamp / 1000).format("MMMM D, YYYY");
+      console.log(market.info.endTimestamp);
+      const date = moment.unix(market.info.endTimestamp / 1000).format("MMMM D, YYYY");
       setMarket({
-        title: market.question,
+        title: market.info.question,
         endTimestamp: date,
         totalAmount: market.totalAmount,
         totalYesAmount: market.totalYesAmount,
         totalNoAmount: market.totalNoAmount,
-        description: market.description,
-        resolverUrl: market.resolverUrl,
+        description: market.info.description,
+        resolverUrl: market.info.resolverUrl,
       });
 
     } catch (error) {

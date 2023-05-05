@@ -54,11 +54,11 @@ export default function Home() {
       for (let i = 0; i < marketCount; i++) {
         let market = await predictionWorldContract.markets(i);
         console.log(i);
-        console.log(`market.id: ${market.question}`);
+        console.log(`market.id: ${market.info.question}`);
         markets.push({
           id: market.id,
-          question: market.question,
-          imageHash: market.creatorImageHash,
+          question: market.info.question,
+          imageHash: market.info.creatorImageHash,
           totalAmount: market.totalAmount,
           totalYesAmount: market.totalYesAmount,
           totalNoAmount: market.totalNoAmount,
