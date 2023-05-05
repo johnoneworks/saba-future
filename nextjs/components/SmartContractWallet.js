@@ -42,6 +42,9 @@ export default function SmartContractWallet() {
         const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
         await sdk.init({
             chainId: ethers.utils.hexValue(chainId),
+            whitelistUrls: {
+                "https://saba-future.vercel.app": signature,
+            },
         });
         setSocialLoginSDK(sdk);
         sdk.showWallet();
