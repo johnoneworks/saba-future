@@ -36,14 +36,14 @@ export default function Portfolio() {
         let market = await predictionWorldContract.markets(i);
         markets.push({
           id: market.id,
-          title: market.question,
+          title: market.info.question,
           imageHash: "", // temp holder
           totalAmount: market.totalAmount,
           totalYesAmount: market.totalYesAmount,
           totalNoAmount: market.totalNoAmount,
           hasResolved: market.marketClosed,
-          endTimestamp: market.endTimestamp,
-          timestamp: market.timestamp
+          endTimestamp: market.info.endTimestamp,
+          timestamp: market.info.timestamp
         });
       }
       console.log(`markets size: ${markets.length}`);

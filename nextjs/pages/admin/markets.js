@@ -29,13 +29,13 @@ export default function Markets() {
                 let market = await predictionWorldContract.markets(i);
                 markets.push({
                     id: market.id,
-                    question: market.question,
-                    imageHash: market.creatorImageHash,
+                    question: market.info.question,
+                    imageHash: market.info.creatorImageHash,
                     totalAmount: market.totalAmount,
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,
-                    timestamp: market.timestamp,
-                    endTimestamp: market.endTimestamp,
+                    timestamp: market.info.timestamp,
+                    endTimestamp: market.info.endTimestamp,
                 });
             }
             setMarkets(markets);
