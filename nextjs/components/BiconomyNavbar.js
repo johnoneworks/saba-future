@@ -39,26 +39,11 @@ export default function BiconomyNavbar() {
                                 />
                             </div>
                     )}
-
-                    {account ? (
-                                <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer">
-                                <span className="text-lg text-white">
-                                    {account.substr(0, 10)}...
-                                </span>
-                                </div>
-                            ) : (
-                                <div
-                                className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
-                                onClick={connectWallet} // original code is load all data
-                                >
-                                <span className="text-lg text-white">Connect</span>
-                                </div>
-                            )}
-                                    </div>
-                                </nav>
-                            </>
-                        );
-                    }
+                </div>
+            </nav>
+        </>
+    );
+}
 
 const TabButton = ({ title, isActive, url }) => {
     return (
