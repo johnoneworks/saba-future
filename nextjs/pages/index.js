@@ -126,8 +126,8 @@ export default function Home() {
           You have: {balance} SURE tokens
           <br />
           <span className="font-bold my-3 text-lg">Market</span>
+          <div>Open Markets</div>
           <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-            Open Markets
             {markets.filter((market) => !market.marketClosed).map((market) => {
               return (
                 <div>
@@ -143,8 +143,8 @@ export default function Home() {
               );
             })}
           </div>
+          <div>Closed Markets</div>
           <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-            Closed Markets
             {markets.filter((market) => market.marketClosed).map((market) => {
               return (
                 <div>

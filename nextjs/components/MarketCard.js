@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 export default function MarketCard({ id, title, totalAmount, totalYesAmount, totalNoAmount }) {
     return (
-        <div className="w-full overflow-hidden sm:my-1 sm:px-1 sm:w-1/3 md:my-2 md:px-2 md:w-1/3 lg:w-1/3 xl:w-1/3 lg:w-full xl:w-full my-2">
+        <div className="w-full overflow-hidden sm:my-1 sm:px-1 sm:w md:my-2 md:px-2 md:w lg:w xl:w lg:w-full xl:w-full my-2">
             <Link href={`/market/${id}`} passHref>
                 <div className="flex flex-col border border-gray-300 rounded-lg p-3 hover:border-blue-700 cursor-pointer">
                     <div className="flex flex-row space-x-5 pb-8">
