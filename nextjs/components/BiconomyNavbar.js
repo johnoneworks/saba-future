@@ -1,20 +1,44 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useState, useEffect } from "react";
+import { ethers } from "ethers";
+import SocialLogin from "@biconomy/web3-auth";
 
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+
+
 
 export default function BiconomyNavbar() {
     const router = useRouter();
     const [account, setAccount] = useContext(BiconomyAccountContext);
+    const [socialLoginSDK, setSocialLoginSDK] = useState(null);
+    const [provider, setProvider] = useState(undefined);
 
-    const checkIfWalletIsConnected = async () => {
-        await setAccount("something");
-      }
+    const connectWallet = useCallback(async () => {
+        console.log("connectWallet()");
+        if (typeof window === "undefined") return;
+        console.log(`socialLoginSDK: ${socialLoginSDK}`);
 
-    useEffect(() => {
-        checkIfWalletIsConnected();
-    }, []);
+        if (socialLoginSDK?.provider) {
+            const web3Provider = new ethers.providers.Web3Provider(
+                socialLoginSDK.provider
+            );
+            setProvider(web3Provider);
+            const accounts = await web3Provider.listAccounts();
+            setAccount(accounts[0]);
+            return;
+        }
+
+        if (socialLoginSDK) {
+            socialLoginSDK.showWallet();
+            return socialLoginSDK;
+        }
+
+        const sdk = new SocialLogin();
+        const chainId = 80001;
+        
+    }, [socialLoginSDK]);
+
     return (
         <>
             <nav className="w-full h-16 mt-auto max-w-5xl">
@@ -38,6 +62,18 @@ export default function BiconomyNavbar() {
                                     url={"/portfolio"}
                                 />
                             </div>
+                    )}
+
+                    {account ? (
+                        <></>
+
+                    ) : (
+                        <div
+                            className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
+                            onClick={connectWallet} // original code is load all data
+                        >
+                            <span className="text-lg text-white">Connect</span>
+                        </div>
                     )}
                 </div>
             </nav>
