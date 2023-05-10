@@ -94,6 +94,11 @@ export default function BiconomyNavbar() {
                 supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
             });
             await smartAccount.init();
+            const context = smartAccount.getSmartAccountContext();
+        }
+        if (!!provider && !!account) {
+            setupSmartAccount();
+            console.log(`Provider: ${provider}`);
         }
     }, [account, provider]);
 
@@ -126,15 +131,12 @@ export default function BiconomyNavbar() {
                         <></>
 
                     ) : (
-                        <></>
-                        /*
                         <div
                             className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
                             onClick={connectWallet} // original code is load all data
                         >
                             <span className="text-lg text-white">Connect</span>
                         </div>
-                        */
                     )}
                 </div>
             </nav>
