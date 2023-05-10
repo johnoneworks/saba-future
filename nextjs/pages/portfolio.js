@@ -43,7 +43,8 @@ export default function Portfolio() {
           totalNoAmount: market.totalNoAmount,
           hasResolved: market.marketClosed,
           endTimestamp: market.info.endTimestamp,
-          timestamp: market.info.timestamp
+          timestamp: market.info.timestamp,
+          outcome: market.outcome,
         });
       }
       console.log(`markets size: ${markets.length}`);
@@ -53,23 +54,23 @@ export default function Portfolio() {
       for (let i = 0; i < markets.length; i++) {
         let marketBets = await predictionWorldContract.getBets(i);
         marketBets["0"].forEach((bet) => {
-          if (bet[0].toLowerCase() == account.toLowerCase()) {
+          if (bet.user.toLowerCase() == account.toLowerCase()) {
             personalizedBetInfo.push({
               id: i.toString(),
-              yesAmount: bet[1].toString(),
-              timestamp: bet[2].toString(),
+              yesAmount: bet.amount.toString(),
+              timestamp: bet.timestamp.toString(),
             });
-            totalBetAmount += parseInt(bet[1]);
+            totalBetAmount += parseInt(bet.amount);
           }
         });
         marketBets["1"].forEach((bet) => {
-          if (bet[0].toLowerCase() == account.toLowerCase()) {
+          if (bet.user.toLowerCase() == account.toLowerCase()) {
             personalizedBetInfo.push({
               id: i.toString(),
-              noAmount: bet[1].toString(),
-              timestamp: bet[2].toString(),
+              noAmount: bet.amount.toString(),
+              timestamp: bet.timestamp.toString(),
             });
-            totalBetAmount += parseInt(bet[1]);
+            totalBetAmount += parseInt(bet.amount);
           }
         });
       }
@@ -84,6 +85,7 @@ export default function Portfolio() {
         personalizedBetInfo[i].hasResolved = market?.hasResolved;
         personalizedBetInfo[i].endTimestamp = market?.endTimestamp;
         personalizedBetInfo[i].timestamp = market?.timestamp;
+        personalizedBetInfo[i].outcome = market?.outcome;
       }
       setPersonalBetInfo(personalizedBetInfo);
     } catch (error) {
@@ -114,16 +116,19 @@ export default function Portfolio() {
             </div>
           </div>
           <span className="font-bold my-3 text-lg">Your Market Positions</span>
-          {personalBetInfo.map((market) => (
+          {personalBetInfo.map((market, i) => (
             <PortfolioMarketCard
               id={market.id}
-              key={market.id}
+              key={i}
               title={market.title}
+              betType={!!market.yesAmount?"Yes":"No"}
+              amount={!!market.yesAmount?market.yesAmount:market.noAmount}
               totalYesAmount={market.totalYesAmount}
               totalNoAmount={market.totalNoAmount}
               endTimestamp={market.endTimestamp}
               timestamp={market.timestamp}
               hasResolved={market.hasResolved}
+              outcome={market.outcome?"Yes":"No"}
             />
           ))}
         </div>
