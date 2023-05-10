@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 import { useCallback, useContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import SocialLogin from "@biconomy/web3-auth";
+import SmartAccount from "@biconomy/smart-account";
+import { ChainId } from "@biconomy/core-types";
 
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+
 
 
 
@@ -36,8 +39,63 @@ export default function BiconomyNavbar() {
 
         const sdk = new SocialLogin();
         const chainId = 80001;
+        const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
+        await sdk.init({
+            chainId: ethers.utils.hexValue(chainId),
+            whitelistUrls: {
+                "https://saba-future.vercel.app": signature,
+            },
+        });
+        setSocialLoginSDK(sdk);
+        sdk.showWallet();
+        return socialLoginSDK;
         
     }, [socialLoginSDK]);
+
+    const disconnectWallet = async () => {
+        if (!socialLoginSDK || !socialLoginSDK.web3auth) {
+            console.error("Binconomy SDK not initialized");
+            return;
+        }
+
+        await socialLoginSDK.logout();
+        socialLoginSDK.hideWallet();
+        setProvider(undefined);
+        setAccount(undefined);
+        // setSmartContractWalletAddress("");
+    };
+
+    useEffect(() => {
+        if (socialLoginSDK && socialLoginSDK.provider) {
+            socialLoginSDK.hideWallet();
+        }
+    }, [account, socialLoginSDK]);
+
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            if (account) {
+                clearInterval(interval);
+            }
+            if (socialLoginSDK?.provider && !account) {
+                connectWallet();
+            }
+
+            return () => {
+                clearInterval(interval);
+            };
+        }, 1000);
+
+    }, [account, connectWallet, socialLoginSDK]);
+
+    useEffect(() => {
+        async function setupSmartAccount() {
+            const smartAccount = new SmartAccount(provider, {
+                activeNetworkId: ChainId.POLYGON_MUMBAI,
+                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+            });
+            await smartAccount.init();
+        }
+    }, [account, provider]);
 
     return (
         <>
@@ -68,12 +126,15 @@ export default function BiconomyNavbar() {
                         <></>
 
                     ) : (
+                        <></>
+                        /*
                         <div
                             className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
                             onClick={connectWallet} // original code is load all data
                         >
                             <span className="text-lg text-white">Connect</span>
                         </div>
+                        */
                     )}
                 </div>
             </nav>
