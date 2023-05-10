@@ -1,20 +1,48 @@
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import Head from "next/head";
-
+import { useState, useEffect, useContext } from "react";
+import { ethers } from "ethers";
 
 import styles from "../styles/Home.module.css";
 import Filter from "@/components/Filter";
-//import BiconomyNavbar from "@/components/BiconomyNavbar";
+import { sureToken3Address } from "@/config";
+import SURE from "../utils/abis/SureToken3.json";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+
+
+const BiconomyNavbar = dynamic(
+    () => import("../components/BiconomyNavbar").then((res) => res.default),
+    {
+        ssr: false,
+    }
+);
 
 export default function BiconomyTest() {
-    
-    const BiconomyNavbar = dynamic(
-        () => import("../components/BiconomyNavbar").then((res) => res.default),
-        {
-            ssr: false,
+    const [balance, setBalance] = useState(0);
+    const [account] = useContext(BiconomyAccountContext);
+    const getBalance = async () => {
+        try {
+            const { ethereum } = window;
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const sureTokenContract = new ethers.Contract(
+                sureToken3Address,
+                SURE.abi,
+                signer
+            );
+            const account = await signer.getAddress();
+
+            let balance = await sureTokenContract.balanceOf(account);
+            setBalance(ethers.utils.commify(balance));
+        } catch (error) {
+            console.log(`Error getting balance, ${error}`);
         }
-    );
+    }
+
+    useEffect(() => {
+        getBalance();
+    }, [account]);
 
     return (
         <div className={styles.container}>
@@ -64,6 +92,7 @@ export default function BiconomyTest() {
                             onChange={() => { }}
                         />
                     </div>
+                    You have: {balance} SURE tokens
                 </div>
             </main>
         </div>
