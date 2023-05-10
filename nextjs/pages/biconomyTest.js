@@ -2,7 +2,9 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import Head from "next/head";
 
+
 import styles from "../styles/Home.module.css";
+import Filter from "@/components/Filter";
 //import BiconomyNavbar from "@/components/BiconomyNavbar";
 
 export default function BiconomyTest() {
@@ -46,6 +48,20 @@ export default function BiconomyTest() {
                             className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md pl-10 focus:outline-none"
                             placeholder="Search markets..."
                             autoComplete="off"
+                        />
+                    </div>
+                    <div className="flex flex-row space-x-2 md:space-x-5 items-center flex-wrap mt-4">
+                        <Filter
+                            list={["All", "Crypto", "Football", "Covid 19", "OneSeal"]}
+                            activeItem="All"
+                            category="Category"
+                            onChange={() => { }}
+                        />
+                        <Filter
+                            list={["Volume", "Newest", "Expiring"]}
+                            activeItem="Volume"
+                            category="Sort By"
+                            onChange={() => { }}
                         />
                     </div>
                 </div>
