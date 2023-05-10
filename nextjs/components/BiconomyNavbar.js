@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import SocialLogin from "@biconomy/web3-auth";
 import SmartAccount from "@biconomy/smart-account";
 import { ChainId } from "@biconomy/core-types";
+//import "@biconomy/web3-auth/src/style.css";
 
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
@@ -102,6 +103,10 @@ export default function BiconomyNavbar() {
         }
     }, [account, provider]);
 
+    useEffect(() => {
+        connectWallet();
+    }, []);
+
     return (
         <>
             <nav className="w-full h-16 mt-auto max-w-5xl">
@@ -128,8 +133,14 @@ export default function BiconomyNavbar() {
                     )}
 
                     {account ? (
-                        <></>
-
+                        <div 
+                            className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
+                            onClick={disconnectWallet}
+                        >
+                            <span className="text-lg text-white">
+                                {account.substr(0, 10)}...
+                            </span>
+                        </div>
                     ) : (
                         <div
                             className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
