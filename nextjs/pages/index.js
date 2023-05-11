@@ -22,12 +22,17 @@ const BiconomyNavbar = dynamic(
 
 export default function Home() {
     const [balance, setBalance] = useState(0);
-    const [account] = useContext(BiconomyAccountContext);
+    const [socialLogin] = useContext(BiconomyAccountContext);
     const [markets, setMarkets] = useState([]);
     const getBalance = async () => {
         try {
+            if (!socialLogin?.provider) {
+                return;
+            }
             const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(ethereum);
+            const provider = new ethers.providers.Web3Provider(
+                socialLogin.provider
+            );
             const signer = provider.getSigner();
             const sureTokenContract = new ethers.Contract(
                 sureToken3Address,
@@ -44,15 +49,20 @@ export default function Home() {
     }
     const getMarkets = async () => {
         try {
+            if (!socialLogin?.provider) {
+                return;
+            }
             const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(ethereum);
+            const provider = new ethers.providers.Web3Provider(
+                socialLogin.provider
+            );
             const signer = provider.getSigner();
             const predictionWorldContract = new ethers.Contract(
                 predictionWorld3Address,
                 PredictionWorld.abi,
                 signer
             );
-            
+
             let marketCount = await predictionWorldContract.totalMarkets();
             let markets = [];
             for (let i = 0; i < marketCount; i++) {
@@ -79,7 +89,7 @@ export default function Home() {
     useEffect(() => {
         getBalance();
         getMarkets();
-    }, [account]);
+    }, [socialLogin]);
 
     return (
         <div className={styles.container}>
@@ -134,34 +144,34 @@ export default function Home() {
                     <span className="font-bold my-3 text-lg">Market</span>
                     <div>Open Markets</div>
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-                    {markets.filter((market) => !market.marketClosed).map((market) => {
-                        return (
-                            <div>
-                            <MarketCard
-                                id={market.id}
-                                key={market.id}
-                                title={market.question}
-                                totalAmount={market.totalAmount}
-                                totalYesAmount={market.totalYesAmount}
-                                totalNoAmount={market.totalNoAmount}
-                            />
-                            </div>
-                        );
-                    })}
+                        {markets.filter((market) => !market.marketClosed).map((market) => {
+                            return (
+                                <div>
+                                    <MarketCard
+                                        id={market.id}
+                                        key={market.id}
+                                        title={market.question}
+                                        totalAmount={market.totalAmount}
+                                        totalYesAmount={market.totalYesAmount}
+                                        totalNoAmount={market.totalNoAmount}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                     <div>Closed Markets</div>
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
                         {markets.filter((market) => market.marketClosed).map((market) => {
                             return (
                                 <div>
-                                <MarketCard
-                                    id={market.id}
-                                    key={market.id}
-                                    title={market.question}
-                                    totalAmount={market.totalAmount}
-                                    totalYesAmount={market.totalYesAmount}
-                                    totalNoAmount={market.totalNoAmount}
-                                />
+                                    <MarketCard
+                                        id={market.id}
+                                        key={market.id}
+                                        title={market.question}
+                                        totalAmount={market.totalAmount}
+                                        totalYesAmount={market.totalYesAmount}
+                                        totalNoAmount={market.totalNoAmount}
+                                    />
                                 </div>
                             );
                         })}

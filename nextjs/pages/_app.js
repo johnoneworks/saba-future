@@ -8,14 +8,15 @@ import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 export default function App({ Component, pageProps }) {
   const [account, setAccount] = useState();
+  const [socialLogin, setSocialLogin] = useState();
 
   return (
-    
+
     <AccountContext.Provider value={[account, setAccount]}>
-    <BiconomyAccountContext.Provider value={[account, setAccount]}>
-      <Component {...pageProps} />
-    </BiconomyAccountContext.Provider>
+      <BiconomyAccountContext.Provider value={[socialLogin, setSocialLogin]}>
+        <Component {...pageProps} />
+      </BiconomyAccountContext.Provider>
     </AccountContext.Provider>
-   
+
   );
 }

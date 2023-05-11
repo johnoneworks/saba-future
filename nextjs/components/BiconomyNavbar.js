@@ -9,99 +9,61 @@ import "@biconomy/web3-auth/dist/src/style.css"
 
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
-
-
-
 export default function BiconomyNavbar() {
     const router = useRouter();
-    const [account, setAccount] = useContext(BiconomyAccountContext);
-    const [socialLoginSDK, setSocialLoginSDK] = useState(null);
-    const [provider, setProvider] = useState(undefined);
+    const [socialLogin, setSocialLogin] = useContext(BiconomyAccountContext);
+    const [account, setAccount] = useState(null);
 
-    const connectWallet = useCallback(async () => {
+    const connectWallet = async () => {
         console.log("connectWallet()");
         if (typeof window === "undefined") return;
-        console.log(`socialLoginSDK: ${socialLoginSDK}`);
 
-        if (socialLoginSDK?.provider) {
+        if (socialLogin?.provider) {
             const web3Provider = new ethers.providers.Web3Provider(
-                socialLoginSDK.provider
+                socialLogin.provider
             );
-            setProvider(web3Provider);
             const accounts = await web3Provider.listAccounts();
             setAccount(accounts[0]);
             return;
         }
 
-        if (socialLoginSDK) {
-            socialLoginSDK.showWallet();
-            return socialLoginSDK;
+        let _socialLogin = socialLogin;
+        if (!socialLogin) {
+            _socialLogin = new SocialLogin();
+            const chainId = 80001;
+            const signature = await _socialLogin.whitelistUrl("https://saba-future.vercel.app");
+            await _socialLogin.init({
+                chainId: ethers.utils.hexValue(chainId),
+                whitelistUrls: {
+                    "https://saba-future.vercel.app": signature,
+                },
+            });
+            setSocialLogin(_socialLogin);
         }
 
-        const sdk = new SocialLogin();
-        const chainId = 80001;
-        const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
-        await sdk.init({
-            chainId: ethers.utils.hexValue(chainId),
-            whitelistUrls: {
-                "https://saba-future.vercel.app": signature,
-            },
-        });
-        setSocialLoginSDK(sdk);
-        sdk.showWallet();
-        return socialLoginSDK;
-        
-    }, [socialLoginSDK]);
+        if (_socialLogin.web3auth.status !== "connected") {
+            await _socialLogin.showWallet();
+        } else {
+            const web3Provider = new ethers.providers.Web3Provider(
+                _socialLogin.provider
+            );
+            const accounts = await web3Provider.listAccounts();
+            setAccount(accounts[0]);
+        }
+    }
 
     const disconnectWallet = async () => {
-        if (!socialLoginSDK || !socialLoginSDK.web3auth) {
+        if (!socialLogin || !socialLogin.web3auth) {
             console.error("Binconomy SDK not initialized");
             return;
         }
 
-        await socialLoginSDK.logout();
-        socialLoginSDK.hideWallet();
-        setProvider(undefined);
+        await socialLogin.logout();
+        socialLogin.hideWallet();
         setAccount(undefined);
+        setSocialLogin(null);
         // setSmartContractWalletAddress("");
     };
-
-    useEffect(() => {
-        if (socialLoginSDK && socialLoginSDK.provider) {
-            socialLoginSDK.hideWallet();
-        }
-    }, [account, socialLoginSDK]);
-
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            if (account) {
-                clearInterval(interval);
-            }
-            if (socialLoginSDK?.provider && !account) {
-                connectWallet();
-            }
-
-            return () => {
-                clearInterval(interval);
-            };
-        }, 1000);
-
-    }, [account, connectWallet, socialLoginSDK]);
-
-    useEffect(() => {
-        async function setupSmartAccount() {
-            const smartAccount = new SmartAccount(provider, {
-                activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
-            });
-            await smartAccount.init();
-            const context = smartAccount.getSmartAccountContext();
-        }
-        if (!!provider && !!account) {
-            setupSmartAccount();
-            console.log(`Provider: ${provider}`);
-        }
-    }, [account, provider]);
 
     useEffect(() => {
         connectWallet();
@@ -130,10 +92,10 @@ export default function BiconomyNavbar() {
                                     url={"/portfolio"}
                                 />
                             </div>
-                    )}
+                        )}
 
                     {account ? (
-                        <div 
+                        <div
                             className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
                             onClick={disconnectWallet}
                         >
@@ -157,15 +119,15 @@ export default function BiconomyNavbar() {
 
 const TabButton = ({ title, isActive, url }) => {
     return (
-      <Link href={url} passHref>
-        <div
-          className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
-            ? "border-blue-700 text-blue-700 text-lg font-semibold"
-            : "border-white text-gray-400 text-lg"
-            }`}
-        >
-          <span>{title}</span>
-        </div>
-      </Link>
+        <Link href={url} passHref>
+            <div
+                className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
+                    ? "border-blue-700 text-blue-700 text-lg font-semibold"
+                    : "border-white text-gray-400 text-lg"
+                    }`}
+            >
+                <span>{title}</span>
+            </div>
+        </Link>
     );
-  };
+};
