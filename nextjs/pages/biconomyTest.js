@@ -6,9 +6,11 @@ import { ethers } from "ethers";
 
 import styles from "../styles/Home.module.css";
 import Filter from "@/components/Filter";
-import { sureToken3Address } from "@/config";
+import { predictionWorld3Address, sureToken3Address } from "@/config";
 import SURE from "../utils/abis/SureToken3.json";
+import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import MarketCard from "@/components/MarketCard";
 
 
 const BiconomyNavbar = dynamic(
@@ -21,6 +23,7 @@ const BiconomyNavbar = dynamic(
 export default function BiconomyTest() {
     const [balance, setBalance] = useState(0);
     const [account] = useContext(BiconomyAccountContext);
+    const [markets, setMarkets] = useState([]);
     const getBalance = async () => {
         try {
             const { ethereum } = window;
@@ -39,9 +42,43 @@ export default function BiconomyTest() {
             console.log(`Error getting balance, ${error}`);
         }
     }
+    const getMarkets = async () => {
+        try {
+            const { ethereum } = window;
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const predictionWorldContract = new ethers.Contract(
+                predictionWorld3Address,
+                PredictionWorld.abi,
+                signer
+            );
+            
+            let marketCount = await predictionWorldContract.totalMarkets();
+            let markets = [];
+            for (let i = 0; i < marketCount; i++) {
+                let market = await predictionWorldContract.markets(i);
+                console.log(i);
+                console.log(`market.id: ${market.info.question}`);
+                markets.push({
+                    id: market.id,
+                    question: market.info.question,
+                    imageHash: market.info.creatorImageHash,
+                    totalAmount: market.totalAmount,
+                    totalYesAmount: market.totalYesAmount,
+                    totalNoAmount: market.totalNoAmount,
+                    marketClosed: market.marketClosed,
+                });
+            }
+            setMarkets(markets);
+        } catch (error) {
+            console.log(`Error getting market: ${error}`);
+        }
+    }
+
 
     useEffect(() => {
         getBalance();
+        getMarkets();
     }, [account]);
 
     return (
@@ -93,6 +130,42 @@ export default function BiconomyTest() {
                         />
                     </div>
                     You have: {balance} SURE tokens
+                    <br />
+                    <span className="font-bold my-3 text-lg">Market</span>
+                    <div>Open Markets</div>
+                    <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
+                    {markets.filter((market) => !market.marketClosed).map((market) => {
+                        return (
+                            <div>
+                            <MarketCard
+                                id={market.id}
+                                key={market.id}
+                                title={market.question}
+                                totalAmount={market.totalAmount}
+                                totalYesAmount={market.totalYesAmount}
+                                totalNoAmount={market.totalNoAmount}
+                            />
+                            </div>
+                        );
+                    })}
+                    </div>
+                    <div>Closed Markets</div>
+                    <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
+                        {markets.filter((market) => market.marketClosed).map((market) => {
+                            return (
+                                <div>
+                                <MarketCard
+                                    id={market.id}
+                                    key={market.id}
+                                    title={market.question}
+                                    totalAmount={market.totalAmount}
+                                    totalYesAmount={market.totalYesAmount}
+                                    totalNoAmount={market.totalNoAmount}
+                                />
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </main>
         </div>
