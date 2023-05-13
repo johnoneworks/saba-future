@@ -6,9 +6,6 @@ import { ethers } from "ethers";
 
 import styles from "../styles/Home.module.css";
 import Filter from "@/components/Filter";
-import { predictionWorld3Address, sureToken3Address } from "@/config";
-import SURE from "../utils/abis/SureToken3.json";
-import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import MarketCard from "@/components/MarketCard";
 
@@ -21,22 +18,13 @@ const BiconomyNavbar = dynamic(
 
 export default function Home() {
     const [balance, setBalance] = useState(0);
-    const {account, socialLoginSDK} = useContext(BiconomyAccountContext);
+    const { account, sureTokenContract, predictionWorldContract} = useContext(BiconomyAccountContext);
     const [markets, setMarkets] = useState([]);
     const getBalance = async () => {
         try {
-            const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(
-                socialLoginSDK.provider
-            );
-            const signer = provider.getSigner();
-            const sureTokenContract = new ethers.Contract(
-                sureToken3Address,
-                SURE.abi,
-                signer
-            );
-            const account = await signer.getAddress();
-
+            if (!account) {
+                return;
+            }
             let balance = await sureTokenContract.balanceOf(account);
             setBalance(ethers.utils.commify(balance));
         } catch (error) {
@@ -45,17 +33,9 @@ export default function Home() {
     }
     const getMarkets = async () => {
         try {
-            const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(
-                socialLoginSDK.provider
-            );
-            const signer = provider.getSigner();
-            const predictionWorldContract = new ethers.Contract(
-                predictionWorld3Address,
-                PredictionWorld.abi,
-                signer
-            );
-            
+            if (!account) {
+                return;
+            }
             let marketCount = await predictionWorldContract.totalMarkets();
             let markets = [];
             for (let i = 0; i < marketCount; i++) {
@@ -77,7 +57,6 @@ export default function Home() {
             console.log(`Error getting market: ${error}`);
         }
     }
-
 
     useEffect(() => {
         getBalance();
@@ -137,34 +116,33 @@ export default function Home() {
                     <span className="font-bold my-3 text-lg">Market</span>
                     <div>Open Markets</div>
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-                    {markets.filter((market) => !market.marketClosed).map((market) => {
-                        return (
-                            <div>
-                            <MarketCard
-                                id={market.id}
-                                key={market.id}
-                                title={market.question}
-                                totalAmount={market.totalAmount}
-                                totalYesAmount={market.totalYesAmount}
-                                totalNoAmount={market.totalNoAmount}
-                            />
-                            </div>
-                        );
-                    })}
+                        {markets.filter((market) => !market.marketClosed).map((market) => {
+                            return (
+                                <div key={market.id}>
+                                    <MarketCard
+                                        id={market.id}
+                                        title={market.question}
+                                        totalAmount={market.totalAmount}
+                                        totalYesAmount={market.totalYesAmount}
+                                        totalNoAmount={market.totalNoAmount}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                     <div>Closed Markets</div>
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
                         {markets.filter((market) => market.marketClosed).map((market) => {
                             return (
                                 <div>
-                                <MarketCard
-                                    id={market.id}
-                                    key={market.id}
-                                    title={market.question}
-                                    totalAmount={market.totalAmount}
-                                    totalYesAmount={market.totalYesAmount}
-                                    totalNoAmount={market.totalNoAmount}
-                                />
+                                    <MarketCard
+                                        id={market.id}
+                                        key={market.id}
+                                        title={market.question}
+                                        totalAmount={market.totalAmount}
+                                        totalYesAmount={market.totalYesAmount}
+                                        totalNoAmount={market.totalNoAmount}
+                                    />
                                 </div>
                             );
                         })}
