@@ -3,20 +3,21 @@ import { useRouter } from "next/router";
 import { useCallback, useContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import SocialLogin from "@biconomy/web3-auth";
-import SmartAccount from "@biconomy/smart-account";
 import { ChainId } from "@biconomy/core-types";
 import "@biconomy/web3-auth/dist/src/style.css";
 
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
-
-
-
 export default function BiconomyNavbar() {
     const router = useRouter();
-    const [account, setAccount] = useContext(BiconomyAccountContext);
-    const [socialLoginSDK, setSocialLoginSDK] = useState(null);
-    const [provider, setProvider] = useState(undefined);
+    const {
+        account, 
+        setAccount, 
+        socialLoginSDK, 
+        setSocialLoginSDK,
+        provider,
+        setProvider,
+    } = useContext(BiconomyAccountContext);
 
     const connectWallet = useCallback(async () => {
         console.log("connectWallet()");
@@ -38,19 +39,33 @@ export default function BiconomyNavbar() {
             return socialLoginSDK;
         }
 
-        const sdk = new SocialLogin();
-        const chainId = 80001;
-        const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
-        await sdk.init({
-            chainId: ethers.utils.hexValue(chainId),
-            whitelistUrls: {
-                "https://saba-future.vercel.app": signature,
-            },
-        });
+        // const sdk = new SocialLogin();
+        let sdk = null;
+        if (window.socialLoginSDK) {
+            sdk = window.socialLoginSDK;
+        } else {
+            sdk = new SocialLogin();
+        }
+        if (!sdk.isInit) {
+            const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
+            await sdk.init({
+                chainId: ethers.utils.hexValue(ChainId.POLYGON_MUMBAI),
+                whitelistUrls: {
+                    "https://saba-future.vercel.app": signature,
+                },
+            });
+        }
+        if (sdk.web3auth.status !== "connected") {
+            await sdk.showWallet();
+        } else {
+            const web3Provider = new ethers.providers.Web3Provider(
+                sdk.provider
+            );
+            const accounts = await web3Provider.listAccounts();
+            setAccount(accounts[0]);
+        }
         setSocialLoginSDK(sdk);
-        sdk.showWallet();
         return socialLoginSDK;
-        
     }, [socialLoginSDK]);
 
     const disconnectWallet = async () => {
@@ -74,13 +89,12 @@ export default function BiconomyNavbar() {
 
     useEffect(() => {
         const interval = setInterval(async () => {
-            if (account) {
+            if (window?.socialLoginSDK?.provider) {
                 clearInterval(interval);
             }
             if (socialLoginSDK?.provider && !account) {
                 connectWallet();
             }
-
             return () => {
                 clearInterval(interval);
             };
@@ -88,20 +102,20 @@ export default function BiconomyNavbar() {
 
     }, [account, connectWallet, socialLoginSDK]);
 
-    useEffect(() => {
-        async function setupSmartAccount() {
-            const smartAccount = new SmartAccount(provider, {
-                activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
-            });
-            await smartAccount.init();
-            const context = smartAccount.getSmartAccountContext();
-        }
-        if (!!provider && !!account) {
-            setupSmartAccount();
-            console.log(`Provider: ${provider}`);
-        }
-    }, [account, provider]);
+    // useEffect(() => {
+    //     async function setupSmartAccount() {
+    //         const smartAccount = new SmartAccount(provider, {
+    //             activeNetworkId: ChainId.POLYGON_MUMBAI,
+    //             supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+    //         });
+    //         await smartAccount.init();
+    //         const context = smartAccount.getSmartAccountContext();
+    //     }
+    //     if (!!provider && !!account) {
+    //         setupSmartAccount();
+    //         console.log(`Provider: ${provider}`);
+    //     }
+    // }, [account, provider]);
 
     useEffect(() => {
         connectWallet();

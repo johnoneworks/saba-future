@@ -12,7 +12,6 @@ import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import MarketCard from "@/components/MarketCard";
 
-
 const BiconomyNavbar = dynamic(
     () => import("../components/BiconomyNavbar").then((res) => res.default),
     {
@@ -22,12 +21,14 @@ const BiconomyNavbar = dynamic(
 
 export default function Home() {
     const [balance, setBalance] = useState(0);
-    const [account] = useContext(BiconomyAccountContext);
+    const {account, socialLoginSDK} = useContext(BiconomyAccountContext);
     const [markets, setMarkets] = useState([]);
     const getBalance = async () => {
         try {
             const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(ethereum);
+            const provider = new ethers.providers.Web3Provider(
+                socialLoginSDK.provider
+            );
             const signer = provider.getSigner();
             const sureTokenContract = new ethers.Contract(
                 sureToken3Address,
@@ -45,7 +46,9 @@ export default function Home() {
     const getMarkets = async () => {
         try {
             const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(ethereum);
+            const provider = new ethers.providers.Web3Provider(
+                socialLoginSDK.provider
+            );
             const signer = provider.getSigner();
             const predictionWorldContract = new ethers.Contract(
                 predictionWorld3Address,
