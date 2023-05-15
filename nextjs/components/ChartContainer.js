@@ -1,18 +1,20 @@
 import { ethers } from "ethers";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 //import Plotly from 'plotly.js-dist-min';
 
 import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../utils/abis/PredictionWorld3.json";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 export default function ChartContainer({ questionId }) {
     const [yesInfo, setYesInfo] = useState([]);
     const [noInfo, setNoInfo] = useState([]);
+    const { account, provider } = useContext(BiconomyAccountContext);
 
     const getBets = async () => {
         try {
             const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(ethereum);
+            //const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const predictionWorldContract = new ethers.Contract(
                 predictionWorld3Address,

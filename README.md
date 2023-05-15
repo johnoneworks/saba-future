@@ -40,13 +40,13 @@ This will be the awesome prediction market that will be the future for us
         - US5: Admin can settle markets(distributeWinning) V
         - US10: Players that have matic but no SURE can place bets from Early Bird V
         - US6: First time players(without metamask) can just use a social login to enter V
+        - US11: First time players(without metamask) can place bet without SURE(if early bird) and no matic
 
     - Not yet functioning
         - US8: Show correct SURE token - web and wallet show the same numbers
-        
         - US7: First time players will see 100 SURE tokens in balance
         - US9: Players don't have to have matic to place bet
-        - US11: TBD
+        - US12: TBD
 
 ### Backlog
     - Seamless Signup
