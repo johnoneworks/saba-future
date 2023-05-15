@@ -19,13 +19,9 @@ export default function BiconomyNavbar() {
         setAccount,
         socialLoginSDK,
         setSocialLoginSDK,
-        provider,
         setProvider,
-        smartAccount,
         setSmartAccount,
-        sureTokenContract,
         setSureTokenContract,
-        predictionWorldContract,
         setPredictionWorldContract,
     } = useContext(BiconomyAccountContext);
 

@@ -11,6 +11,7 @@ This is the part with the smart contract related functions
             - `npx hardhat run scripts/deploy.js`
     - copy the ~/harhat/artifacts/contracts/PredictionWorld3.json & ~/harhat/artifacts/contracts/SureToken3.json to ~/nextjs/utils/abis
     - Transfer SURE to PredictionWorld3
+        - note, need to transfer token to PredictionWorld3
 
 # Resources
     - Faucets (free test network tokens)

@@ -31,19 +31,22 @@ This will be the awesome prediction market that will be the future for us
         - check /hardhat/contracts/PredictionWorld3.sol
 
 ## MVP Stories
-    - Functioning
-        - US1: Admin can create market
-        - US2: New Player start with zero tokens
-        - US3: Admin can transfer tokens to New(Any) Player
-        - US4: Player with SURE can place bet on market
-            - note, need to transfer token to PredictionWorld
-        - US5: Admin can settle markets(distributeWinning)
+    - Functioning (With Metamask Installed)
+        - US1: Admin can create market V
+        - US2: New Player start with zero tokens V
+        - US3: Admin can transfer tokens to New(Any) Player V
+        - US4: Player with SURE can place bet on market V
+            - note, this one assumes Player has matic in his wallet
+        - US5: Admin can settle markets(distributeWinning) V
+        - US10: Players that have matic but no SURE can place bets from Early Bird V
+        - US6: First time players(without metamask) can just use a social login to enter V
 
     - Not yet functioning
         - US8: Show correct SURE token - web and wallet show the same numbers
-        - US6: First time players can just use a social login to enter
+        
         - US7: First time players will see 100 SURE tokens in balance
         - US9: Players don't have to have matic to place bet
+        - US11: TBD
 
 ### Backlog
     - Seamless Signup
