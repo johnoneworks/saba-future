@@ -13,7 +13,10 @@ export default function App({ Component, pageProps }) {
   // testing
   const [account2, setAccount2] = useState("no one yet");
   const [socialLoginSDK, setSocialLoginSDK] = useState(null);
-  
+  const [provider, setProvider] = useState(null);
+  const [smartAccount, setSmartAccount] = useState(null);
+  const [sureTokenContract, setSureTokenContract] = useState(null);
+  const [predictionWorldContract, setPredictionWorldContract] = useState(null);
 
   const contextValue = {
     account2,
@@ -26,7 +29,20 @@ export default function App({ Component, pageProps }) {
   return (
     
     <AccountContext.Provider value={[account, setAccount]}>
-    <BiconomyAccountContext.Provider value={[account, setAccount]}>
+    <BiconomyAccountContext.Provider value={{
+      account, 
+      setAccount, 
+      socialLoginSDK, 
+      setSocialLoginSDK,
+      provider,
+      setProvider,
+      smartAccount,
+      setSmartAccount,
+      sureTokenContract,
+      setSureTokenContract,
+      predictionWorldContract,
+      setPredictionWorldContract,
+    }}>
     <TestContext.Provider value={contextValue}>
       <Component {...pageProps} />
     </TestContext.Provider>

@@ -7,50 +7,88 @@ import SmartAccount from "@biconomy/smart-account";
 import { ChainId } from "@biconomy/core-types";
 import "@biconomy/web3-auth/dist/src/style.css";
 
+import SURE from "@/utils/abis/SureToken3.json";
+import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
+import { predictionWorld3Address, sureToken3Address } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-
-
-
 
 export default function BiconomyNavbar() {
     const router = useRouter();
-    const [account, setAccount] = useContext(BiconomyAccountContext);
-    const [socialLoginSDK, setSocialLoginSDK] = useState(null);
-    const [provider, setProvider] = useState(undefined);
+    const {
+        account,
+        setAccount,
+        socialLoginSDK,
+        setSocialLoginSDK,
+        provider,
+        setProvider,
+        smartAccount,
+        setSmartAccount,
+        sureTokenContract,
+        setSureTokenContract,
+        predictionWorldContract,
+        setPredictionWorldContract,
+    } = useContext(BiconomyAccountContext);
 
     const connectWallet = useCallback(async () => {
         console.log("connectWallet()");
         if (typeof window === "undefined") return;
         console.log(`socialLoginSDK: ${socialLoginSDK}`);
 
-        if (socialLoginSDK?.provider) {
+        let sdk = null;
+        if (window.socialLoginSDK) {
+            sdk = window.socialLoginSDK;
+        } else {
+            sdk = new SocialLogin();
+        }
+
+        if (!sdk.isInit) {
+            const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
+            await sdk.init({
+                chainId: ethers.utils.hexValue(ChainId.POLYGON_MUMBAI),
+                whitelistUrls: {
+                    "https://saba-future.vercel.app": signature,
+                },
+            });
+        }
+
+        if (sdk.web3auth.status !== "connected") {
+            await sdk.showWallet();
+        } else {
             const web3Provider = new ethers.providers.Web3Provider(
-                socialLoginSDK.provider
+                sdk.provider
             );
-            setProvider(web3Provider);
             const accounts = await web3Provider.listAccounts();
+            console.log(`account:${accounts[0]}`);
+
+            let smartAccount = new SmartAccount(web3Provider, {
+                activeNetworkId: ChainId.POLYGON_MUMBAI,
+                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+            });
+            smartAccount = await smartAccount.init();
+
+            const signer = web3Provider.getSigner();
+            const sureTokenContract = new ethers.Contract(
+                sureToken3Address,
+                SURE.abi,
+                signer
+            );
+            
+            const predictionWorldContract = new ethers.Contract(
+                predictionWorld3Address,
+                PredictionWorld.abi,
+                signer
+            );
+            
             setAccount(accounts[0]);
-            return;
+            setProvider(web3Provider);
+            setSmartAccount(smartAccount);
+            setSureTokenContract(sureTokenContract);
+            setPredictionWorldContract(predictionWorldContract);
         }
-
-        if (socialLoginSDK) {
-            socialLoginSDK.showWallet();
-            return socialLoginSDK;
-        }
-
-        const sdk = new SocialLogin();
-        const chainId = 80001;
-        const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
-        await sdk.init({
-            chainId: ethers.utils.hexValue(chainId),
-            whitelistUrls: {
-                "https://saba-future.vercel.app": signature,
-            },
-        });
-        setSocialLoginSDK(sdk);
-        sdk.showWallet();
-        return socialLoginSDK;
         
+        setSocialLoginSDK(sdk);
+        return socialLoginSDK;
+
     }, [socialLoginSDK]);
 
     const disconnectWallet = async () => {
@@ -74,13 +112,12 @@ export default function BiconomyNavbar() {
 
     useEffect(() => {
         const interval = setInterval(async () => {
-            if (account) {
+            if (window?.socialLoginSDK?.provider) {
                 clearInterval(interval);
             }
             if (socialLoginSDK?.provider && !account) {
                 connectWallet();
             }
-
             return () => {
                 clearInterval(interval);
             };
@@ -88,20 +125,20 @@ export default function BiconomyNavbar() {
 
     }, [account, connectWallet, socialLoginSDK]);
 
-    useEffect(() => {
-        async function setupSmartAccount() {
-            const smartAccount = new SmartAccount(provider, {
-                activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
-            });
-            await smartAccount.init();
-            const context = smartAccount.getSmartAccountContext();
-        }
-        if (!!provider && !!account) {
-            setupSmartAccount();
-            console.log(`Provider: ${provider}`);
-        }
-    }, [account, provider]);
+    // useEffect(() => {
+    //     async function setupSmartAccount() {
+    //         const smartAccount = new SmartAccount(provider, {
+    //             activeNetworkId: ChainId.POLYGON_MUMBAI,
+    //             supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+    //         });
+    //         await smartAccount.init();
+    //         const context = smartAccount.getSmartAccountContext();
+    //     }
+    //     if (!!provider && !!account) {
+    //         setupSmartAccount();
+    //         console.log(`Provider: ${provider}`);
+    //     }
+    // }, [account, provider]);
 
     useEffect(() => {
         connectWallet();
@@ -130,10 +167,10 @@ export default function BiconomyNavbar() {
                                     url={"/portfolio"}
                                 />
                             </div>
-                    )}
+                        )}
 
                     {account ? (
-                        <div 
+                        <div
                             className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
                             onClick={disconnectWallet}
                         >
@@ -157,15 +194,15 @@ export default function BiconomyNavbar() {
 
 const TabButton = ({ title, isActive, url }) => {
     return (
-      <Link href={url} passHref>
-        <div
-          className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
-            ? "border-blue-700 text-blue-700 text-lg font-semibold"
-            : "border-white text-gray-400 text-lg"
-            }`}
-        >
-          <span>{title}</span>
-        </div>
-      </Link>
+        <Link href={url} passHref>
+            <div
+                className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
+                    ? "border-blue-700 text-blue-700 text-lg font-semibold"
+                    : "border-white text-gray-400 text-lg"
+                    }`}
+            >
+                <span>{title}</span>
+            </div>
+        </Link>
     );
-  };
+};
