@@ -9,17 +9,16 @@ import "@biconomy/web3-auth/dist/src/style.css";
 
 import { TestContext } from "@/contexts/TestContext";
 
-
-
-
 export default function Navbar2() {
+    
     const router = useRouter();
     const { 
         account2, setAccount2,
         socialLoginSDK, setSocialLoginSDK,
     } = useContext(TestContext);
 
-    const connectWallet = useCallback(async () => {
+    //const connectWallet = useCallback(async () => {
+        /*
         console.log("connectWallet()");
         if (typeof window === "undefined") return;
         console.log(`socialLoginSDK: ${socialLoginSDK}`);
@@ -39,6 +38,7 @@ export default function Navbar2() {
             sdk.showWallet();
             return socialLoginSDK;
         }
+        */
         
         /*
         if (socialLoginSDK?.provider) {
@@ -70,16 +70,18 @@ export default function Navbar2() {
         return socialLoginSDK;
         */
         
-    }, [socialLoginSDK]);
+    //}, [socialLoginSDK]);
 
     
 
     useEffect(() => {
-        connectWallet();
+        //connectWallet();
     }, []);
 
     return (
         <>
+            hihihi
+            {/*
             <nav className="w-full h-16 mt-auto max-w-5xl">
                 <div className="flex flex-row justify-between items-center h-full">
                     <Link href="/" passHref>
@@ -122,6 +124,7 @@ export default function Navbar2() {
                     )}
                 </div>
             </nav>
+            */}
         </>
     );
 }
