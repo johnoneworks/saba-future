@@ -1,4 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
+require('@openzeppelin/hardhat-upgrades');
 require("dotenv").config();
 
 const { API_URL, PRIVATE_KEY } = process.env;
