@@ -8,6 +8,7 @@ import styles from "../styles/Home.module.css";
 import Filter from "@/components/Filter";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import MarketCard from "@/components/MarketCard";
+import ClosedMarketCard from "@/components/ClosedMarketCard";
 
 const BiconomyNavbar = dynamic(
     () => import("../components/BiconomyNavbar").then((res) => res.default),
@@ -18,7 +19,7 @@ const BiconomyNavbar = dynamic(
 
 export default function Home() {
     const [balance, setBalance] = useState(0);
-    const { account, sureTokenContract, predictionWorldContract} = useContext(BiconomyAccountContext);
+    const { account, sureTokenContract, predictionWorldContract } = useContext(BiconomyAccountContext);
     const [markets, setMarkets] = useState([]);
     const getBalance = async () => {
         try {
@@ -42,7 +43,8 @@ export default function Home() {
                 let market = await predictionWorldContract.markets(i);
                 console.log(i);
                 console.log(`market.id: ${market.info.question}`);
-                markets.push({
+
+                let mt = {
                     id: market.id,
                     question: market.info.question,
                     imageHash: market.info.creatorImageHash,
@@ -50,11 +52,45 @@ export default function Home() {
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,
                     marketClosed: market.marketClosed,
-                });
+                    outcome: market.outcome,
+                };
+
+                if (market.marketClosed) {
+                    const bets = await getBets(market.id);
+                    mt = { ...mt, ...bets };
+                }
+
+                markets.push(mt);
             }
             setMarkets(markets);
         } catch (error) {
             console.log(`Error getting market: ${error}`);
+        }
+    }
+
+    const getBets = async (marketId) => {
+        let bets = await predictionWorldContract.getBets(Number(marketId));
+        let yesBets = [];
+        let noBets = [];
+        // yes bets
+        bets["0"].forEach((bet) => {
+            yesBets.push({
+                time: new Date(parseInt(bet.timestamp + "000")),
+                amount: bet.amount.toNumber(),
+                user: bet.user,
+            });
+        });
+        // no bets
+        bets["1"].forEach((bet) => {
+            noBets.push({
+                time: new Date(parseInt(bet.timestamp + "000")),
+                amount: bet.amount.toNumber(),
+                user: bet.user,
+            });
+        });
+        return {
+            yesBets,
+            noBets,
         }
     }
 
@@ -118,7 +154,7 @@ export default function Home() {
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
                         {markets.filter((market) => !market.marketClosed).map((market) => {
                             return (
-                                <div key={market.id}>
+                                <div key={market.id} className="w-72">
                                     <MarketCard
                                         id={market.id}
                                         title={market.question}
@@ -134,14 +170,18 @@ export default function Home() {
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
                         {markets.filter((market) => market.marketClosed).map((market) => {
                             return (
-                                <div>
-                                    <MarketCard
+                                <div key={market.id} className="w-72">
+                                    <ClosedMarketCard
                                         id={market.id}
                                         key={market.id}
                                         title={market.question}
                                         totalAmount={market.totalAmount}
                                         totalYesAmount={market.totalYesAmount}
                                         totalNoAmount={market.totalNoAmount}
+                                        outcome={market.outcome}
+                                        yesBets={market.yesBets}
+                                        noBets={market.noBets}
+                                        currentUser={account}
                                     />
                                 </div>
                             );
