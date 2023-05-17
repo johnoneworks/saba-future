@@ -90,8 +90,8 @@ export default function Detail() {
         PredictionWorld.abi,
         signer
       );
-      const accounts = await ethereum.request({ method: "eth_accounts" });
-      const account = accounts[0];
+      //const accounts = await ethereum.request({ method: "eth_accounts" });
+      //const account = accounts[0];
       let balance = await sureTokenContract.balanceOf(account);
       console.log(`balance of account: ${balance}`);
       console.log(`input: ${input}`);

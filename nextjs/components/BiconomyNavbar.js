@@ -56,10 +56,19 @@ export default function BiconomyNavbar() {
             const accounts = await web3Provider.listAccounts();
             console.log(`account:${accounts[0]}`);
 
-            let smartAccount = new SmartAccount(web3Provider, {
+            const smartAccountOptions = {
                 activeNetworkId: ChainId.POLYGON_MUMBAI,
                 supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
-            });
+                networkConfig: [
+                    {
+                        chainId: ChainId.POLYGON_MUMBAI,
+                        dappAPIKey: "WFa23cEs2.8010afd7-00e3-48a5-9f14-183faf9a8361", // TODO: should use .env
+                        providerUrl: "https://polygon-mumbai.g.alchemy.com/v2/GDTl7qsRqT4CbILRcYxCOC1DF2-jpNuF", // TODO: should use .env
+                    }
+                ],
+            }
+
+            let smartAccount = new SmartAccount(web3Provider, smartAccountOptions);
             smartAccount = await smartAccount.init();
 
             const signer = web3Provider.getSigner();
