@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
+import dynamic from "next/dynamic";
 
 import styles from "../styles/Home.module.css";
 import Navbar from "@/components/Navbar";
@@ -8,10 +9,19 @@ import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import PortfolioMarketCard from "@/components/PortfolioMarketCard";
 import { AccountContext } from '../contexts/AccountContext';
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
+
+const BiconomyNavbar = dynamic(
+  () => import("../components/BiconomyNavbar").then((res) => res.default),
+  {
+    ssr: false,
+  }
+);
 
 export default function Portfolio() {
-  const [account] = useContext(AccountContext);
+  //const [account] = useContext(AccountContext);
+  const { account, provider } = useContext(BiconomyAccountContext);
   const [portfolioValue, setPortfolioValue] = useState(0);
   const [personalBetInfo, setPersonalBetInfo] = useState([]);
 
@@ -19,7 +29,7 @@ export default function Portfolio() {
   const getMarkets = async () => {
     try {
       const { ethereum } = window;
-      const provider = new ethers.providers.Web3Provider(ethereum);
+      //const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const predictionWorldContract = new ethers.Contract(
         predictionWorld3Address,
@@ -27,8 +37,8 @@ export default function Portfolio() {
         signer
       );
 
-      const accounts = await ethereum.request({ method: "eth_accounts" });
-      const account = accounts[0];
+      //const accounts = await ethereum.request({ method: "eth_accounts" });
+      //const account = accounts[0];
 
       let marketCount = await predictionWorldContract.totalMarkets();
       let markets = [];
