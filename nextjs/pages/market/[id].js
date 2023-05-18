@@ -28,7 +28,7 @@ export default function Detail() {
   const router = useRouter();
   const { id } = router.query;
   //const [account] = useContext(AccountContext);
-  const { account, provider } = useContext(BiconomyAccountContext);
+  const { account, provider, smartAccount } = useContext(BiconomyAccountContext);
   const [loading, setLoading] = useState(false);
 
   const [market, setMarket] = useState({
@@ -41,6 +41,7 @@ export default function Detail() {
   const [selected, setSelected] = useState("YES");
   const [input, setInput] = useState("");
   const [button, setButton] = useState("Trade");
+  const [buttonTest, setButtonTest] = useState("Test");
 
   const getMarket = async () => {
     try {
@@ -123,6 +124,16 @@ export default function Detail() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGasless = async () => {
+    const erc20Interface = new ethers.utils.Interface([
+      "function transfer(address _to, uint256 _value)"
+    ]);
+
+    const encodedData = erc20Interface.encodeFunctionData(
+      "transfer", []
+    )
   };
 
   useEffect(() => {
@@ -252,6 +263,13 @@ export default function Detail() {
                     disabled={button !== "Trade"}
                   >
                     {button}
+                  </button>
+                  <button
+                    className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
+                    onClick={handleGasless}
+                    disabled={button !== "Trade"}
+                  >
+                    {buttonTest}
                   </button>
                 </div>
               </div>

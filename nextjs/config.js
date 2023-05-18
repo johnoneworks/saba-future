@@ -11,6 +11,9 @@
 //SURE Token(3) contract deployed to 0x8744A70D3A8D5cC95Ef882cED9e62De94B0F3B75
 //PredictionWorld(3) contract deployed to 0xf3466268C35615c45704784bb6c58E2F72f53489
 
+//Proxy contract address: 0x92eE4757F0f83f0Ab7290434f75cA9512b17e892
+//Implementation contract address: 0xB177993a2ACFf972540B0f3Aeb9E402a29ad17E6
+
 export const sureToken3Address = "0x8744A70D3A8D5cC95Ef882cED9e62De94B0F3B75";
 export const predictionWorld3Address = "0xf3466268C35615c45704784bb6c58E2F72f53489";
 
