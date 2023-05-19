@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useContext, useState, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ethers } from "ethers";
 import SocialLogin from "@biconomy/web3-auth";
 import SmartAccount from "@biconomy/smart-account";
@@ -22,7 +22,9 @@ export default function BiconomyNavbar() {
         setProvider,
         setSmartAccount,
         setSureTokenContract,
+        setSureTokenInterface,
         setPredictionWorldContract,
+        setPredictionWorldInterface,
     } = useContext(BiconomyAccountContext);
 
     const connectWallet = useCallback(async () => {
@@ -77,18 +79,22 @@ export default function BiconomyNavbar() {
                 SURE.abi,
                 signer
             );
+            const sureTokenInterface = new ethers.utils.Interface(SURE.abi);
             
             const predictionWorldContract = new ethers.Contract(
                 predictionWorld3Address,
                 PredictionWorld.abi,
                 signer
             );
+            const predictionWorldInterface = new ethers.utils.Interface(PredictionWorld.abi);
             
             setAccount(accounts[0]);
             setProvider(web3Provider);
             setSmartAccount(smartAccount);
             setSureTokenContract(sureTokenContract);
+            setSureTokenInterface(sureTokenInterface);
             setPredictionWorldContract(predictionWorldContract);
+            setPredictionWorldInterface(predictionWorldInterface);
         }
         
         setSocialLoginSDK(sdk);
