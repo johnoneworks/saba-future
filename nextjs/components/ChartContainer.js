@@ -51,7 +51,7 @@ export default function ChartContainer({ questionId }) {
 
     useEffect(() => {
         getBets();
-    });
+    }, []);
 
     return (
         <>
