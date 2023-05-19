@@ -18,14 +18,14 @@ export default function ClosedMarketCard({
   let titleWidth = "w-[calc(100%-72px)]";
   let win = false;
   let lost = false;
-  if (yesBets.filter(bet => bet.user.toLowerCase() === currentUser.toLowerCase()).length > 0) {
+  if (yesBets.filter(bet => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
     if (outcome) {
       win = true;
     } else {
       lost = true;
     }
   }
-  if (noBets.filter(bet => bet.user.toLowerCase() === currentUser.toLowerCase()).length > 0) {
+  if (noBets.filter(bet => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
     if (outcome) {
       lost = true;
     } else {
