@@ -2,11 +2,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 import { ethers } from "ethers";
+import dynamic from "next/dynamic";
 
 
 import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
-import dynamic from "next/dynamic";
 
 const BiconomyNavbar = dynamic(
     () => import("../../components/BiconomyNavbar").then((res) => res.default),
