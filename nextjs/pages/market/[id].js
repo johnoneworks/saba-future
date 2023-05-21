@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Img from "next/image";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import moment from "moment";
@@ -12,7 +12,6 @@ import ChartContainer from "@/components/ChartContainer";
 import { predictionWorld3Address, sureToken3Address } from "@/config";
 import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
 import SureToken from "@/utils/abis/SureToken3.json";
-import { AccountContext } from '@/contexts/AccountContext';
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 
@@ -27,8 +26,14 @@ const BiconomyNavbar = dynamic(
 export default function Detail() {
   const router = useRouter();
   const { id } = router.query;
-  //const [account] = useContext(AccountContext);
-  const { account, provider, smartAccount } = useContext(BiconomyAccountContext);
+  const {
+    provider,
+    account,
+    smartAccount,
+    predictionWorldContract,
+    predictionWorldInterface,
+    sureTokenInterface,
+  } = useContext(BiconomyAccountContext);
   const [loading, setLoading] = useState(false);
 
   const [market, setMarket] = useState({
@@ -43,21 +48,12 @@ export default function Detail() {
   const [button, setButton] = useState("Trade");
   const [buttonTest, setButtonTest] = useState("Test");
 
-  const getMarket = async () => {
+  const getMarket = useCallback(async () => {
     try {
-      const { ethereum } = window;
-      //const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const predictionWorldContract = new ethers.Contract(
-        predictionWorld3Address,
-        PredictionWorld.abi,
-        signer
-      );
-
       const market = await predictionWorldContract.markets(id);
       //console.log(market);
       // handle millisecond time stamp
-      console.log(market.info.endTimestamp);
+      // console.log(market.info.endTimestamp);
       const date = moment.unix(market.info.endTimestamp / 1000).format("MMMM D, YYYY");
       setMarket({
         title: market.info.question,
@@ -72,7 +68,7 @@ export default function Detail() {
     } catch (error) {
       console.log(`Error getting market detail, ${error}`);
     }
-  }
+  }, [id]);
 
   const handleTrade = async () => {
     try {
@@ -127,18 +123,56 @@ export default function Detail() {
   };
 
   const handleGasless = async () => {
-    const erc20Interface = new ethers.utils.Interface([
-      "function transfer(address _to, uint256 _value)"
-    ]);
+    try {
+      setLoading(true);
 
-    const encodedData = erc20Interface.encodeFunctionData(
-      "transfer", []
-    )
+      let betFunction = null;
+      if (input && selected === "YES") {
+        betFunction = "addYesBet";
+      } else if (input && selected === "NO") {
+        betFunction = "addNoBet";
+      }
+
+      if (betFunction) {
+        let transactions = [];
+        try {
+          const approveEncodedData = sureTokenInterface.encodeFunctionData(
+            'approve', [predictionWorld3Address, input]
+          );
+          const addYesBetEncodedData = predictionWorldInterface.encodeFunctionData(
+            betFunction, [id, input]
+          );
+          transactions = [{
+            to: sureToken3Address,
+            data: approveEncodedData,
+            gasLimit: 500000,
+          }, {
+            to: predictionWorld3Address,
+            data: addYesBetEncodedData,
+          }];
+
+          const txResponse = await smartAccount.sendTransactionBatch({ transactions });
+          console.log('UserOp hash', txResponse.hash);
+          await txResponse.wait();
+
+        } catch (error) {
+          console.log(`Error: ${error}`);
+        }
+
+        await getMarket();
+        setButton("Trade");
+      }
+
+    } catch (error) {
+      console.log(`Error trading: ${error}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     getMarket();
-  }, [router.isReady, account, provider]);
+  }, [router.isReady, account, provider, getMarket]);
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
@@ -259,17 +293,17 @@ export default function Detail() {
                   </div>
                   <button
                     className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
-                    onClick={handleTrade}
-                    disabled={button !== "Trade"}
-                  >
-                    {button}
-                  </button>
-                  <button
-                    className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
                     onClick={handleGasless}
                     disabled={button !== "Trade"}
                   >
                     {buttonTest}
+                  </button>
+                  <button
+                    className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
+                    onClick={handleTrade}
+                    disabled={button !== "Trade"}
+                  >
+                    {button}
                   </button>
                 </div>
               </div>

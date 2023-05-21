@@ -19,14 +19,14 @@ const BiconomyNavbar = dynamic(
 
 export default function Home() {
     const [balance, setBalance] = useState(0);
-    const { account, sureTokenContract, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { account, smartAccount, sureTokenContract, predictionWorldContract } = useContext(BiconomyAccountContext);
     const [markets, setMarkets] = useState([]);
     const getBalance = async () => {
         try {
             if (!account) {
                 return;
             }
-            let balance = await sureTokenContract.balanceOf(account);
+            let balance = await sureTokenContract.balanceOf(smartAccount.address);
             setBalance(ethers.utils.commify(balance));
         } catch (error) {
             console.log(`Error getting balance, ${error}`);
