@@ -46,7 +46,7 @@ export default function Detail() {
   const [selected, setSelected] = useState("YES");
   const [input, setInput] = useState("");
   const [button, setButton] = useState("Trade");
-  const [buttonTest, setButtonTest] = useState("Test");
+  //const [buttonTest, setButtonTest] = useState("Test");
 
   const getMarket = useCallback(async () => {
     try {
@@ -291,13 +291,7 @@ export default function Detail() {
                       Max
                     </span>
                   </div>
-                  <button
-                    className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
-                    onClick={handleGasless}
-                    disabled={button !== "Trade"}
-                  >
-                    {buttonTest}
-                  </button>
+                  
                   <button
                     className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
                     onClick={handleTrade}
