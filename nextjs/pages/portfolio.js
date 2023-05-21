@@ -4,11 +4,9 @@ import { ethers } from "ethers";
 import dynamic from "next/dynamic";
 
 import styles from "../styles/Home.module.css";
-import Navbar from "@/components/Navbar";
 import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import PortfolioMarketCard from "@/components/PortfolioMarketCard";
-import { AccountContext } from '../contexts/AccountContext';
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 

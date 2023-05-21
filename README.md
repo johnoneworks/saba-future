@@ -46,7 +46,8 @@ This will be the awesome prediction market that will be the future for us
         - US8: Show correct SURE token - web and wallet show the same numbers
         - US7: First time players will see 100 SURE tokens in balance
         - US9: Players don't have to have matic to place bet
-        - US12: TBD
+        - US12: Single Market>刪除按鈕滑上去之後沒有任何改變，建議至少給予cursor pointer
+        - US13: 
 
 ### Backlog
     - Seamless Signup
