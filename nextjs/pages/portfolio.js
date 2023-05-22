@@ -1,11 +1,8 @@
 import Head from "next/head";
-import { useState, useEffect, useContext, Suspense } from "react";
-import { ethers } from "ethers";
+import { useState, useEffect, useCallback, useContext, Suspense } from "react";
 import dynamic from "next/dynamic";
 
 import styles from "../styles/Home.module.css";
-import { predictionWorld3Address } from "@/config";
-import PredictionWorld from "../utils/abis/PredictionWorld3.json";
 import PortfolioMarketCard from "@/components/PortfolioMarketCard";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
@@ -18,26 +15,13 @@ const BiconomyNavbar = dynamic(
 );
 
 export default function Portfolio() {
-  //const [account] = useContext(AccountContext);
-  const { account, provider } = useContext(BiconomyAccountContext);
+  const { smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
   const [portfolioValue, setPortfolioValue] = useState(0);
   const [personalBetInfo, setPersonalBetInfo] = useState([]);
 
 
-  const getMarkets = async () => {
+  const getMarkets = useCallback(async () => {
     try {
-      const { ethereum } = window;
-      //const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const predictionWorldContract = new ethers.Contract(
-        predictionWorld3Address,
-        PredictionWorld.abi,
-        signer
-      );
-
-      //const accounts = await ethereum.request({ method: "eth_accounts" });
-      //const account = accounts[0];
-
       let marketCount = await predictionWorldContract.totalMarkets();
       let markets = [];
       for (let i = 0; i < marketCount; i++) {
@@ -62,7 +46,7 @@ export default function Portfolio() {
       for (let i = 0; i < markets.length; i++) {
         let marketBets = await predictionWorldContract.getBets(i);
         marketBets["0"].forEach((bet) => {
-          if (bet.user.toLowerCase() == account.toLowerCase()) {
+          if (bet.user.toLowerCase() == smartAccount.address.toLowerCase()) {
             personalizedBetInfo.push({
               id: i.toString(),
               yesAmount: bet.amount.toString(),
@@ -72,7 +56,7 @@ export default function Portfolio() {
           }
         });
         marketBets["1"].forEach((bet) => {
-          if (bet.user.toLowerCase() == account.toLowerCase()) {
+          if (bet.user.toLowerCase() == smartAccount.address.toLowerCase()) {
             personalizedBetInfo.push({
               id: i.toString(),
               noAmount: bet.amount.toString(),
@@ -99,11 +83,13 @@ export default function Portfolio() {
     } catch (error) {
       console.log(`Error getting markets, ${error}`);
     }
-  }
+  }, [predictionWorldContract]);
 
   useEffect(() => {
-    getMarkets();
-  }, [account]);
+    if (smartAccount && predictionWorldContract) {
+      getMarkets();
+    }
+  }, [smartAccount, getMarkets]);
 
   return (
     <div className={styles.container}>
@@ -131,14 +117,14 @@ export default function Portfolio() {
               id={market.id}
               key={i}
               title={market.title}
-              betType={!!market.yesAmount?"Yes":"No"}
-              amount={!!market.yesAmount?market.yesAmount:market.noAmount}
+              betType={!!market.yesAmount ? "Yes" : "No"}
+              amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
               totalYesAmount={market.totalYesAmount}
               totalNoAmount={market.totalNoAmount}
               endTimestamp={market.endTimestamp}
               timestamp={market.timestamp}
               hasResolved={market.hasResolved}
-              outcome={market.outcome?"Yes":"No"}
+              outcome={market.outcome ? "Yes" : "No"}
             />
           ))}
         </div>
