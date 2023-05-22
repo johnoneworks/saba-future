@@ -1,12 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { Suspense, useContext, useState } from "react";
 import { ethers } from "ethers";
 import dynamic from "next/dynamic";
 
 
 import { predictionWorld3Address } from "@/config";
 import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 const BiconomyNavbar = dynamic(
     () => import("../../components/BiconomyNavbar").then((res) => res.default),
@@ -21,8 +22,23 @@ export default function Admin() {
     const [description, setDescription] = useState("");
     const [resolverUrl, setResolverUrl] = useState("");
     const [timestamp, setTimestamp]= useState(Date());
+    const { predictionWorldContract } = useContext(BiconomyAccountContext);
 
     const handleSubmit = async () => {
+        try {
+            setSubmitButtonText("Creating");
+            await predictionWorldContract.createMarket(
+                title,
+                "",
+                description,
+                resolverUrl,
+                timestamp
+            );
+            setSubmitButtonText("Create Market");
+        } catch (error) {
+            console.log(`Error creating market: ${error}`);
+        }
+        /*
         try {
             setSubmitButtonText("Creating");
             console.log(`We got here`);
@@ -46,6 +62,7 @@ export default function Admin() {
         } catch (error) {
             console.log(`Error creating market: ${error}`);
         }
+        */
     }
 
     return (
