@@ -23,7 +23,7 @@ export default function Home() {
     const [markets, setMarkets] = useState([]);
     const getBalance = async () => {
         try {
-            if (!account) {
+            if (!smartAccount.address) {
                 return;
             }
             let balance = await sureTokenContract.balanceOf(smartAccount.address);
@@ -34,7 +34,7 @@ export default function Home() {
     }
     const getMarkets = async () => {
         try {
-            if (!account) {
+            if (!smartAccount.address) {
                 return;
             }
             let marketCount = await predictionWorldContract.totalMarkets();

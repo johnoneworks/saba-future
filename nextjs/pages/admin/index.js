@@ -1,12 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
-import { Suspense, useContext, useState } from "react";
+import { Suspense, useContext, useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 import dynamic from "next/dynamic";
 
 
-import { predictionWorld3Address } from "@/config";
-import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 const BiconomyNavbar = dynamic(
@@ -18,11 +16,24 @@ const BiconomyNavbar = dynamic(
 
 export default function Admin() {
     const [submitButtonText, setSubmitButtonText] = useState("Create Market");
+    const [balance, setBalance] = useState(0);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [resolverUrl, setResolverUrl] = useState("");
     const [timestamp, setTimestamp]= useState(Date());
-    const { predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { predictionWorldContract, sureTokenContract, account } = useContext(BiconomyAccountContext);
+
+    const getBalance = useCallback(async () => {
+        try {
+            if (!account) {
+                return;
+            }
+            let balance = await sureTokenContract.balanceOf(account);
+            setBalance(ethers.utils.commify(balance));
+        } catch (error) {
+            console.log(`Error getting balance, ${error}`);
+        }
+    }, [account]);
 
     const handleSubmit = async () => {
         try {
@@ -65,6 +76,10 @@ export default function Admin() {
         */
     }
 
+    useEffect(() => {
+        getBalance();
+    }, [account, getBalance]);
+
     return (
         <>
             <div className="flex flex-col justify-center items-center h-full p-5">
@@ -80,6 +95,8 @@ export default function Admin() {
                     <Link href="/admin/markets" className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white font-bold mb-5">
                         See All Markets
                     </Link>
+                    You have: {balance} SURE tokens
+
                     <div className="w-full flex flex-col pt-1 border border-gray-300 p-5 rounded-lg ">
                         <span className="text-lg font-semibold mt-4">Add New Market</span>
                         <span className="text-lg font mt-6 mb-1">Market Title</span>
