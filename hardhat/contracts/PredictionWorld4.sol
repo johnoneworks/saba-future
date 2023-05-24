@@ -8,6 +8,8 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 // import "hardhat/console.sol";
 
 contract PredictionWorld4 is Initializable {
+    address public constant commissionAddress =
+        0x99e9624508534FC190B233CB1D3a9b755B5D312d;
     address public owner;
     address public sureToken;
     uint256 public totalMarkets;
@@ -21,6 +23,8 @@ contract PredictionWorld4 is Initializable {
     mapping(uint256 => Market) public markets;
     mapping(address => uint256) public winAmounts;
     address[] public winAddresses;
+
+    mapping(address => bool) earlyBirds;
 
     struct Market {
         uint256 id;
@@ -60,6 +64,8 @@ contract PredictionWorld4 is Initializable {
         uint256 totalYesAmount,
         uint256 totalNoAmount
     );
+
+    error Overflow(uint256 r, uint256 x, uint256 y);
 
     function initialize(
         address _sureToken,
@@ -156,12 +162,18 @@ contract PredictionWorld4 is Initializable {
     ) public payable {
         require(msg.sender == owner, "Unauthorized");
 
+        uint256 commissionRate = 99;
+        uint256 hundred = 100;
+
         Market storage market = markets[_marketId];
         if (eventOutcome) {
+            uint256 bounus = market.totalNoAmount * commissionRate / hundred;
+            uint256 totalWinAmount = 0;
             for (uint256 i = 0; i < market.yesBets.length; i++) {
                 // split all No bets with the Yessers
-                uint256 winAmount = ((market.totalNoAmount *
-                    market.yesBets[i].amount) / market.totalYesAmount);
+                uint256 winAmount = ((bounus * market.yesBets[i].amount) /
+                    market.totalYesAmount);
+                totalWinAmount += winAmount;
                 winAmounts[market.yesBets[i].user] += (winAmount +
                     market.yesBets[i].amount);
                 // console.log(
@@ -177,11 +189,20 @@ contract PredictionWorld4 is Initializable {
                 ERC20(sureToken).transfer(_address, winAmounts[_address]);
                 delete winAmounts[_address];
             }
+
+            // Send the commission.
+            uint256 commission = market.totalNoAmount - totalWinAmount;
+            address payable _commissionAddress = payable(commissionAddress);
+            ERC20(sureToken).transfer(_commissionAddress, commission);
+
             delete winAddresses;
         } else {
+            uint256 bounus = market.totalYesAmount * commissionRate / hundred;
+            uint256 totalWinAmount = 0;
             for (uint256 i = 0; i < market.noBets.length; i++) {
-                uint256 winAmount = ((market.totalYesAmount *
-                    market.noBets[i].amount) / market.totalNoAmount);
+                uint256 winAmount = ((bounus * market.noBets[i].amount) /
+                    market.totalNoAmount);
+                totalWinAmount += winAmount;
                 winAmounts[market.noBets[i].user] += (winAmount +
                     market.noBets[i].amount);
                 winAddresses.push(market.noBets[i].user);
@@ -190,14 +211,19 @@ contract PredictionWorld4 is Initializable {
             for (uint256 i = 0; i < winAddresses.length; i++) {
                 address payable _address = payable(winAddresses[i]);
                 ERC20(sureToken).transfer(_address, winAmounts[_address]);
+                delete winAmounts[_address];
             }
+
+            // Send the commission.
+            uint256 commission = market.totalYesAmount - totalWinAmount;
+            address payable _commissionAddress = payable(commissionAddress);
+            ERC20(sureToken).transfer(_commissionAddress, commission);
+
             delete winAddresses;
         }
         market.outcome = eventOutcome;
         market.marketClosed = true;
     }
-
-    mapping(address => bool) earlyBirds;
 
     function checkEarlyBird() public returns (bool) {
         if (currentEarlyBirdCount >= numOfEarlyBirdsAllowed) {
