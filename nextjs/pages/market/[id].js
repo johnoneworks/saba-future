@@ -15,7 +15,6 @@ import SureToken from "@/utils/abis/SureToken3.json";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 
-
 const BiconomyNavbar = dynamic(
   () => import("../../components/BiconomyNavbar").then((res) => res.default),
   {
@@ -48,7 +47,7 @@ export default function Detail() {
   const [button, setButton] = useState("Trade");
   //const [buttonTest, setButtonTest] = useState("Test");
 
-  const getMarket = useCallback(async () => {
+  const getMarket = useCallback(async (id, predictionWorldContract) => {
     try {
       const market = await predictionWorldContract.markets(id);
       //console.log(market);
@@ -66,9 +65,9 @@ export default function Detail() {
       });
 
     } catch (error) {
-      console.log(`Error getting market detail, ${error}`);
+      console.error(`Error getting market detail, ${error}`);
     }
-  }, [id]);
+  }, [id, predictionWorldContract]);
 
   const handleTrade = async () => {
     try {
@@ -102,7 +101,7 @@ export default function Detail() {
           const betTx = await predictionWorldContract.addYesBet(id, input);
           await betTx.wait();
         } catch (error) {
-          console.log(`Error: ${error}`);
+          console.error(`Error: ${error}`);
         }
         // }
       } else if (input && selected === "NO") {
@@ -112,11 +111,11 @@ export default function Detail() {
         await betTx.wait();
         // }
       }
-      await getMarket();
+      await getMarket(id, predictionWorldContract);
       setButton("Trade");
 
     } catch (error) {
-      console.log(`Error trading: ${error}`);
+      console.error(`Error trading: ${error}`);
     } finally {
       setLoading(false);
     }
@@ -153,26 +152,30 @@ export default function Detail() {
 
           const txResponse = await smartAccount.sendTransactionBatch({ transactions });
           console.log('UserOp hash', txResponse.hash);
-          await txResponse.wait();
+          const txReceipt = await txResponse.wait();
+          console.log('Tx hash', txReceipt.transactionHash);
+          const txReceipt2 = await provider.getTransactionReceipt(txReceipt.transactionHash);
 
         } catch (error) {
-          console.log(`Error: ${error}`);
+          console.error(`Error: ${error}`);
         }
 
-        await getMarket();
+        await getMarket(id, predictionWorldContract);
         setButton("Trade");
       }
 
     } catch (error) {
-      console.log(`Error trading: ${error}`);
+      console.error(`Error trading: ${error}`);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getMarket();
-  }, [router.isReady, account, provider, getMarket]);
+    if (id && predictionWorldContract) {
+      getMarket(id, predictionWorldContract);
+    }
+  }, [router.isReady, account, getMarket]);
 
   return (
     <div className="flex flex-col justify-center items-center h-full">
@@ -291,7 +294,7 @@ export default function Detail() {
                       Max
                     </span>
                   </div>
-                  
+
                   <button
                     className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
                     onClick={handleGasless}
