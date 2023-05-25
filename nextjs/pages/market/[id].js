@@ -294,7 +294,7 @@ export default function Detail() {
                   
                   <button
                     className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white"
-                    onClick={handleTrade}
+                    onClick={handleGasless}
                     disabled={button !== "Trade"}
                   >
                     {button}
