@@ -114,7 +114,7 @@ export default function Navbar() {
         console.log('Your loss!');
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

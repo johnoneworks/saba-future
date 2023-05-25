@@ -81,7 +81,7 @@ export default function Portfolio() {
       }
       setPersonalBetInfo(personalizedBetInfo);
     } catch (error) {
-      console.log(`Error getting markets, ${error}`);
+      console.error(`Error getting markets, ${error}`);
     }
   }, [predictionWorldContract]);
 

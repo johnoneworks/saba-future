@@ -31,7 +31,7 @@ export default function Admin() {
             let balance = await sureTokenContract.balanceOf(account);
             setBalance(ethers.utils.commify(balance));
         } catch (error) {
-            console.log(`Error getting balance, ${error}`);
+            console.error(`Error getting balance, ${error}`);
         }
     }, [account]);
 
@@ -47,7 +47,7 @@ export default function Admin() {
             );
             setSubmitButtonText("Create Market");
         } catch (error) {
-            console.log(`Error creating market: ${error}`);
+            console.error(`Error creating market: ${error}`);
         }
         /*
         try {
@@ -71,7 +71,7 @@ export default function Admin() {
             );
             setSubmitButtonText("Create Market");
         } catch (error) {
-            console.log(`Error creating market: ${error}`);
+            console.error(`Error creating market: ${error}`);
         }
         */
     }
