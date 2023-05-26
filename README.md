@@ -40,6 +40,7 @@ This will be the awesome prediction market that will be the future for us
         - US5: Admin can settle markets(distributeWinning) V
         - US6: First time players(without metamask) can just use a social login to enter V
         - US11: First time players(without metamask) can place bet without SURE(if early bird) and no matic V
+        - US15: Show outcome as Yes/No V
 
     - Not yet functioning
         - US7: First time players will see 1000 SURE tokens in balance
@@ -47,7 +48,8 @@ This will be the awesome prediction market that will be the future for us
         - US12: Single Market>刪除按鈕滑上去之後沒有任何改變，建議至少給予cursor pointer
         - US13: Loading for main page
         - US14: I want early bird players to directly have 1000 SURE without placing bet 
-        - US15:
+        
+        - US16: 
 
     - Obsolete
         - US10*: Players that have matic but no SURE can place bets from Early Bird V
@@ -56,7 +58,7 @@ This will be the awesome prediction market that will be the future for us
 ### Backlog
     - Seamless Signup
     - Show actual winnings for players
-    - Show outcome as Yes/No
+    
     - Map wallet account with a name
     - Filter & searches
     - Rake for resolvement
