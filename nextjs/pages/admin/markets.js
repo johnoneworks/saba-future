@@ -40,7 +40,7 @@ export default function Markets() {
             }
             setMarkets(markets);
         } catch (error) {
-            console.log(`Error getting markets, ${error}`);
+            console.error(`Error getting markets, ${error}`);
         }
     }
 

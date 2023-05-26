@@ -54,7 +54,7 @@ export default function WalletHeader() {
 			console.log('Found account', accounts[0]);
 			setCurrentAccount(accounts[0]);
 		} catch (error) {
-			console.log(`Error connecting to metamask: ${error}`);
+			console.error(`Error connecting to metamask: ${error}`);
 		}
 	}
 

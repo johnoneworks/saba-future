@@ -21,7 +21,7 @@ export default function PortfolioMarketCard({
             signer
         );
     } catch (error) {
-        console.log(`Error getting markets, ${error}`);
+        console.error(`Error getting markets, ${error}`);
     }
 
     const onYes = async () => {

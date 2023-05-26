@@ -29,7 +29,7 @@ export default function Home() {
             let balance = await sureTokenContract.balanceOf(smartAccount.address);
             setBalance(ethers.utils.commify(balance));
         } catch (error) {
-            console.log(`Error getting balance, ${error}`);
+            console.error(`Error getting balance, ${error}`);
         }
     }
     const getMarkets = async () => {
@@ -64,7 +64,7 @@ export default function Home() {
             }
             setMarkets(markets);
         } catch (error) {
-            console.log(`Error getting market: ${error}`);
+            console.error(`Error getting market: ${error}`);
         }
     }
 
