@@ -329,7 +329,7 @@ describe("PredictionWorld4", function () {
   });
 
   describe("Early Bird", function () {
-
+    // TODO: should test for early bird count decrease after granting early bird
     it("Should get SURE when first play", async function () {
 
       const { predictionWorld, sureToken, other1, other2, other3, other4, decimals } = await loadFixture(deploySurePredictionWorldFixture);
