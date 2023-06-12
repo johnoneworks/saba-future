@@ -110,7 +110,6 @@ export default function Home() {
                 <BiconomyNavbar />
             </Suspense>
             <main className="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow max-w-5xl">
-                <h1>救星來了</h1>
                 <div className="w-full flex flex-col flex-grow pt-1">
                     <div className="relative text-gray-500 focus-within:text-gray-400 w-full">
                         <span className="absolute inset-y-0 left-0 flex items-center px-3">
