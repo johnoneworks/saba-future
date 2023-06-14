@@ -14,53 +14,89 @@ This is the part with the smart contract related functions
         - note, need to transfer token to PredictionWorld3
 
 # Usage (With Upgraded)
+
     - Environment Variable
+    
         - API_URL
+        
           Network URL. For different networks, it should be the specific url for the networks.
           Mumbai: https://polygon-mumbai.g.alchemy.com/v2/B_OwiBiK0aenS3ooAxCMR9w45G1-gQ6Q
+          
         - PRIVATE_KEY
+        
           The private key of the owner address. You could export from the metamask.
           Note: When you deploy the sure-token, the address will be the Super-Admin who get the initial sure-token. You should **NOT** commit the Super-Admin private key to the git!!
+          
         - SCAN_KEY
+        
           The api key of the scan (EtherScan, PolygonScan...).
           After deploy the contract, it should verify the contract and the user could access the contrat by the Scan website.
+          
         - SURE_TOKEN_ADDRESS
+        
           The sure token address. It will be generated after executing deploySureToken.js. You don't have to set the variable before that.
+          
         - PROXY_ADDRESS
+        
           The proxy address. It will be generated after executing deployProxy.js. You don't have to set the variable before that. And it should not be updated when upgrading the new contract.
+          
           Note: If the redeploy the proxy, it'll clear all data in the proxy.
+          
         - UPGRADING_CONTRACT
+        
           The new contrat name which you want to upgrade. It will use the varialbe when executing upgradeProxy.js. You don't have to set the variable before that.
+          
     - Deploy Sure Token
+    
         - Deploy the sure token contract.
+        
           `npx hardhat run scripts/deploySureToken.js --network mumbai`
+          
           You will get the information
             SURE Token(3) contract deployed to 0xF1CE94...
+            
         - Copy the address to env variable "SURE_TOKEN_ADDRESS".
+        
     - Deploy Proxy + Implementation Contract
+    
         - Confirm the "initialContract" in the script/deployProxy.js
+        
         - Deploy the proxy and implementation contract.
+        
           `npx hardhat run scripts/deployProxy.js --network mumbai`
+          
           You will get the information
                        Sure Token: 0x552571d0...
                    Proxy Contract: 0x2efBe968...
           Implementation Contract: 0x75863C87...
+          
         - Verify the contract
+        
           `npx hardhat verify --network mumbai <Proxy Contract>`
+          
           Check the contract on the Scan website.
           ex: https://mumbai.polygonscan.com/address/<Proxy Contract>#code
+          
         - Copy "Proxy Contract" to env variable "PROXY_ADDRESS".
+        
     - Upgrade Implementation Contract
+    
         - Update the env variable "UPGRADING_CONTRACT" to new contract name.
+        
         - Upgrade the proxy with new contract.
+        
           `npx hardhat run scripts/upgradeProxy.js --network mumbai`
+          
           You will get the information
                             Owner: 0xcc6Ccc0A...
                     Contract Name: PredictionWorld5
                    Proxy Contract: 0xb73Cc06D...
           Implementation Contract: 0xD8Ea726a...
+          
         - Verify the contract
+        
           `npx hardhat verify --network mumbai <Proxy Contract>`
+          
           Check the contract on the Scan website.
           ex: https://mumbai.polygonscan.com/address/<Proxy Contract>#code
         
