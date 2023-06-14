@@ -78,7 +78,10 @@ This is the part with the smart contract related functions
           ex: https://mumbai.polygonscan.com/address/<Proxy Contract>#code
           
         - Copy "Proxy Contract" to env variable "PROXY_ADDRESS".
-        
+
+    - Transfer SURE to <Proxy Contract>
+        - note, need to transfer token to the proxy for early-bird token
+
     - Upgrade Implementation Contract
     
         - Update the env variable "UPGRADING_CONTRACT" to new contract name.
@@ -99,6 +102,8 @@ This is the part with the smart contract related functions
           
           Check the contract on the Scan website.
           ex: https://mumbai.polygonscan.com/address/<Proxy Contract>#code
+        
+    - copy the ~/harhat/artifacts/contracts/<Contract Name>.json & ~/harhat/artifacts/contracts/SureToken3.json to ~/nextjs/utils/abis
         
 # Resources
     - Faucets (free test network tokens)
