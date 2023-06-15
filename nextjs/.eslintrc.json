@@ -20,7 +20,7 @@
         "sourceType": "module"
     },
 
-    "plugins": ["react", "react-hooks", "import", "prettier"],
+    "plugins": ["react", "react-hooks", "prettier"],
     "rules": {
         "indent": [
             "error",
@@ -53,15 +53,6 @@
         "prettier/prettier": ["error"]
     },
     "settings": {
-        "import/resolver": {
-            "webpack": {
-                "config": {
-                    "resolve": {
-                        "extensions": ["", ".js", ".jsx"]
-                    }
-                }
-            }
-        },
         "react": {
             "createClass": "createReactClass",
             "pragma": "React",
