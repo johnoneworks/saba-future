@@ -5,9 +5,9 @@ async function main() {
 
   const numOfEarlyBirdsAllowed = 100;
   const amountOfTokenForEarlyBird = 1000;
-  console.log(`SURE_TOKEN_ADDRESS: ${SURE_TOKEN_ADDRESS}`);
   
-  const PredictionWorld = await ethers.getContractFactory("PredictionWorld4");
+  const initialContract = "PredictionWorld4";
+  const PredictionWorld = await ethers.getContractFactory(initialContract);
   const proxy = await upgrades.deployProxy(PredictionWorld, [SURE_TOKEN_ADDRESS, numOfEarlyBirdsAllowed, amountOfTokenForEarlyBird]);
   await proxy.deployed();
 
@@ -15,9 +15,10 @@ async function main() {
     proxy.address
   );
   
-  console.log('Proxy contract address: ' + proxy.address);
-
-  console.log('Implementation contract address: ' + implementationAddress);
+  console.log(`             Sure Token: ${SURE_TOKEN_ADDRESS}`);
+  console.log(`          Contract Name: ${initialContract}`);
+  console.log(`         Proxy Contract: ${proxy.address}`);
+  console.log(`Implementation Contract: ${implementationAddress}`);
 }
 
 main();
