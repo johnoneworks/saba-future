@@ -398,7 +398,7 @@ describe("PredictionWorld4", function () {
     it("Owner should be the default admin", async function () {
       const { predictionWorld, owner } = await loadFixture(deploySurePredictionWorldFixture);
       const ownerPredictionContract = predictionWorld.connect(owner);
-      await ownerPredictionContract.isAdminUser(owner.address).is.equal(true);
+      expect(await ownerPredictionContract.isAdminUser(owner.address)).is.equal(true);
     });
 
     it("Should be rejected to update the admin user if user is NOT owner", async function () {
