@@ -1,21 +1,16 @@
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
-import Head from "next/head";
-import { useState, useEffect, useContext } from "react";
 import { ethers } from "ethers";
+import dynamic from "next/dynamic";
+import Head from "next/head";
+import { Suspense, useContext, useEffect, useState } from "react";
 
-import styles from "../styles/Home.module.css";
 import Filter from "@/components/Filter";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import MarketCard from "@/components/MarketCard";
-import ClosedMarketCard from "@/components/ClosedMarketCard";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import styles from "../styles/Home.module.css";
 
-const BiconomyNavbar = dynamic(
-    () => import("../components/BiconomyNavbar").then((res) => res.default),
-    {
-        ssr: false,
-    }
-);
+const BiconomyNavbar = dynamic(() => import("../components/BiconomyNavbar").then((res) => res.default), {
+    ssr: false
+});
 
 export default function Home() {
     const [balance, setBalance] = useState(0);
@@ -31,7 +26,7 @@ export default function Home() {
         } catch (error) {
             console.error(`Error getting balance, ${error}`);
         }
-    }
+    };
     const getMarkets = async () => {
         try {
             if (!smartAccount.address) {
@@ -52,7 +47,7 @@ export default function Home() {
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,
                     marketClosed: market.marketClosed,
-                    outcome: market.outcome,
+                    outcome: market.outcome
                 };
 
                 if (market.marketClosed) {
@@ -66,7 +61,7 @@ export default function Home() {
         } catch (error) {
             console.error(`Error getting market: ${error}`);
         }
-    }
+    };
 
     const getBets = async (marketId) => {
         let bets = await predictionWorldContract.getBets(Number(marketId));
@@ -77,7 +72,7 @@ export default function Home() {
             yesBets.push({
                 time: new Date(parseInt(bet.timestamp + "000")),
                 amount: bet.amount.toNumber(),
-                user: bet.user,
+                user: bet.user
             });
         });
         // no bets
@@ -85,14 +80,14 @@ export default function Home() {
             noBets.push({
                 time: new Date(parseInt(bet.timestamp + "000")),
                 amount: bet.amount.toNumber(),
-                user: bet.user,
+                user: bet.user
             });
         });
         return {
             yesBets,
-            noBets,
-        }
-    }
+            noBets
+        };
+    };
 
     useEffect(() => {
         getBalance();
@@ -134,58 +129,59 @@ export default function Home() {
                         />
                     </div>
                     <div className="flex flex-row space-x-2 md:space-x-5 items-center flex-wrap mt-4">
-                        <Filter
-                            list={["All", "Crypto", "Football", "Covid 19", "OneSeal"]}
-                            activeItem="All"
-                            category="Category"
-                            onChange={() => { }}
-                        />
-                        <Filter
-                            list={["Volume", "Newest", "Expiring"]}
-                            activeItem="Volume"
-                            category="Sort By"
-                            onChange={() => { }}
-                        />
+                        <Filter list={["All", "Crypto", "Football", "Covid 19", "OneSeal"]} activeItem="All" category="Category" onChange={() => {}} />
+                        <Filter list={["Volume", "Newest", "Expiring"]} activeItem="Volume" category="Sort By" onChange={() => {}} />
                     </div>
                     You have: {balance} SURE tokens
                     <br />
                     <span className="font-bold my-3 text-lg">Market</span>
                     <div>Open Markets</div>
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-                        {markets.filter((market) => !market.marketClosed).map((market) => {
-                            return (
-                                <div key={market.id} className="w-72">
-                                    <MarketCard
-                                        id={market.id}
-                                        title={market.question}
-                                        totalAmount={market.totalAmount}
-                                        totalYesAmount={market.totalYesAmount}
-                                        totalNoAmount={market.totalNoAmount}
-                                    />
-                                </div>
-                            );
-                        })}
+                        {markets
+                            .filter((market) => !market.marketClosed)
+                            .map((market) => {
+                                return (
+                                    <div key={market.id} className="w-72">
+                                        <MarketCard
+                                            id={market.id}
+                                            key={market.id}
+                                            title={market.question}
+                                            totalAmount={market.totalAmount}
+                                            totalYesAmount={market.totalYesAmount}
+                                            totalNoAmount={market.totalNoAmount}
+                                            outcome={market.outcome}
+                                            yesBets={market.yesBets}
+                                            noBets={market.noBets}
+                                            currentUser={account}
+                                            isClosed={false}
+                                        />
+                                    </div>
+                                );
+                            })}
                     </div>
                     <div>Closed Markets</div>
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-                        {markets.filter((market) => market.marketClosed).map((market) => {
-                            return (
-                                <div key={market.id} className="w-72">
-                                    <ClosedMarketCard
-                                        id={market.id}
-                                        key={market.id}
-                                        title={market.question}
-                                        totalAmount={market.totalAmount}
-                                        totalYesAmount={market.totalYesAmount}
-                                        totalNoAmount={market.totalNoAmount}
-                                        outcome={market.outcome}
-                                        yesBets={market.yesBets}
-                                        noBets={market.noBets}
-                                        currentUser={account}
-                                    />
-                                </div>
-                            );
-                        })}
+                        {markets
+                            .filter((market) => market.marketClosed)
+                            .map((market) => {
+                                return (
+                                    <div key={market.id} className="w-72">
+                                        <MarketCard
+                                            id={market.id}
+                                            key={market.id}
+                                            title={market.question}
+                                            totalAmount={market.totalAmount}
+                                            totalYesAmount={market.totalYesAmount}
+                                            totalNoAmount={market.totalNoAmount}
+                                            outcome={market.outcome}
+                                            yesBets={market.yesBets}
+                                            noBets={market.noBets}
+                                            currentUser={account}
+                                            isClosed={true}
+                                        />
+                                    </div>
+                                );
+                            })}
                     </div>
                 </div>
             </main>
