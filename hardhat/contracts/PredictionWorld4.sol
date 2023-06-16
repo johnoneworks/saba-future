@@ -78,6 +78,7 @@ contract PredictionWorld4 is Initializable {
         amountOfFreeTokenForEarlyBird = _amountOfFreeTokenForEarlyBird;
         owner = msg.sender;
         commissionAddress = owner;
+        adminAddresses[owner] = true;
     }
 
     function createMarket(
@@ -86,7 +87,7 @@ contract PredictionWorld4 is Initializable {
         string memory _description,
         string memory _resolverUrl,
         uint256 _endTimestamp
-    ) public onlyOwner {
+    ) public onlyAdmin {
 
         uint256 timestamp = block.timestamp;
 
@@ -161,7 +162,7 @@ contract PredictionWorld4 is Initializable {
     function distributeWinningAmount(
         uint256 _marketId,
         bool _eventOutcome
-    ) public payable onlyOwner {
+    ) public payable onlyAdmin {
 
         uint256 commissionRate = 99;
         uint256 hundred = 100;
@@ -245,11 +246,7 @@ contract PredictionWorld4 is Initializable {
     }
 
     function isAdminUser(address _address) public view returns (bool) {
-        if (adminAddresses[_address]) {
-            return true;
-        } else {
-            return false;
-        }
+        return adminAddresses[_address];
     }
 
     function addAdminUser(address _address) public onlyOwner {
@@ -264,6 +261,11 @@ contract PredictionWorld4 is Initializable {
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Unauthorized");
+        _;
+    }
+
+    modifier onlyAdmin() {
+        require(adminAddresses[msg.sender], "Unauthorized");
         _;
     }
 }

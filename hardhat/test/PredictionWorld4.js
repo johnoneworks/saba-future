@@ -395,7 +395,13 @@ describe("PredictionWorld4", function () {
 
   describe("Multiple Admin Users", function () {
 
-    it("Should be rejected when updating the admin user by NOT owner", async function () {
+    it("Owner should be the default admin", async function () {
+      const { predictionWorld, owner } = await loadFixture(deploySurePredictionWorldFixture);
+      const ownerPredictionContract = predictionWorld.connect(owner);
+      ownerPredictionContract.isAdminUser(owner.address).is.equal(true);
+    });
+
+    it("Should be rejected to update the admin user if user is NOT owner", async function () {
       const { predictionWorld, other1, other2 } = await loadFixture(deploySurePredictionWorldFixture);
       const other1PredictionContract = predictionWorld.connect(other1);
       await expect(other1PredictionContract.addAdminUser(other1.address)).to.be.revertedWith("Unauthorized");
@@ -403,7 +409,7 @@ describe("PredictionWorld4", function () {
       await expect(other1PredictionContract.removeAdminUser(other2.address)).to.be.revertedWith("Unauthorized");
     });
 
-    it("Should be updated when updating the admin user by owner", async function () {
+    it("Should update the admin users if the user is owner", async function () {
       const { predictionWorld, owner, other1, other2, other3 } = await loadFixture(deploySurePredictionWorldFixture);
       const ownerPredictionContract = predictionWorld.connect(owner);
       await ownerPredictionContract.addAdminUser(other1.address);
@@ -418,6 +424,50 @@ describe("PredictionWorld4", function () {
       expect(await ownerPredictionContract.isAdminUser(other1.address)).is.equal(true);
       expect(await ownerPredictionContract.isAdminUser(other2.address)).is.equal(false);
       expect(await ownerPredictionContract.isAdminUser(other3.address)).is.equal(false);
+    });
+
+    it("Should be rejected to create a market if the user is NOT admin user", async function () {
+      const { predictionWorld, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+      const other1PredictionContract = predictionWorld.connect(other1);
+      expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(false);
+      await expect(other1PredictionContract.createMarket(
+        dummyMarket1.question,
+        dummyMarket1.creatorImageHash,
+        dummyMarket1.description,
+        dummyMarket1.resolverUrl,
+        dummyMarket1.endTimestamp
+      )).to.be.revertedWith("Unauthorized");
+    });
+
+    it("Should create the market when the user is admin user", async function () {
+      const { predictionWorld, owner, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+      const ownerPredictionContract = predictionWorld.connect(owner);
+      await ownerPredictionContract.addAdminUser(other1.address);
+      const other1PredictionContract = predictionWorld.connect(other1);
+      expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(true);
+      await other1PredictionContract.createMarket(
+        dummyMarket1.question,
+        dummyMarket1.creatorImageHash,
+        dummyMarket1.description,
+        dummyMarket1.resolverUrl,
+        dummyMarket1.endTimestamp
+      );
+    });
+
+    it("Should be rejected to distribute if the user is NOT admin user", async function () {
+      const { predictionWorld, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+      const other1PredictionContract = predictionWorld.connect(other1);
+      expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(false);
+      await expect(other1PredictionContract.distributeWinningAmount(0, true)).to.be.revertedWith("Unauthorized");
+    });
+
+    it("Should distribute when the user is admin user", async function () {
+      const { predictionWorld, owner, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+      const ownerPredictionContract = predictionWorld.connect(owner);
+      await ownerPredictionContract.addAdminUser(other1.address);
+      const other1PredictionContract = predictionWorld.connect(other1);
+      expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(true);
+      await other1PredictionContract.distributeWinningAmount(0, true);
     });
 
   });
