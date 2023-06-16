@@ -19,6 +19,7 @@ export default function App({ Component, pageProps }) {
   const [sureTokenInterface, setSureTokenInterface] = useState(null);
   const [predictionWorldContract, setPredictionWorldContract] = useState(null);
   const [predictionWorldInterface, setPredictionWorldInterface] = useState(null);
+  const [email, setEmail] = useState('');
 
   const contextValue = {
     account2,
@@ -48,6 +49,8 @@ export default function App({ Component, pageProps }) {
       setPredictionWorldContract,
       predictionWorldInterface,
       setPredictionWorldInterface,
+      email,
+      setEmail
     }}>
     <TestContext.Provider value={contextValue}>
       <Component {...pageProps} />
