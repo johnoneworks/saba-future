@@ -1,6 +1,7 @@
 import ChartContainer from "@/components/ChartContainer";
 import Loading from "@/components/Loading";
 import { predictionWorld3Address, sureToken3Address } from "@/config";
+import { ADD_NO_BET, ADD_YES_BET } from "@/constants/ContractsFunctionName";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import moment from "moment";
 import dynamic from "next/dynamic";
@@ -8,6 +9,16 @@ import Head from "next/head";
 import Img from "next/image";
 import { useRouter } from "next/router";
 import { Suspense, useCallback, useContext, useEffect, useState } from "react";
+
+/** TODO LIST:
+ 1. Return back button
+ 2. Add loading
+ 3. Add error handling
+ 4. Add chart
+ 5. update bet button
+ 6. 下注後，要更新資料
+ 7. 顯示資料 
+ 8. 將此頁移到 index.js */
 
 //TODO: 放到 constant
 const SELECT_TYPE = {
@@ -82,7 +93,7 @@ export default function Detail() {
     const router = useRouter();
     const { id } = router.query;
     const { account, smartAccount, predictionWorldContract, predictionWorldInterface, sureTokenInterface } = useContext(BiconomyAccountContext);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [market, setMarket] = useState({
         title: "title of market",
@@ -110,6 +121,7 @@ export default function Detail() {
                     description: market.info.description,
                     resolverUrl: market.info.resolverUrl
                 });
+                setLoading(false);
             } catch (error) {
                 console.error(`Error getting market detail, ${error}`);
             }
@@ -117,48 +129,41 @@ export default function Detail() {
         [id, predictionWorldContract]
     );
 
-    const handleGasless = async () => {
+    const handleTrade = async () => {
+        if (input == "") return;
         try {
             setLoading(true);
+            const betFunctionName = selected === SELECT_TYPE.YES ? ADD_YES_BET : ADD_NO_BET;
 
-            let betFunction = null;
-            if (input && selected === SELECT_TYPE.YES) {
-                betFunction = "addYesBet";
-            } else if (input && selected === SELECT_TYPE.NO) {
-                betFunction = "addNoBet";
+            try {
+                const approveEncodedData = sureTokenInterface.encodeFunctionData("approve", [predictionWorld3Address, input]);
+                const addYesBetEncodedData = predictionWorldInterface.encodeFunctionData(betFunctionName, [id, input]);
+                const transactions = [
+                    {
+                        to: sureToken3Address,
+                        data: approveEncodedData,
+                        gasLimit: 500000
+                    },
+                    {
+                        to: predictionWorld3Address,
+                        data: addYesBetEncodedData
+                    }
+                ];
+
+                const txResponse = await smartAccount.sendTransactionBatch({ transactions });
+                console.log("UserOp hash", txResponse.hash);
+                const txReceipt = await txResponse.wait();
+                console.log("Tx hash", txReceipt.transactionHash);
+            } catch (error) {
+                console.error(`Error: ${error}`);
             }
 
-            if (betFunction) {
-                let transactions = [];
-                try {
-                    const approveEncodedData = sureTokenInterface.encodeFunctionData("approve", [predictionWorld3Address, input]);
-                    const addYesBetEncodedData = predictionWorldInterface.encodeFunctionData(betFunction, [id, input]);
-                    transactions = [
-                        {
-                            to: sureToken3Address,
-                            data: approveEncodedData,
-                            gasLimit: 500000
-                        },
-                        {
-                            to: predictionWorld3Address,
-                            data: addYesBetEncodedData
-                        }
-                    ];
-
-                    const txResponse = await smartAccount.sendTransactionBatch({ transactions });
-                    console.log("UserOp hash", txResponse.hash);
-                    const txReceipt = await txResponse.wait();
-                    console.log("Tx hash", txReceipt.transactionHash);
-                } catch (error) {
-                    console.error(`Error: ${error}`);
-                }
-
-                await getMarket(id, predictionWorldContract);
-            }
+            await getMarket(id, predictionWorldContract);
         } catch (error) {
             console.error(`Error trading: ${error}`);
         } finally {
             setLoading(false);
+            setInput("");
         }
     };
 
@@ -222,19 +227,20 @@ export default function Detail() {
                                     {/* TODO: Input可拆出來做 */}
                                     <div className="w-full border border-gray-300 flex flex-row items-center">
                                         <input
-                                            type="search"
+                                            type="number"
                                             name="q"
                                             value={input}
                                             onChange={(e) => setInput(e.target.value)}
                                             className="w-full py-2 px-2 text-base text-gray-700 border-gray-300 rounded-md focus:outline-none"
                                             placeholder="0"
                                             autoComplete="off"
+                                            min={0}
                                         />
                                         <span className="whitespace-nowrap text-sm font-semibold">SURE</span>
                                     </div>
 
                                     {/* TODO: 下注按鈕，可拆出來做*/}
-                                    <button className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white" onClick={handleGasless}>
+                                    <button className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white" onClick={handleTrade}>
                                         Trade
                                     </button>
                                 </div>
