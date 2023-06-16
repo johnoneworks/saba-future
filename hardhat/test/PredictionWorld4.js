@@ -393,4 +393,33 @@ describe("PredictionWorld4", function () {
 
   });
 
+  describe("Multiple Admin Users", function () {
+
+    it("Should be rejected when updating the admin user by NOT owner", async function () {
+      const { predictionWorld, other1, other2 } = await loadFixture(deploySurePredictionWorldFixture);
+      const other1PredictionContract = predictionWorld.connect(other1);
+      await expect(other1PredictionContract.addAdminUser(other1.address)).to.be.revertedWith("Unauthorized");
+      await expect(other1PredictionContract.addAdminUser(other2.address)).to.be.revertedWith("Unauthorized");
+      await expect(other1PredictionContract.removeAdminUser(other2.address)).to.be.revertedWith("Unauthorized");
+    });
+
+    it("Should be updated when updating the admin user by owner", async function () {
+      const { predictionWorld, owner, other1, other2, other3 } = await loadFixture(deploySurePredictionWorldFixture);
+      const ownerPredictionContract = predictionWorld.connect(owner);
+      await ownerPredictionContract.addAdminUser(other1.address);
+      await ownerPredictionContract.addAdminUser(other2.address);
+
+      expect(await ownerPredictionContract.isAdminUser(other1.address)).is.equal(true);
+      expect(await ownerPredictionContract.isAdminUser(other2.address)).is.equal(true);
+      expect(await ownerPredictionContract.isAdminUser(other3.address)).is.equal(false);
+
+      await ownerPredictionContract.removeAdminUser(other2.address);
+
+      expect(await ownerPredictionContract.isAdminUser(other1.address)).is.equal(true);
+      expect(await ownerPredictionContract.isAdminUser(other2.address)).is.equal(false);
+      expect(await ownerPredictionContract.isAdminUser(other3.address)).is.equal(false);
+    });
+
+  });
+
 });
