@@ -1,16 +1,16 @@
+import { ChainId } from "@biconomy/core-types";
+import SmartAccount from "@biconomy/smart-account";
+import SocialLogin from "@biconomy/web3-auth";
+import "@biconomy/web3-auth/dist/src/style.css";
+import { ethers } from "ethers";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect } from "react";
-import { ethers } from "ethers";
-import SocialLogin from "@biconomy/web3-auth";
-import SmartAccount from "@biconomy/smart-account";
-import { ChainId } from "@biconomy/core-types";
-import "@biconomy/web3-auth/dist/src/style.css";
 
-import SURE from "@/utils/abis/SureToken3.json";
-import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
 import { predictionWorld3Address, sureToken3Address } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
+import SURE from "@/utils/abis/SureToken3.json";
 
 export default function BiconomyNavbar() {
     const router = useRouter();
@@ -25,6 +25,8 @@ export default function BiconomyNavbar() {
         setSureTokenInterface,
         setPredictionWorldContract,
         setPredictionWorldInterface,
+        email,
+        setEmail
     } = useContext(BiconomyAccountContext);
 
     const connectWallet = useCallback(async () => {
@@ -44,17 +46,15 @@ export default function BiconomyNavbar() {
             await sdk.init({
                 chainId: ethers.utils.hexValue(ChainId.POLYGON_MUMBAI),
                 whitelistUrls: {
-                    "https://saba-future.vercel.app": signature,
-                },
+                    "https://saba-future.vercel.app": signature
+                }
             });
         }
 
         if (sdk.web3auth.status !== "connected") {
             await sdk.showWallet();
         } else {
-            const web3Provider = new ethers.providers.Web3Provider(
-                sdk.provider
-            );
+            const web3Provider = new ethers.providers.Web3Provider(sdk.provider);
             const accounts = await web3Provider.listAccounts();
             console.log(`account:${accounts[0]}`);
 
@@ -65,29 +65,21 @@ export default function BiconomyNavbar() {
                     {
                         chainId: ChainId.POLYGON_MUMBAI,
                         dappAPIKey: "WFa23cEs2.8010afd7-00e3-48a5-9f14-183faf9a8361", // TODO: should use .env
-                        providerUrl: "https://polygon-mumbai.g.alchemy.com/v2/GDTl7qsRqT4CbILRcYxCOC1DF2-jpNuF", // TODO: should use .env
+                        providerUrl: "https://polygon-mumbai.g.alchemy.com/v2/GDTl7qsRqT4CbILRcYxCOC1DF2-jpNuF" // TODO: should use .env
                     }
-                ],
-            }
+                ]
+            };
 
             let smartAccount = new SmartAccount(web3Provider, smartAccountOptions);
             smartAccount = await smartAccount.init();
 
             const signer = web3Provider.getSigner();
-            const sureTokenContract = new ethers.Contract(
-                sureToken3Address,
-                SURE.abi,
-                signer
-            );
+            const sureTokenContract = new ethers.Contract(sureToken3Address, SURE.abi, signer);
             const sureTokenInterface = new ethers.utils.Interface(SURE.abi);
-            
-            const predictionWorldContract = new ethers.Contract(
-                predictionWorld3Address,
-                PredictionWorld.abi,
-                signer
-            );
+
+            const predictionWorldContract = new ethers.Contract(predictionWorld3Address, PredictionWorld.abi, signer);
             const predictionWorldInterface = new ethers.utils.Interface(PredictionWorld.abi);
-            
+
             setAccount(accounts[0]);
             setProvider(web3Provider);
             setSmartAccount(smartAccount);
@@ -96,10 +88,16 @@ export default function BiconomyNavbar() {
             setPredictionWorldContract(predictionWorldContract);
             setPredictionWorldInterface(predictionWorldInterface);
         }
-        
+
+        if (sdk.web3auth.status === "connected") {
+            const user = await sdk.getUserInfo();
+            if (!!user && !!user.email) {
+                setEmail(user.email);
+                // TODO: call api set email
+            }
+        }
         setSocialLoginSDK(sdk);
         return socialLoginSDK;
-
     }, [socialLoginSDK]);
 
     const disconnectWallet = async () => {
@@ -133,7 +131,6 @@ export default function BiconomyNavbar() {
                 clearInterval(interval);
             };
         }, 1000);
-
     }, [account, connectWallet, socialLoginSDK]);
 
     // useEffect(() => {
@@ -160,34 +157,23 @@ export default function BiconomyNavbar() {
             <nav className="w-full h-16 mt-auto max-w-5xl">
                 <div className="flex flex-row justify-between items-center h-full">
                     <Link href="/" passHref>
-                        <span className="font-semibold text-xl cursor-pointer">
-                            Prediction World
-                        </span>
+                        <span className="font-semibold text-xl cursor-pointer">Prediction World</span>
                     </Link>
-                    {!router.asPath.includes("/market") &&
-                        !router.asPath.includes("/admin") && (
-                            <div className="flex flex-row items-center justify-center h-full">
-                                <TabButton
-                                    title="Market"
-                                    isActive={router.asPath === "/"}
-                                    url={"/"}
-                                />
-                                <TabButton
-                                    title="Portfolio"
-                                    isActive={router.asPath === "/portfolio"}
-                                    url={"/portfolio"}
-                                />
-                            </div>
-                        )}
+                    {!router.asPath.includes("/market") && !router.asPath.includes("/admin") && (
+                        <div className="flex flex-row items-center justify-center h-full">
+                            <TabButton title="Market" isActive={router.asPath === "/"} url={"/"} />
+                            <TabButton title="Portfolio" isActive={router.asPath === "/portfolio"} url={"/portfolio"} />
+                        </div>
+                    )}
 
                     {account ? (
-                        <div
-                            className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
-                            onClick={disconnectWallet}
-                        >
-                            <span className="text-lg text-white">
-                                {account.substr(0, 10)}...
-                            </span>
+                        <div className="flex">
+                            <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer mx-4">
+                                <span className="text-lg text-white">{email || `${account.substr(0, 10)}...`}</span>
+                            </div>
+                            <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer" onClick={disconnectWallet}>
+                                <span className="text-lg text-white">Logout</span>
+                            </div>
                         </div>
                     ) : (
                         <div
@@ -207,10 +193,9 @@ const TabButton = ({ title, isActive, url }) => {
     return (
         <Link href={url} passHref>
             <div
-                className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${isActive
-                    ? "border-blue-700 text-blue-700 text-lg font-semibold"
-                    : "border-white text-gray-400 text-lg"
-                    }`}
+                className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${
+                    isActive ? "border-blue-700 text-blue-700 text-lg font-semibold" : "border-white text-gray-400 text-lg"
+                }`}
             >
                 <span>{title}</span>
             </div>
