@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }) {
     const [predictionWorldContract, setPredictionWorldContract] = useState(null);
     const [predictionWorldInterface, setPredictionWorldInterface] = useState(null);
     const [email, setEmail] = useState("");
-    const [isPageLoading, setIsPageLoading] = useState(false);
+    const [isPageLoading, setIsPageLoading] = useState(true);
     const [isMarketLoading, setIsMarketLoading] = useState(false);
 
     const contextValue = {

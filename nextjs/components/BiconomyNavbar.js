@@ -9,6 +9,7 @@ import { useCallback, useContext, useEffect } from "react";
 
 import { predictionWorld3Address, sureToken3Address } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { LoadingContext } from "@/contexts/LoadingContext";
 import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
 import SURE from "@/utils/abis/SureToken3.json";
 
@@ -28,6 +29,7 @@ export default function BiconomyNavbar() {
         email,
         setEmail
     } = useContext(BiconomyAccountContext);
+    const { setIsPageLoading } = useContext(LoadingContext);
 
     const connectWallet = useCallback(async () => {
         console.log("connectWallet()");
@@ -87,6 +89,7 @@ export default function BiconomyNavbar() {
             setSureTokenInterface(sureTokenInterface);
             setPredictionWorldContract(predictionWorldContract);
             setPredictionWorldInterface(predictionWorldInterface);
+            setIsPageLoading(false);
         }
 
         if (sdk.web3auth.status === "connected") {
