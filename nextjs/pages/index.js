@@ -136,12 +136,12 @@ export default function Home() {
                     <br />
                     <span className="font-bold my-3 text-lg">Market</span>
                     <div>Open Markets</div>
-                    <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
+                    <div className={styles.marketCardContainer}>
                         {markets
                             .filter((market) => !market.marketClosed)
                             .map((market) => {
                                 return (
-                                    <div key={market.id} className="w-72">
+                                    <div key={market.id} className={styles.marketCard}>
                                         <MarketCard
                                             id={market.id}
                                             key={market.id}
@@ -165,7 +165,7 @@ export default function Home() {
                             .filter((market) => market.marketClosed)
                             .map((market) => {
                                 return (
-                                    <div key={market.id} className="w-72">
+                                    <div key={market.id} className={styles.marketCard}>
                                         <MarketCard
                                             id={market.id}
                                             key={market.id}

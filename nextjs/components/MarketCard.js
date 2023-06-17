@@ -1,16 +1,109 @@
-import Img from "next/image";
+import { Avatar, CardContent, Typography } from "@mui/material";
+import { styled } from "@mui/system";
+import Image from "next/image";
 import Link from "next/link";
+
+const CardContainer = styled("div")({
+    boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.15)",
+    borderRadius: "8px",
+    margin: "4px",
+    cursor: "pointer",
+    "&:hover": {
+        borderColor: "#0070f3"
+    }
+});
+
+const CardTop = styled("div")({
+    display: "flex"
+});
+
+const TypographyGroup = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+});
+
+const CustomAvatar = styled(Avatar)({
+    "border-radius": "4px",
+    "margin-right": "4px"
+});
+
+const Title = styled("div")({
+    fontSize: "14px",
+    fontWeight: "bold",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    marginBottom: "8px"
+});
+
+const InfoText = styled("div")({
+    marginRight: "6px",
+    fontSize: "12px",
+    color: "#777"
+});
+
+const ValueContainer = styled("div")({
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "6px"
+});
+
+const ValueBox = styled("div")({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    "border-radius": "4px"
+});
+
+const Info = styled("div")({
+    display: "flex",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    color: "rgba(0, 0, 0, 0.65)",
+    fontWeight: "bold",
+    lineHeight: 1,
+    borderRadius: "4px",
+    padding: "2px 4px"
+});
+
+const isVolume = {
+    width: "38%",
+    backgroundColor: "#F2F5FA"
+};
+
+const isYes = {
+    width: "29%",
+    backgroundColor: "#E9F6EE"
+};
+
+const isNo = {
+    width: "29%",
+    backgroundColor: "#FDEDED"
+};
+
+const CustomTypography = styled("div")({
+    fontSize: "12px",
+    fontWeight: "normal",
+    transform: "scale(0.8)"
+});
+
+const SureText = styled(Typography)({
+    fontSize: "12px",
+    color: "#0070f3"
+});
 
 export default function MarketCard({ id, title, outcome, yesBets, noBets, totalAmount, totalYesAmount, totalNoAmount, currentUser, isClosed }) {
     const failIcon = (
-        <svg className="h-8 w-8 text-red-500" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            {" "}
-            <path stroke="none" d="M0 0h24v24H0z" /> <line x1="18" y1="6" x2="6" y2="18" /> <line x1="6" y1="6" x2="18" y2="18" />
+        <svg className="h-8 w-8 text-red-500" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
     );
     const successIcon = (
-        <svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            {" "}
+        <svg className="h-8 w-8 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
         </svg>
     );
@@ -42,45 +135,72 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
     const cardValueTitle = isClosed ? ["Outcome", "Winners Count", "Bonus"] : ["Volume", "Yes", "No"];
 
     return (
-        <div className="w-full overflow-hidden sm:my-1 sm:px-1 sm:w md:my-2 md:px-2 md:w lg:w xl:w lg:w-full xl:w-full my-2">
+        <div className="w-full overflow-hidden">
             <Link href={`/market/${id}`} passHref>
-                <div className="flex flex-col border border-gray-300 rounded-lg p-3 hover:border-blue-700 cursor-pointer">
-                    <div className="flex flex-row space-x-5 pb-8">
-                        <div className="w-12  h-w-12 ">
-                            <Img src="/placeholder.jpg" alt="placeholder" className="rounded-full" width={100} height={100} />
-                        </div>
-                        <span className={`text-sm break-words ${titleWidth}`}>{title}</span>
+                <CardContainer>
+                    <CardContent>
+                        <CardTop>
+                            <CustomAvatar>
+                                <Image src="/placeholder.jpg" alt="placeholder" width={100} height={100} />
+                            </CustomAvatar>
+                            <Title>{title}</Title>
+                        </CardTop>
                         {win ? successIcon : null}
                         {lost ? failIcon : null}
-                    </div>
-                    <div className="flex flex-row flex-nowrap justify-between items-center">
-                        <div className="flex flex-col space-y-1">
-                            <span className="text-xs text-gray-500 font-light">{cardValueTitle[0]}</span>
-                            {isClosed && <span className="text-sm">{outcomeValue}</span>}
-                            {!isClosed && <span className="text-sm">{totalAmount.toString()} SURE</span>}
-                        </div>
-                        <div className="flex flex-col space-y-1">
-                            <span className="text-xs text-gray-500 font-light">{cardValueTitle[1]}</span>
-                            {isClosed && <span className="text-sm">{winnersCount}</span>}
-                            {!isClosed && (
-                                <div className="px-1 bg-gray-200 text-center rounded-sm">
-                                    <span className="text-xs font-medium text-blue-700">{totalYesAmount.toString()} SURE</span>
-                                </div>
-                            )}
-                        </div>
-                        <div className="flex flex-col space-y-1">
-                            <span className="text-xs text-gray-500 font-light">{cardValueTitle[2]}</span>
-                            {isClosed && <span className="text-sm">{bonus.toString()} SURE</span>}
-                            {!isClosed && (
-                                <div className="px-1 bg-gray-200 text-center rounded-sm">
-                                    <span className="text-xs font-medium text-blue-700">{totalNoAmount.toString()} SURE</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                        <ValueContainer>
+                            <ValueBox style={isVolume}>
+                                {isClosed ? (
+                                    <Info>
+                                        <InfoText>{cardValueTitle[0]}</InfoText>
+                                        <Typography variant="filled">{outcomeValue}</Typography>
+                                    </Info>
+                                ) : (
+                                    <Info>
+                                        <InfoText>{cardValueTitle[0]}</InfoText>
+                                        <TypographyGroup>
+                                            <Typography variant="filled">{totalAmount.toString()}</Typography>
+                                            <CustomTypography variant="body2">SURE</CustomTypography>
+                                        </TypographyGroup>
+                                    </Info>
+                                )}
+                            </ValueBox>
+                            <ValueBox style={isYes}>
+                                {isClosed ? (
+                                    <Info>
+                                        <InfoText>{cardValueTitle[1]}</InfoText>
+                                        <Typography variant="filled">{winnersCount}</Typography>
+                                    </Info>
+                                ) : (
+                                    <Info>
+                                        <InfoText>{cardValueTitle[1]}</InfoText>
+                                        <TypographyGroup>
+                                            <Typography variant="filled">{totalYesAmount.toString()}</Typography>
+                                            <CustomTypography variant="body2">SURE</CustomTypography>
+                                        </TypographyGroup>
+                                    </Info>
+                                )}
+                            </ValueBox>
+                            <ValueBox style={isNo}>
+                                {isClosed ? (
+                                    <Info>
+                                        <InfoText>{cardValueTitle[2]}</InfoText>
+                                        <Typography variant="filled">{bonus.toString()}</Typography>
+                                        <CustomTypography variant="body2">SURE</CustomTypography>
+                                    </Info>
+                                ) : (
+                                    <Info>
+                                        <InfoText>{cardValueTitle[2]}</InfoText>
+                                        <TypographyGroup>
+                                            <Typography variant="filled">{totalNoAmount.toString()}</Typography>
+                                            <CustomTypography variant="body2">SURE</CustomTypography>
+                                        </TypographyGroup>
+                                    </Info>
+                                )}
+                            </ValueBox>
+                        </ValueContainer>
+                    </CardContent>
+                </CardContainer>
             </Link>
         </div>
     );
 }
-// ethers.utils.formatEther(balanceInWei);
