@@ -1,7 +1,8 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer";
-import Loading from "@/components/Loading";
+import PageLoading from "@/components/LoadingPage/PageLoading";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { LoadingContext } from "@/contexts/LoadingContext";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -72,7 +73,7 @@ export default function Detail() {
     const router = useRouter();
     const { id } = router.query;
     const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const [loading, setLoading] = useState(true);
+    const { isPageLoading, setIsPageLoading } = useContext(LoadingContext);
 
     const [market, setMarket] = useState({
         title: "title of market",
@@ -87,7 +88,6 @@ export default function Detail() {
     const getMarket = useCallback(
         async (id, predictionWorldContract) => {
             try {
-                setLoading(true);
                 const market = await predictionWorldContract.markets(id);
                 const date = moment.unix(market.info.endTimestamp / 1000).format("MMMM D, YYYY");
                 setMarket({
@@ -99,7 +99,6 @@ export default function Detail() {
                     description: market.info.description,
                     resolverUrl: market.info.resolverUrl
                 });
-                setLoading(false);
             } catch (error) {
                 console.error(`Error getting market detail, ${error}`);
             }
@@ -115,8 +114,7 @@ export default function Detail() {
 
     return (
         <div className="flex flex-col justify-center items-center h-full">
-            <Loading loading={loading}></Loading>
-
+            <PageLoading />
             {/* TODO: 返回功能 */}
             <Head>
                 <title>Prediction World</title>
@@ -127,27 +125,28 @@ export default function Detail() {
             <Suspense fallback={<div>Loading...</div>}>
                 <BiconomyNavbar />
             </Suspense>
+            {!isPageLoading && (
+                <div className="w-full flex flex-col sm:flex-row py-4 max-w-5xl">
+                    <div className="w-full flex flex-col pt-1">
+                        {/* market title */}
+                        <MarketTitle title={market?.title} endTimestamp={market?.endTimestamp} totalAmount={market?.totalAmount} />
+                        {/* market container */}
+                        <div className="flex flex-col space-y-3">
+                            <div className="w-full flex flex-row mt-5">
+                                {/* TODO: Market 的Yes No 詳細資料 */}
+                                <div className="w-2/3 border rounded-lg p-1 pb-4 border-gray-300 mr-2">
+                                    <ChartContainer questionId={id} />
+                                </div>
 
-            <div className="w-full flex flex-col sm:flex-row py-4 max-w-5xl">
-                <div className="w-full flex flex-col pt-1">
-                    {/* market title */}
-                    <MarketTitle title={market?.title} endTimestamp={market?.endTimestamp} totalAmount={market?.totalAmount} />
-                    {/* market container */}
-                    <div className="flex flex-col space-y-3">
-                        <div className="w-full flex flex-row mt-5">
-                            {/* TODO: Market 的Yes No 詳細資料 */}
-                            <div className="w-2/3 border rounded-lg p-1 pb-4 border-gray-300 mr-2">
-                                <ChartContainer questionId={id} />
+                                {/* 下注區 */}
+                                <BetArea id={id} market={market} />
                             </div>
-
-                            {/* 下注區 */}
-                            <BetArea id={id} market={market} />
                         </div>
+                        {/* Market Description */}
+                        <MarketDescription description={market?.description} resolverUrl={market?.resolverUrl} />
                     </div>
-                    {/* Market Description */}
-                    <MarketDescription description={market?.description} resolverUrl={market?.resolverUrl} />
                 </div>
-            </div>
+            )}
         </div>
     );
 }
