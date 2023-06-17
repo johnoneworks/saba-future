@@ -4,7 +4,7 @@ import { Suspense, useContext, useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 import dynamic from "next/dynamic";
 
-
+import { predictionWorld3Address } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 const BiconomyNavbar = dynamic(
@@ -21,7 +21,13 @@ export default function Admin() {
   const [description, setDescription] = useState("");
   const [resolverUrl, setResolverUrl] = useState("");
   const [timestamp, setTimestamp] = useState(Date());
-  const { predictionWorldContract, sureTokenContract, account } = useContext(BiconomyAccountContext);
+  const {
+    provider,
+    sureTokenContract,
+    account,
+    smartAccount,
+    predictionWorldInterface,
+  } = useContext(BiconomyAccountContext);
 
   const getBalance = useCallback(async () => {
     try {
@@ -38,43 +44,34 @@ export default function Admin() {
   const handleSubmit = async () => {
     try {
       setSubmitButtonText("Creating");
-      await predictionWorldContract.createMarket(
-        title,
-        "",
-        description,
-        resolverUrl,
-        timestamp
-      );
+      await createMarketWithGasless();
+      alert("Success!");
+    } catch (error) {
+      console.error(`Error creating market`);
+      console.error(error);
+      alert("Error!!");
+    } finally {
       setSubmitButtonText("Create Market");
-    } catch (error) {
-      console.error(`Error creating market: ${error}`);
     }
-    /*
-    try {
-        setSubmitButtonText("Creating");
-        console.log(`We got here`);
-        const { ethereum } = window;
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const predictionWorldContract = new ethers.Contract(
-            predictionWorld3Address,
-            PredictionWorld.abi,
-            signer
-        );
-
-        await predictionWorldContract.createMarket(
-            title,
-            "", // just a fake string for image hash
-            description,
-            resolverUrl,
-            timestamp
-        );
-        setSubmitButtonText("Create Market");
-    } catch (error) {
-        console.error(`Error creating market: ${error}`);
-    }
-    */
   }
+
+  const createMarketWithGasless = async () => {
+    let transactions = [];
+    const transactionData = predictionWorldInterface.encodeFunctionData(
+      'createMarket', [title, '', description, resolverUrl, timestamp]
+    );
+
+    transactions = [{
+      to: predictionWorld3Address,
+      data: transactionData,
+    }];
+
+    const txResponse = await smartAccount.sendTransactionBatch({ transactions });
+    console.log('UserOp hash', txResponse.hash);
+    const txReceipt = await txResponse.wait();
+    console.log('Tx hash', txReceipt.transactionHash);
+    const txReceipt2 = await provider.getTransactionReceipt(txReceipt.transactionHash);
+  };
 
   useEffect(() => {
     getBalance();

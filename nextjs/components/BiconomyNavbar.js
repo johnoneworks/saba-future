@@ -72,6 +72,8 @@ export default function BiconomyNavbar() {
 
             let smartAccount = new SmartAccount(web3Provider, smartAccountOptions);
             smartAccount = await smartAccount.init();
+            console.log(`Smart Account Owner: ${smartAccount.owner}`);
+            console.log(`Smart Contract Wallet: ${smartAccount.address}`);
 
             const signer = web3Provider.getSigner();
             const sureTokenContract = new ethers.Contract(

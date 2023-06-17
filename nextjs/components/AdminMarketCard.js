@@ -1,8 +1,8 @@
 import Img from "next/image";
-import { ethers } from "ethers";
+import { useContext } from "react";
 
 import { predictionWorld3Address } from "@/config";
-import PredictionWorld from "../utils/abis/PredictionWorld3.json"
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 export default function PortfolioMarketCard({
   id,
@@ -10,26 +10,48 @@ export default function PortfolioMarketCard({
   totalAmount
 }) {
 
-  let predictionWorldContract;
-  try {
-    const { ethereum } = window;
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    predictionWorldContract = new ethers.Contract(
-      predictionWorld3Address,
-      PredictionWorld.abi,
-      signer
-    );
-  } catch (error) {
-    console.error(`Error getting markets, ${error}`);
-  }
+  const {
+    provider,
+    smartAccount,
+    predictionWorldInterface,
+  } = useContext(BiconomyAccountContext);
 
   const onYes = async () => {
-    await predictionWorldContract.distributeWinningAmount(id, true);
+    try {
+      await distributeWithGasless(true);
+      alert('Success!');
+    } catch (err) {
+      console.error(err);
+      alert('Error!!');
+    }
   }
   const onNo = async () => {
-    await predictionWorldContract.distributeWinningAmount(id, false);
+    try {
+      await distributeWithGasless(false);
+      alert('Success!');
+    } catch (err) {
+      console.error(err);
+      alert('Error!!');
+    }
   }
+
+  const distributeWithGasless = async (result) => {
+    let transactions = [];
+    const transactionData = predictionWorldInterface.encodeFunctionData(
+      'distributeWinningAmount', [id, result]
+    );
+
+    transactions = [{
+      to: predictionWorld3Address,
+      data: transactionData,
+    }];
+
+    const txResponse = await smartAccount.sendTransactionBatch({ transactions });
+    console.log('UserOp hash', txResponse.hash);
+    const txReceipt = await txResponse.wait();
+    console.log('Tx hash', txReceipt.transactionHash);
+    const txReceipt2 = await provider.getTransactionReceipt(txReceipt.transactionHash);
+  };
 
   return (
     <div className="w-full overflow-hidden my-2">
