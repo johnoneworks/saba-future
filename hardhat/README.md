@@ -1,7 +1,7 @@
 # Intro
 This is the part with the smart contract related functions
 
-# Usage
+# Usage (Obsolete)
     - Compile Contract
         - `npx hardhat compile`
     - Deploy
