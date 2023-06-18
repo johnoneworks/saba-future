@@ -6,9 +6,9 @@ This is the part with the smart contract related functions
         - `npx hardhat compile`
     - Deploy
         - to mumbai
-            - `npx hardhat run scripts/deploy-prediction-world.js --network mumbai`
+            - `npx hardhat run ~/hardhat/scripts/deploy-prediction-world.js --network mumbai`
         - to hardhat network
-            - `npx hardhat run scripts/deploy.js`
+            - `npx hardhat run ~/hardhat/scripts/deploy.js`
     - copy the ~/harhat/artifacts/contracts/PredictionWorld3.json & ~/harhat/artifacts/contracts/SureToken3.json to ~/nextjs/utils/abis
     - Transfer SURE to PredictionWorld3
         - note, need to transfer token to PredictionWorld3
@@ -50,7 +50,7 @@ This is the part with the smart contract related functions
 
         - Deploy the sure token contract.
 
-          `npx hardhat run scripts/deploySureToken.js --network mumbai`
+          `npx hardhat run ~/hardhat/scripts/deploySureToken.js --network mumbai`
 
           You will get the information
             SURE Token(3) contract deployed to 0xF1CE94...
@@ -66,11 +66,11 @@ This is the part with the smart contract related functions
 
     - Deploy Proxy + Implementation Contract
 
-        - Confirm the "initialContract" in the script/deployProxy.js
+        - Confirm the "initialContract" in the ~/hardhat/script/deployProxy.js
 
         - Deploy the proxy and implementation contract.
 
-          `npx hardhat run scripts/deployProxy.js --network mumbai`
+          `npx hardhat run ~/hardhat/scripts/deployProxy.js --network mumbai`
 
           You will get the information
                        Sure Token: 0x552571d0...
@@ -95,7 +95,7 @@ This is the part with the smart contract related functions
 
         - Upgrade the proxy with new contract.
 
-          `npx hardhat run scripts/upgradeProxy.js --network mumbai`
+          `npx hardhat run ~/hardhat/scripts/upgradeProxy.js --network mumbai`
 
           You will get the information
                             Owner: 0xcc6Ccc0A...
