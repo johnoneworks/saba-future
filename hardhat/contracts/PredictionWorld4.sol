@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -8,8 +8,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 // import "hardhat/console.sol";
 
 contract PredictionWorld4 is Initializable {
-    address public constant commissionAddress =
-        0x99e9624508534FC190B233CB1D3a9b755B5D312d;
+    address public commissionAddress;
     address public owner;
     address public sureToken;
     uint256 public totalMarkets;
@@ -21,10 +20,12 @@ contract PredictionWorld4 is Initializable {
     uint32 public currentEarlyBirdCount;
 
     mapping(uint256 => Market) public markets;
-    mapping(address => uint256) public winAmounts;
-    address[] public winAddresses;
+    mapping(address => uint256) winAmounts;
+    address[] winAddresses;
 
     mapping(address => bool) earlyBirds;
+
+    mapping(address => bool) adminAddresses;
 
     struct Market {
         uint256 id;
@@ -76,6 +77,8 @@ contract PredictionWorld4 is Initializable {
         numOfEarlyBirdsAllowed = _numOfEarlyBirdsAllowed;
         amountOfFreeTokenForEarlyBird = _amountOfFreeTokenForEarlyBird;
         owner = msg.sender;
+        commissionAddress = owner;
+        adminAddresses[owner] = true;
     }
 
     function createMarket(
@@ -84,8 +87,8 @@ contract PredictionWorld4 is Initializable {
         string memory _description,
         string memory _resolverUrl,
         uint256 _endTimestamp
-    ) public {
-        require(msg.sender == owner, "Unauthorized");
+    ) public onlyAdmin {
+
         uint256 timestamp = block.timestamp;
 
         Market storage market = markets[totalMarkets];
@@ -158,15 +161,14 @@ contract PredictionWorld4 is Initializable {
 
     function distributeWinningAmount(
         uint256 _marketId,
-        bool eventOutcome
-    ) public payable {
-        require(msg.sender == owner, "Unauthorized");
+        bool _eventOutcome
+    ) public payable onlyAdmin {
 
         uint256 commissionRate = 99;
         uint256 hundred = 100;
 
         Market storage market = markets[_marketId];
-        if (eventOutcome) {
+        if (_eventOutcome) {
             uint256 bounus = market.totalNoAmount * commissionRate / hundred;
             uint256 totalWinAmount = 0;
             for (uint256 i = 0; i < market.yesBets.length; i++) {
@@ -221,7 +223,7 @@ contract PredictionWorld4 is Initializable {
 
             delete winAddresses;
         }
-        market.outcome = eventOutcome;
+        market.outcome = _eventOutcome;
         market.marketClosed = true;
     }
 
@@ -243,8 +245,27 @@ contract PredictionWorld4 is Initializable {
         owner = _newOwner;
     }
 
+    function isAdminUser(address _address) public view returns (bool) {
+        return adminAddresses[_address];
+    }
+
+    function addAdminUser(address _address) public onlyOwner {
+        if (!adminAddresses[_address]) {
+            adminAddresses[_address] = true;
+        }
+    }
+
+    function removeAdminUser(address _address) public onlyOwner {
+        delete adminAddresses[_address];
+    }
+
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function.");
+        require(msg.sender == owner, "Unauthorized");
+        _;
+    }
+
+    modifier onlyAdmin() {
+        require(adminAddresses[msg.sender], "Unauthorized");
         _;
     }
 }
