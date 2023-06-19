@@ -17,6 +17,12 @@ import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
 import SURE from "@/utils/abis/SureToken3.json";
 import axios from "axios";
 
+/**
+ * TODO:
+ * 1. refactor
+ *
+ */
+
 export default function BiconomyNavbar() {
     const router = useRouter();
     const {
@@ -196,7 +202,7 @@ export default function BiconomyNavbar() {
 
     return (
         <>
-            <nav className="w-full h-16 mt-auto max-w-5xl">
+            {/* <nav className="w-full h-16 mt-auto max-w-5xl">
                 <div className="flex flex-row justify-between items-center h-full">
                     <Link href="/" passHref>
                         <span className="font-semibold text-xl cursor-pointer">Prediction World</span>
@@ -226,7 +232,7 @@ export default function BiconomyNavbar() {
                         </div>
                     )}
                 </div>
-            </nav>
+            </nav> */}
         </>
     );
 }

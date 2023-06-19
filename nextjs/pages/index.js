@@ -1,18 +1,24 @@
 import { Header } from "@/components/Header/Header";
+import MarketLoading from "@/components/LoadingPage/MarketLoading";
 import PageLoading from "@/components/LoadingPage/PageLoading";
 import MarketCard from "@/components/MarketCard";
-import { MARKET_STATUS } from "@/constants/Constant";
+import { Statement } from "@/components/Statement/Statement";
+import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { useContext } from "react";
+import { LoadingContext } from "@/contexts/LoadingContext";
+import { useRouter } from "next/router";
+import { useContext, useEffect } from "react";
+import { PageContext } from "../contexts/PageContext";
 import useGetMarkets from "../hooks/useGetMarkets";
-import useGetUserBalance from "../hooks/useGetUserBalance";
 import styles from "../styles/Home.module.css";
 /**
  * TODO:
- * 1. add market loading
- * 2. 更新market
- * 3. 切換Tab邏輯
- * 4. useGetBalance hook
+ * 1. add market loading √
+ * 2. 更新market √
+ * 3. 切換Tab邏輯 √
+ * 4. useGetBalance hook √
+ * 5. 把 markets 抽出去做成一個 component
+ * 6. 優化 router
  */
 
 const ShowMarkets = (props) => {
@@ -50,13 +56,21 @@ const ShowMarkets = (props) => {
 };
 
 export default function Home() {
+    const router = useRouter();
+    const { menu, marketId } = router.query;
     const { account } = useContext(BiconomyAccountContext);
+    const { isMarketLoading } = useContext(LoadingContext);
+    const { currentMenu } = useContext(PageContext);
     const { markets, updateMarkets } = useGetMarkets();
-    const { balance, updateBalance } = useGetUserBalance();
 
-    const refreshMarkets = () => {
-        // updateMarkets() TODO
-    };
+    useEffect(() => {
+        if (account && !menu) {
+            router.push({
+                pathname: `/`,
+                query: { menu: currentMenu }
+            });
+        }
+    }, [account]);
 
     return (
         <div className={styles.container}>
@@ -64,19 +78,25 @@ export default function Home() {
             {/* Header NavBar */}
             <Header />
             <main className="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow max-w-5xl">
-                <div className="w-full flex flex-col flex-grow pt-1">
-                    You have: {balance} SURE tokens
-                    <br />
-                    <span className="font-bold my-3 text-lg">Market</span>
-                    <div>Open Markets</div>
-                    <div className={styles.marketCardContainer}>
-                        <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
-                    </div>
-                    <div>Closed Markets</div>
-                    <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-                        <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
-                    </div>
-                </div>
+                {/* TODO: refactor Markets 拆出去 */}
+                {menu === MENU_TYPE.MARKET && (
+                    <>
+                        <MarketLoading />
+                        {!isMarketLoading && (
+                            <div className="w-full flex flex-col flex-grow pt-1">
+                                <div className={styles.marketCardContainer}>
+                                    <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
+                                </div>
+                                <div>Closed Markets</div>
+                                <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
+                                    <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+                {/* TODO: STATEMENT */}
+                {menu === MENU_TYPE.STATEMENT && <Statement />}
             </main>
         </div>
     );

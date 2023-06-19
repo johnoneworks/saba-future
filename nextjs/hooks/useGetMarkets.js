@@ -1,4 +1,5 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { LoadingContext } from "@/contexts/LoadingContext";
 import { useContext, useEffect, useState } from "react";
 
 /**
@@ -11,6 +12,7 @@ import { useContext, useEffect, useState } from "react";
 const useGetMarkets = () => {
     const [markets, setMarkets] = useState();
     const { account, smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { isMarketLoading, setIsMarketLoading } = useContext(LoadingContext);
 
     const getBets = async (marketId) => {
         let bets = await predictionWorldContract.getBets(Number(marketId));
@@ -43,6 +45,7 @@ const useGetMarkets = () => {
             if (!smartAccount.address) {
                 return;
             }
+            setIsMarketLoading(true);
             let marketCount = await predictionWorldContract.totalMarkets();
             let tempMarkets = [];
             for (let i = 0; i < marketCount; i++) {
@@ -69,6 +72,7 @@ const useGetMarkets = () => {
                 tempMarkets.push(mt);
             }
             setMarkets(tempMarkets);
+            setIsMarketLoading(false);
         } catch (error) {
             console.error(`Error getting market: ${error}`);
         }

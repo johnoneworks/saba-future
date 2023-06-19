@@ -1,6 +1,6 @@
 export const MENU_TYPE = {
-    MARKET: "MARKET",
-    STATEMENT: "STATEMENT"
+    MARKET: "Market",
+    STATEMENT: "Statement"
 };
 
 export const MARKET_STATUS = {

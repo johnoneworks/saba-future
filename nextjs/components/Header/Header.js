@@ -1,3 +1,8 @@
+import { MENU_TYPE } from "@/constants/Constant";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { PageContext } from "@/contexts/PageContext";
+import useGetMarkets from "@/hooks/useGetMarkets";
+import useGetUserBalance from "@/hooks/useGetUserBalance";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
@@ -5,15 +10,16 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { Suspense } from "react";
+import { useRouter } from "next/router";
+import { Suspense, useContext } from "react";
 import styles from "./Header.module.scss";
 
 /**
  * TODO:
  * 1. return back button
- * 2. add MUI style
- * 3. 個人資訊
+ * 2. add MUI style √
+ * 3. 個人資訊 icon √
+ * 4. Login / Logout Logic
  */
 
 const CustomPersonIcon = styled(PersonIcon)({
@@ -39,37 +45,68 @@ const ProfileItem = ({ type, text }) => {
     );
 };
 
-const TabButton = ({ title, isActive, url }) => {
+const MenuTab = ({ tab }) => {
+    const { currentMenu, setCurrentMenu } = useContext(PageContext);
+    const router = useRouter();
     return (
-        <Link href={url} passHref>
-            <div className={classnames(styles.tabItem, { [styles.active]: isActive })}>
-                <span>{title}</span>
-            </div>
-        </Link>
+        <div
+            className={classnames(styles.tabItem, { [styles.active]: tab === currentMenu })}
+            onClick={() => {
+                setCurrentMenu(tab);
+                router.push({
+                    pathname: `/`,
+                    query: { menu: tab }
+                });
+            }}
+        >
+            <span>{tab}</span>
+        </div>
     );
 };
 
 export const Header = () => {
+    const { account, email } = useContext(BiconomyAccountContext);
+    const { markets, updateMarkets } = useGetMarkets();
+    const { balance, updateBalance } = useGetUserBalance();
+
+    const refreshMarkets = () => {
+        updateMarkets();
+    };
+
+    const handleLogout = () => {
+        //TODO
+    };
+
+    const handleReturnBack = () => {
+        //TODO
+    };
+
     return (
-        <div className={styles.root}>
-            <div className={styles.header}>
-                <RefreshIcon />
-                <div> Prediction World </div>
-                <LogoutIcon />
-            </div>
-            <div className={styles.headerInfo}>
-                <div className={styles.profile}>
-                    <ProfileItem type="person" text="person" />
-                    <ProfileItem type="wallet" text="wallet" />
-                </div>
-                <div className={styles.tab}>
-                    <TabButton title="Market" isActive url={"/"} />
-                    <TabButton title="Portfolio" url={"/portfolio"} />
-                </div>
-            </div>
-            <Suspense fallback={<div>Loading...</div>}>
+        <>
+            <Suspense>
                 <BiconomyNavbar />
             </Suspense>
-        </div>
+            <div className={styles.root}>
+                <div className={styles.header}>
+                    <div onClick={refreshMarkets}>
+                        <RefreshIcon />
+                    </div>
+                    <div> Prediction World </div>
+                    <div onClick={handleLogout}>
+                        <LogoutIcon />
+                    </div>
+                </div>
+                <div className={styles.headerInfo}>
+                    <div className={styles.profile}>
+                        <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
+                        <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
+                    </div>
+                    <div className={styles.tab}>
+                        <MenuTab tab={MENU_TYPE.MARKET} />
+                        <MenuTab tab={MENU_TYPE.STATEMENT} />
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
