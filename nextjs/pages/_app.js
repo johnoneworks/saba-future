@@ -23,6 +23,7 @@ export default function App({ Component, pageProps }) {
     const [email, setEmail] = useState("");
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [isMarketLoading, setIsMarketLoading] = useState(false);
+    const [isSendAccountReady, setisSendAccountReady] = useState(false);
 
     const contextValue = {
         account2,
@@ -52,7 +53,9 @@ export default function App({ Component, pageProps }) {
                     predictionWorldInterface,
                     setPredictionWorldInterface,
                     email,
-                    setEmail
+                    setEmail,
+                    isSendAccountReady,
+                    setisSendAccountReady
                 }}
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>

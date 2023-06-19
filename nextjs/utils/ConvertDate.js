@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-const convertBigNumberToDate = (time) => {
+export const convertBigNumberToDate = (time) => {
     if (!time) return "";
     // 转换 BigNumber 对象到 JavaScript 数字字符串
     let timestampStr = ethers.BigNumber.from(time._hex).toString();
@@ -21,4 +21,8 @@ const convertBigNumberToDate = (time) => {
     return outputDate;
 };
 
-export default convertBigNumberToDate;
+export const currentDate = () => {
+    const currentDate = new Date();
+    const timeStamp = currentDate.toISOString();
+    return timeStamp;
+};

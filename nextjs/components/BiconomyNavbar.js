@@ -8,10 +8,14 @@ import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect } from "react";
 
 import { predictionWorld3Address, sureToken3Address } from "@/config";
+import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { currentDate } from "@/utils/ConvertDate";
+import uuidv4 from "@/utils/Uuid";
 import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
 import SURE from "@/utils/abis/SureToken3.json";
+import axios from "axios";
 
 export default function BiconomyNavbar() {
     const router = useRouter();
@@ -21,13 +25,16 @@ export default function BiconomyNavbar() {
         socialLoginSDK,
         setSocialLoginSDK,
         setProvider,
+        smartAccount,
         setSmartAccount,
         setSureTokenContract,
         setSureTokenInterface,
         setPredictionWorldContract,
         setPredictionWorldInterface,
         email,
-        setEmail
+        setEmail,
+        isSendAccountReady,
+        setisSendAccountReady
     } = useContext(BiconomyAccountContext);
     const { setIsPageLoading } = useContext(LoadingContext);
 
@@ -72,10 +79,11 @@ export default function BiconomyNavbar() {
                 ]
             };
 
-            let smartAccount = new SmartAccount(web3Provider, smartAccountOptions);
-            smartAccount = await smartAccount.init();
-            console.log(`Smart Account Owner: ${smartAccount.owner}`);
-            console.log(`Smart Contract Wallet: ${smartAccount.address}`);
+            let smartAccountSdk = new SmartAccount(web3Provider, smartAccountOptions);
+            smartAccountSdk = await smartAccountSdk.init();
+
+            console.log("%c⧭ Smart Account Owner:", "color: #807160", smartAccountSdk.owner);
+            console.log("%c⧭ Smart Contract Wallet:", "color: #007300", smartAccountSdk.address);
 
             const signer = web3Provider.getSigner();
             const sureTokenContract = new ethers.Contract(sureToken3Address, SURE.abi, signer);
@@ -86,7 +94,7 @@ export default function BiconomyNavbar() {
 
             setAccount(accounts[0]);
             setProvider(web3Provider);
-            setSmartAccount(smartAccount);
+            setSmartAccount(smartAccountSdk);
             setSureTokenContract(sureTokenContract);
             setSureTokenInterface(sureTokenInterface);
             setPredictionWorldContract(predictionWorldContract);
@@ -98,12 +106,40 @@ export default function BiconomyNavbar() {
             const user = await sdk.getUserInfo();
             if (!!user && !!user.email) {
                 setEmail(user.email);
-                // TODO: call api set email
             }
         }
+
         setSocialLoginSDK(sdk);
         return socialLoginSDK;
     }, [socialLoginSDK]);
+
+    const sendAccountData = async ({ smartAccountAddress, email, isSendAccountReady }) => {
+        try {
+            const requestBody = {
+                TimeStamp: currentDate(),
+                Seq: uuidv4(),
+                WalletId: smartAccountAddress,
+                Email: email
+            };
+            const response = await axios.post(API_SAVE_ACCOUNT, requestBody, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (!!response && !!response.data && response.data.ErrorCode === 0) {
+                setisSendAccountReady(!isSendAccountReady);
+            }
+        } catch (error) {
+            console.log("%c⧭ accoutSaveApiIsError", "color: #731d6d", error);
+        }
+    };
+
+    useEffect(() => {
+        // only send account to server when smartAccount is ready in once
+        if (!!smartAccount && !!smartAccount.address && !!email && !isSendAccountReady) {
+            sendAccountData({ smartAccountAddress: smartAccount.address, email, isSendAccountReady });
+        }
+    }, [smartAccount]);
 
     const disconnectWallet = async () => {
         if (!socialLoginSDK || !socialLoginSDK.web3auth) {
@@ -112,6 +148,7 @@ export default function BiconomyNavbar() {
         }
 
         await socialLoginSDK.logout();
+        setisSendAccountReady(false); // reset send account status
         socialLoginSDK.hideWallet();
         setProvider(undefined);
         setAccount(undefined);
