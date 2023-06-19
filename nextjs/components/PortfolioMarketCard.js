@@ -1,7 +1,7 @@
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import convertBigNumberToDate from "../utils/ConvertDate";
+import { convertBigNumberToDate } from "../utils/ConvertDate";
 
 export default function PortfolioMarketCard({ id, title, betType, amount, totalYesAmount, totalNoAmount, timestamp, endTimestamp, hasResolved, outcome }) {
     let bgColor = "";

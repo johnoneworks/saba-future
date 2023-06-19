@@ -17,3 +17,6 @@ export const CONTRACTS_NAME = {
     ADD_YES_BET: "addYesBet",
     ADD_NO_BET: "addNoBet"
 };
+
+const API_URL_DOMAIN = "https://sabafuturecoreapi.azurewebsites.net/api";
+export const API_SAVE_ACCOUNT = `${API_URL_DOMAIN}/SabaFutureInternal/SyncCustInfo`;
