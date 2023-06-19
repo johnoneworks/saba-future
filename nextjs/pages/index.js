@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header/Header";
 import PageLoading from "@/components/LoadingPage/PageLoading";
 import MarketCard from "@/components/MarketCard";
+import { MARKET_STATUS } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { useContext } from "react";
 import useGetMarkets from "../hooks/useGetMarkets";
@@ -14,14 +15,9 @@ import styles from "../styles/Home.module.css";
  * 4. useGetBalance hook
  */
 
-const MARKET_TYPE = {
-    OPEN: "Open",
-    CLOSE: "Close"
-};
-
 const ShowMarkets = (props) => {
-    const { markeType, markets, account } = props;
-    const isClose = markeType !== MARKET_TYPE.OPEN;
+    const { marketStatus, markets, account } = props;
+    const isClose = marketStatus !== MARKET_STATUS.OPEN;
 
     return (
         <>
@@ -74,11 +70,11 @@ export default function Home() {
                     <span className="font-bold my-3 text-lg">Market</span>
                     <div>Open Markets</div>
                     <div className={styles.marketCardContainer}>
-                        <ShowMarkets markeType={MARKET_TYPE.OPEN} markets={markets} account={account} />
+                        <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
                     </div>
                     <div>Closed Markets</div>
                     <div className="flex flex-wrap overflow-hidden sm:-mx-1 md:-mx-2">
-                        <ShowMarkets markeType={MARKET_TYPE.CLOSE} markets={markets} account={account} />
+                        <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
                     </div>
                 </div>
             </main>

@@ -1,12 +1,7 @@
 import { predictionWorld3Address, sureToken3Address } from "@/config";
-import { ADD_NO_BET, ADD_YES_BET } from "@/constants/ContractsFunctionName";
+import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { useContext, useState } from "react";
-
-const SELECT_TYPE = {
-    YES: "YES",
-    NO: "NO"
-};
 
 const SelectButton = (props) => {
     const { type, selected, selectedAmount, totalAmount, onClick } = props;
@@ -23,15 +18,15 @@ const SelectButton = (props) => {
 };
 
 export const BetArea = (props) => {
-    const { market } = props;
-    const { smartAccount, predictionWorldContract, predictionWorldInterface, sureTokenInterface } = useContext(BiconomyAccountContext);
-    const [selected, setSelected] = useState(SELECT_TYPE.YES);
+    const { id, market } = props;
+    const { smartAccount, predictionWorldInterface, sureTokenInterface } = useContext(BiconomyAccountContext);
+    const [selected, setSelected] = useState(BET_TYPE.YES);
     const [input, setInput] = useState("");
 
     const handleTrade = async () => {
         if (input === "") return;
         try {
-            const betFunctionName = selected === SELECT_TYPE.YES ? ADD_YES_BET : ADD_NO_BET;
+            const betFunctionName = selected === BET_TYPE.YES ? CONTRACTS_NAME.ADD_YES_BET : CONTRACTS_NAME.ADD_NO_BET;
 
             try {
                 const approveEncodedData = sureTokenInterface.encodeFunctionData("approve", [predictionWorld3Address, input]);
@@ -55,8 +50,6 @@ export const BetArea = (props) => {
             } catch (error) {
                 console.error(`Error: ${error}`);
             }
-
-            await getMarket(id, predictionWorldContract);
         } catch (error) {
             console.error(`Error trading: ${error}`);
         } finally {
@@ -71,18 +64,18 @@ export const BetArea = (props) => {
                 <hr className="text-black w-full py-2" />
                 <span className="text-base">Pick Outcome</span>
                 <SelectButton
-                    type={SELECT_TYPE.YES}
+                    type={BET_TYPE.YES}
                     selected={selected}
                     selectedAmount={market?.totalYesAmount}
                     totalAmount={market?.totalAmount}
-                    onClick={() => setSelected(SELECT_TYPE.YES)}
+                    onClick={() => setSelected(BET_TYPE.YES)}
                 />
                 <SelectButton
-                    type={SELECT_TYPE.NO}
+                    type={BET_TYPE.NO}
                     selected={selected}
                     selectedAmount={market?.totalNoAmount}
                     totalAmount={market?.totalAmount}
-                    onClick={() => setSelected(SELECT_TYPE.NO)}
+                    onClick={() => setSelected(BET_TYPE.NO)}
                 />
                 <span className="text-sm mt-5 mb-4">How much?</span>
 
