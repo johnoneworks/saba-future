@@ -6,7 +6,7 @@ import classnames from "classnames";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Suspense } from "react";
-import styles from "./Header.module.css";
+import styles from "./Header.module.scss";
 
 /**
  * TODO:

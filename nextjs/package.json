@@ -33,6 +33,7 @@
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-loader-spinner": "^5.3.4",
+        "sass": "^1.63.4",
         "tailwindcss": "^3.3.2",
         "tls": "^0.0.1"
     },

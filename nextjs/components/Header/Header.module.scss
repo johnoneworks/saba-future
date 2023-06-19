@@ -27,8 +27,11 @@
 
 .tabItem {
     margin-right: 30px;
-}
-
-.tabItem.active {
-    color: #1A84F2;
+    &.active {
+        color: #1A84F2;
+        &::before {
+            content: '';
+            width: 100%
+        }
+    }
 }
