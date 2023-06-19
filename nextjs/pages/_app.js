@@ -2,8 +2,10 @@
 import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
 
+import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { PageContext } from "@/contexts/PageContext";
 import { TestContext } from "@/contexts/TestContext";
 import { useState } from "react";
 import { AccountContext } from "../contexts/AccountContext";
@@ -21,9 +23,15 @@ export default function App({ Component, pageProps }) {
     const [predictionWorldContract, setPredictionWorldContract] = useState(null);
     const [predictionWorldInterface, setPredictionWorldInterface] = useState(null);
     const [email, setEmail] = useState("");
+
+    //Loadinf Context
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [isMarketLoading, setIsMarketLoading] = useState(false);
     const [isSendAccountReady, setisSendAccountReady] = useState(false);
+
+    //Page Context
+    const [selectedMenu, setSelectedMenu] = useState(MENU_TYPE.MARKET);
+    const [selectedMarket, setSelectedMarket] = useState(null);
 
     const contextValue = {
         account2,
@@ -59,9 +67,11 @@ export default function App({ Component, pageProps }) {
                 }}
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
-                    <TestContext.Provider value={contextValue}>
-                        <Component {...pageProps} />
-                    </TestContext.Provider>
+                    <PageContext.Provider value={{ selectedMenu, setSelectedMenu, selectedMarket, setSelectedMarket }}>
+                        <TestContext.Provider value={contextValue}>
+                            <Component {...pageProps} />
+                        </TestContext.Provider>
+                    </PageContext.Provider>
                 </LoadingContext.Provider>
             </BiconomyAccountContext.Provider>
         </AccountContext.Provider>
