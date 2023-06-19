@@ -2,9 +2,9 @@ import { Header } from "@/components/Header/Header";
 import PageLoading from "@/components/LoadingPage/PageLoading";
 import MarketCard from "@/components/MarketCard";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { ethers } from "ethers";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import useGetMarkets from "../hooks/useGetMarkets";
+import useGetUserBalance from "../hooks/useGetUserBalance";
 import styles from "../styles/Home.module.css";
 /**
  * TODO:
@@ -54,29 +54,13 @@ const ShowMarkets = (props) => {
 };
 
 export default function Home() {
-    const [balance, setBalance] = useState(0);
-    const { account, smartAccount, sureTokenContract } = useContext(BiconomyAccountContext);
+    const { account } = useContext(BiconomyAccountContext);
     const { markets, updateMarkets } = useGetMarkets();
-
-    const getBalance = async () => {
-        try {
-            if (!smartAccount.address) {
-                return;
-            }
-            let balance = await sureTokenContract.balanceOf(smartAccount.address);
-            setBalance(ethers.utils.commify(balance));
-        } catch (error) {
-            console.error(`Error getting balance, ${error}`);
-        }
-    };
+    const { balance, updateBalance } = useGetUserBalance();
 
     const refreshMarkets = () => {
         // updateMarkets() TODO
     };
-
-    useEffect(() => {
-        getBalance();
-    }, [account]);
 
     return (
         <div className={styles.container}>
