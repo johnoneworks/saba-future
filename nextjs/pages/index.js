@@ -79,7 +79,7 @@ export default function Home() {
             <Header />
             <main className="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow max-w-5xl">
                 {/* TODO: refactor Markets 拆出去 */}
-                {menu === MENU_TYPE.MARKET && (
+                {account && menu === MENU_TYPE.MARKET && (
                     <>
                         <MarketLoading />
                         {!isMarketLoading && (

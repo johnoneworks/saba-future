@@ -7,11 +7,15 @@ import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import { TestContext } from "@/contexts/TestContext";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { AccountContext } from "../contexts/AccountContext";
 
 export default function App({ Component, pageProps }) {
+    const router = useRouter();
+    const { menu, marketId } = router.query;
     const [account, setAccount] = useState();
+    const defaultMenu = menu ? menu : MENU_TYPE.MARKET;
 
     // testing
     const [account2, setAccount2] = useState("no one yet");
@@ -30,7 +34,7 @@ export default function App({ Component, pageProps }) {
     const [isSendAccountReady, setisSendAccountReady] = useState(false);
 
     //Page Context
-    const [currentMenu, setCurrentMenu] = useState(MENU_TYPE.MARKET);
+    const [currentMenu, setCurrentMenu] = useState(defaultMenu);
     const [selectedMarket, setSelectedMarket] = useState(null);
 
     const contextValue = {
