@@ -91,21 +91,23 @@ export const Header = () => {
                     <div onClick={refreshMarkets}>
                         <RefreshIcon />
                     </div>
-                    <div> Prediction World </div>
+                    <div> {account ? "Prediction World" : "Wallet Connecting..."} </div>
                     <div onClick={handleLogout}>
                         <LogoutIcon />
                     </div>
                 </div>
-                <div className={styles.headerInfo}>
-                    <div className={styles.profile}>
-                        <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
-                        <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
+                {account && (
+                    <div className={styles.headerInfo}>
+                        <div className={styles.profile}>
+                            <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
+                            <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
+                        </div>
+                        <div className={styles.tab}>
+                            <MenuTab tab={MENU_TYPE.MARKET} />
+                            <MenuTab tab={MENU_TYPE.STATEMENT} />
+                        </div>
                     </div>
-                    <div className={styles.tab}>
-                        <MenuTab tab={MENU_TYPE.MARKET} />
-                        <MenuTab tab={MENU_TYPE.STATEMENT} />
-                    </div>
-                </div>
+                )}
             </div>
         </>
     );
