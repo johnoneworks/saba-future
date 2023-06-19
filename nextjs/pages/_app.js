@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }) {
     const [isSendAccountReady, setisSendAccountReady] = useState(false);
 
     //Page Context
-    const [selectedMenu, setSelectedMenu] = useState(MENU_TYPE.MARKET);
+    const [currentMenu, setCurrentMenu] = useState(MENU_TYPE.MARKET);
     const [selectedMarket, setSelectedMarket] = useState(null);
 
     const contextValue = {
@@ -67,7 +67,7 @@ export default function App({ Component, pageProps }) {
                 }}
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
-                    <PageContext.Provider value={{ selectedMenu, setSelectedMenu, selectedMarket, setSelectedMarket }}>
+                    <PageContext.Provider value={{ currentMenu, setCurrentMenu, selectedMarket, setSelectedMarket }}>
                         <TestContext.Provider value={contextValue}>
                             <Component {...pageProps} />
                         </TestContext.Provider>
