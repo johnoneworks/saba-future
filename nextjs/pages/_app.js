@@ -8,7 +8,7 @@ import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import { TestContext } from "@/contexts/TestContext";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AccountContext } from "../contexts/AccountContext";
 
 export default function App({ Component, pageProps }) {
@@ -43,6 +43,10 @@ export default function App({ Component, pageProps }) {
         socialLoginSDK,
         setSocialLoginSDK
     };
+
+    useEffect(() => {
+        setCurrentMenu(defaultMenu);
+    }, [defaultMenu]);
 
     return (
         <AccountContext.Provider value={[account, setAccount]}>
