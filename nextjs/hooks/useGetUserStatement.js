@@ -1,6 +1,16 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { testMarketsData } from "@/testData/testMarketsData";
+import { testUserBetList } from "@/testData/testStatementsData";
+import { IsLocal } from "@/utils/IsLocal";
 import { useCallback, useContext, useEffect, useState } from "react";
+
+/**
+ * TODO
+ * 1. 確認資料正確
+ * 2. 優化速度
+ *
+ */
 
 export const useGetUserStatement = () => {
     const { smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
@@ -8,7 +18,40 @@ export const useGetUserStatement = () => {
     const [userTotalBetValue, setUserTotalBetValue] = useState(0);
     const [userStatements, setUserStatements] = useState([]);
 
+    const useTestData = () => {
+        let tempMarkets = testMarketsData;
+        let userBetList = testUserBetList;
+        let totalBetValue = 0;
+        const StatementsInfo = userBetList.reduce((info, statement) => {
+            const market = tempMarkets.find((market) => market.id == statement.id);
+            totalBetValue += parseInt(statement?.yesAmount) + parseInt(statement?.noAmount);
+            if (market) {
+                info.push({
+                    ...statement,
+                    title: market?.info.question,
+                    imageHash: market?.imageHash,
+                    totalAmount: market?.totalAmount,
+                    totalYesAmount: market?.totalYesAmount,
+                    totalNoAmount: market?.totalNoAmount,
+                    hasResolved: market?.hasResolved,
+                    endTimestamp: market?.info.endTimestamp,
+                    timestamp: market?.info.timestamp,
+                    outcome: market?.outcome
+                });
+            }
+            return info;
+        }, []);
+        setUserTotalBetValue(totalBetValue);
+        setUserStatements(StatementsInfo);
+    };
+
     const getStatement = useCallback(async () => {
+        //使用假資料，不需要就 false 掉
+        if (IsLocal) {
+            useTestData();
+            return;
+        }
+
         try {
             setIsMarketLoading(true);
             let marketCount = await predictionWorldContract.totalMarkets();
@@ -35,31 +78,32 @@ export const useGetUserStatement = () => {
             let totalBetAmount = 0;
             for (let i = 0; i < markets.length; i++) {
                 let marketBets = await predictionWorldContract.getBets(i);
-
                 //Yes Bet
-                const yesBet = marketBets["0"].find((bet) => bet.user.toLowerCase() === smartAccount.address.toLowerCase());
-                if (yesBet) {
-                    userBetList.push({
-                        id: i.toString(),
-                        yesAmount: bet.amount.toString(),
-                        timestamp: bet.timestamp.toString()
-                    });
-                    totalBetAmount += parseInt(bet.amount);
-                }
+                marketBets["0"].forEach((bet) => {
+                    if (bet.user.toLowerCase() == smartAccount.address.toLowerCase()) {
+                        userBetList.push({
+                            id: i.toString(),
+                            yesAmount: bet.amount.toString(),
+                            timestamp: bet.timestamp.toString()
+                        });
+                        totalBetAmount += parseInt(bet.amount);
+                    }
+                });
                 //No Bet
-                const noBet = marketBets["1"].find((bet) => bet.user.toLowerCase() === smartAccount.address.toLowerCase());
-                if (noBet) {
-                    userBetList.push({
-                        id: i.toString(),
-                        noAmount: bet.amount.toString(),
-                        timestamp: bet.timestamp.toString()
-                    });
-                    totalBetAmount += parseInt(bet.amount);
-                }
+                marketBets["1"].forEach((bet) => {
+                    if (bet.user.toLowerCase() == smartAccount.address.toLowerCase()) {
+                        userBetList.push({
+                            id: i.toString(),
+                            noAmount: bet.amount.toString(),
+                            timestamp: bet.timestamp.toString()
+                        });
+                        totalBetAmount += parseInt(bet.amount);
+                    }
+                });
             }
 
             const StatementsInfo = userBetList.reduce((info, statement) => {
-                const market = markets.find((market) => market.id === statement.id);
+                const market = markets.find((market) => market.id == statement.id);
                 if (market) {
                     info.push({
                         ...statement,

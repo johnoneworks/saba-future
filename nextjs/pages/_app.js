@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }) {
 
     useEffect(() => {
         setCurrentMenu(defaultMenu);
-    }, [defaultMenu]);
+    }, [menu]);
 
     return (
         <AccountContext.Provider value={[account, setAccount]}>

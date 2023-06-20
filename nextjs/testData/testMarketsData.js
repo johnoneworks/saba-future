@@ -1,3 +1,4 @@
+const { BigNumber } = require("ethers");
 export const testMarketsData = [
     {
         id: 1,
@@ -56,7 +57,12 @@ export const testMarketsData = [
                 amount: 1,
                 user: "0xa5c1D6514807D4655a9635cE2A40d83228Ae9E8B"
             }
-        ]
+        ],
+        info: {
+            question: "會不會寫到第 50 版~? XD",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        }
     },
     {
         id: 2,
@@ -67,6 +73,11 @@ export const testMarketsData = [
         totalNoAmount: 850,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "Edward 會不會買 PS5",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -126,6 +137,11 @@ export const testMarketsData = [
         totalNoAmount: 0,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "上線會不會順利",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -185,6 +201,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "會不會寫到第 500 版~? XD",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -244,6 +265,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "今天會順利完工嗎?",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -303,6 +329,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "明天會下雨嗎",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -362,6 +393,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "會有人接棒黃子郊嗎",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -421,6 +457,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "想不到題目了",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -480,6 +521,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "青菜啦",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -539,6 +585,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: false,
         outcome: false,
+        info: {
+            question: "ai 幫我想題目",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -598,6 +649,11 @@ export const testMarketsData = [
         totalNoAmount: 85,
         marketClosed: true,
         outcome: true,
+        info: {
+            question: "John會升官嗎",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
@@ -657,6 +713,11 @@ export const testMarketsData = [
         totalNoAmount: 90,
         marketClosed: true,
         outcome: false,
+        info: {
+            question: "Lydia 會發現題目都是隨便打的嗎",
+            timestamp: BigNumber.from("0x64819c03"),
+            endTimestamp: BigNumber.from("0x018909997800")
+        },
         yesBets: [
             {
                 time: "2023-05-04T16:56:18.000Z",
