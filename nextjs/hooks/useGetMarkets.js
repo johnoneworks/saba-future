@@ -1,5 +1,7 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { testMarketsData } from "@/testData/testMarketsData";
+import { IsLocal } from "@/utils/IsLocal";
 import { useContext, useEffect, useState } from "react";
 
 /**
@@ -13,6 +15,13 @@ const useGetMarkets = () => {
     const [markets, setMarkets] = useState();
     const { account, smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
     const { isMarketLoading, setIsMarketLoading } = useContext(LoadingContext);
+
+    const useTestData = () => {
+        let tempMarkets = testMarketsData;
+        setIsMarketLoading(true);
+        setMarkets(tempMarkets);
+        setIsMarketLoading(false);
+    };
 
     const getBets = async (marketId) => {
         let bets = await predictionWorldContract.getBets(Number(marketId));
@@ -41,6 +50,12 @@ const useGetMarkets = () => {
     };
 
     const updateMarkets = async () => {
+        //使用假資料，不需要就 false 掉
+        if (IsLocal) {
+            useTestData();
+            return;
+        }
+
         try {
             if (!smartAccount.address) {
                 return;

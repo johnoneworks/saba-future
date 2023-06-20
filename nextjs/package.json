@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
+        "dev": "cross-env NODE_ENV=development next dev",
         "build": "next build",
         "start": "next start",
         "test": "jest",
@@ -38,6 +38,7 @@
         "tls": "^0.0.1"
     },
     "devDependencies": {
+        "cross-env": "^7.0.3",
         "eslint": "8.38.0",
         "eslint-config-next": "13.3.0",
         "eslint-config-prettier": "^8.6.0",
