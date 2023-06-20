@@ -4,6 +4,7 @@ import { PageContext } from "@/contexts/PageContext";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -64,7 +65,7 @@ const MenuTab = ({ tab }) => {
     );
 };
 
-export const Header = () => {
+export const Header = (isLogin) => {
     const { account, email } = useContext(BiconomyAccountContext);
     const { markets, updateMarkets } = useGetMarkets();
     const { balance, updateBalance } = useGetUserBalance();
@@ -92,9 +93,7 @@ export const Header = () => {
                         <RefreshIcon />
                     </div>
                     <div> {account ? "Prediction World" : "Wallet Connecting..."} </div>
-                    <div onClick={handleLogout}>
-                        <LogoutIcon />
-                    </div>
+                    <div onClick={handleLogout}>{isLogin ? <LoginIcon /> : <LogoutIcon />}</div>
                 </div>
                 {account && (
                     <div className={styles.headerInfo}>
