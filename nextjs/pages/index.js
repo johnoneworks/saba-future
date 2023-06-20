@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header/Header";
 import MarketLoading from "@/components/LoadingPage/MarketLoading";
 import PageLoading from "@/components/LoadingPage/PageLoading";
-import MarketCard from "@/components/MarketCard";
+import MarketCard from "@/components/MarketCard/MarketCard";
 import { Statement } from "@/components/Statement/Statement";
 import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";

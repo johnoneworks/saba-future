@@ -1,0 +1,55 @@
+.cardContainer {
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    margin: 4px;
+    cursor: pointer;
+    &:hover {
+        border-color: #0070f3;
+    }
+}
+
+.sureGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.valueContainer {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-top: 6px;  
+}
+
+.valueBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 4px;
+
+    &.isVolume {
+        width: 38%;
+        background-color: #F2F5FA;    
+    }
+
+    &.isYes {
+        width: 29%;
+        background-color: #E9F6EE;
+    }
+
+    &.isNo {
+        width: 29%;
+        background-color: #FDEDED;
+    }
+}
+
+.info {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 2px 4px;
+    color: rgba(0, 0, 0, 0.65);
+    font-weight: bold;
+    line-height: 1;
+    border-radius: 4px;
+}
