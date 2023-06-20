@@ -1,0 +1,18 @@
+//MarketTitle
+
+.marketTitle {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.totalVolume {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #fff;
+    padding: 4px 0;
+    width: 168px;
+    border-radius: 4px;
+}
+

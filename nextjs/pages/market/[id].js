@@ -1,14 +1,16 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer";
+import { Header } from "@/components/Header/Header";
 import PageLoading from "@/components/LoadingPage/PageLoading";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { Avatar, Box, Typography } from "@mui/material";
+import { styled } from "@mui/system";
 import moment from "moment";
-import dynamic from "next/dynamic";
-import Head from "next/head";
-import Img from "next/image";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { Suspense, useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
+import styles from "./MarketDetail.module.scss";
 
 /** TODO LIST:
  1. Return back button
@@ -20,36 +22,50 @@ import { Suspense, useCallback, useContext, useEffect, useState } from "react";
  7. 顯示資料 
  8. 將此頁移到 index.js */
 
-const BiconomyNavbar = dynamic(() => import("../../components/BiconomyWallet").then((res) => res.default), {
-    ssr: false
+const CustomTypography = styled(Typography)({
+    fontSize: "12px",
+    fontWeight: "normal",
+    transform: "scale(0.8)",
+    lineHeight: 0.5
 });
 
 const MarketTitle = (props) => {
     const { title, endTimestamp, totalAmount } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
-    const totalSureAmount = `${totalAmount} SURE`;
+    const totalSureAmount = `${totalAmount}`;
 
     return (
-        <div className="p-6 rounded-lg flex flex-row justify-start border border-gray-300">
-            <div className="flex flex-row">
-                <div className="h-w-15 pr-4">
-                    <Img src="/placeholder.jpg" alt="placeholder" className="rounded-full" width={55} height={55} />
-                </div>
-                <div className="flex flex-col justify-start w-1/2 space-y-1">
-                    <span className="text-lg font-semibold whitespace-nowrap">{title}</span>
-                </div>
-            </div>
-            <div className="flex flex-row items-center space-x-4 ml-3">
-                <div className="flex flex-col justify-start bg-gray-100 p-3">
-                    <span className="text-xs font-light text-gray-500 whitespace-nowrap">Market Ends on</span>
-                    <span className="text-base font-semibold text-black whitespace-nowrap">{endTime}</span>
-                </div>
-                <div className="flex flex-col justify-start bg-gray-100 p-3">
-                    <span className="text-xs font-light text-gray-500 whitespace-nowrap">Total Volume</span>
-                    <span className="text-base font-semibold text-black whitespace-nowrap">{totalSureAmount}</span>
-                </div>
-            </div>
-        </div>
+        <Box className={styles.marketTitle}>
+            <Box sx={{ display: "flex", mb: "10px" }}>
+                <Avatar sx={{ width: 55, height: 55, borderRadius: "4px" }}>
+                    <Image src="/placeholder.jpg" alt="placeholder" width={100} height={100} />
+                </Avatar>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "8px" }}>
+                    {title}
+                </Typography>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 3, ml: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                    <Typography sx={{ lineHeight: 1 }} variant="caption" color="grey.500" noWrap>
+                        Market Ends on
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ fontWeight: "bold" }} noWrap color="grey.700">
+                        {endTime}
+                    </Typography>
+                </Box>
+                <Box className={styles.totalVolume}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: "bold", mr: 0.5 }} color="grey.700" noWrap>
+                        Total Volume
+                    </Typography>
+                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", transform: "translateY(-3px)" }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: "bold" }} noWrap color="grey.700">
+                            {totalSureAmount}
+                        </Typography>
+                        <CustomTypography color="grey.500">SURE</CustomTypography>
+                    </Box>
+                </Box>
+            </Box>
+        </Box>
     );
 };
 
@@ -115,16 +131,8 @@ export default function Detail() {
     return (
         <div className="flex flex-col justify-center items-center h-full">
             <PageLoading />
-            {/* TODO: 返回功能 */}
-            <Head>
-                <title>Prediction World</title>
-                <meta name="description" content="Generated by create next app" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-
-            <Suspense fallback={<div>Loading...</div>}>
-                <BiconomyNavbar />
-            </Suspense>
+            {/* Header NavBar */}
+            <Header />
             {!isPageLoading && (
                 <div className="w-full flex flex-col sm:flex-row py-4 max-w-5xl">
                     <div className="w-full flex flex-col pt-1">
