@@ -51,7 +51,7 @@ const useGetMarkets = () => {
 
     const updateMarkets = async () => {
         //使用假資料，不需要就 false 掉
-        if (IsLocal) {
+        if (IsLocal()) {
             useTestData();
             return;
         }
