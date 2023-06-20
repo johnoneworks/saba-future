@@ -90,9 +90,9 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
     ];
 
     return (
-        <Box sx={{ width: "100%" }}>
+        <Box>
             <Link href={`/market/${id}`} passHref>
-                <CustomCardContent className={styles.cardContainer}>
+                <CustomCardContent className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                     <Box sx={{ display: "flex" }}>
                         <CustomAvatar>
                             <Image src="/placeholder.jpg" alt="placeholder" width={100} height={100} />
