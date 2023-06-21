@@ -1,6 +1,5 @@
 import { Header } from "@/components/Header/Header";
 import MarketLoading from "@/components/LoadingPage/MarketLoading";
-import PageLoading from "@/components/LoadingPage/PageLoading";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { Statement } from "@/components/Statement/Statement";
 import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
@@ -74,8 +73,6 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            <PageLoading />
-            {/* Header NavBar */}
             <Header />
             <main className="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow max-w-5xl">
                 {/* TODO: refactor Markets 拆出去 */}

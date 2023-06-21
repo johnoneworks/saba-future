@@ -7,7 +7,7 @@ import PortfolioMarketCard from "@/components/PortfolioMarketCard";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import styles from "../styles/Home.module.css";
 
-const BiconomyNavbar = dynamic(() => import("../components/BiconomyNavbar").then((res) => res.default), {
+const BiconomyNavbar = dynamic(() => import("../components/BiconomyWallet").then((res) => res.default), {
     ssr: false
 });
 

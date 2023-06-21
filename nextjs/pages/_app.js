@@ -29,7 +29,7 @@ export default function App({ Component, pageProps }) {
     const [email, setEmail] = useState("");
 
     //Loadinf Context
-    const [isPageLoading, setIsPageLoading] = useState(true);
+    const [isPageLoading, setIsPageLoading] = useState(false);
     const [isMarketLoading, setIsMarketLoading] = useState(false);
     const [isSendAccountReady, setisSendAccountReady] = useState(false);
 
