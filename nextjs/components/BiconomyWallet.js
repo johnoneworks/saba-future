@@ -3,8 +3,6 @@ import SmartAccount from "@biconomy/smart-account";
 import SocialLogin from "@biconomy/web3-auth";
 import "@biconomy/web3-auth/dist/src/style.css";
 import { ethers } from "ethers";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect } from "react";
 
 import { predictionWorld3Address, sureToken3Address } from "@/config";
@@ -16,20 +14,21 @@ import uuidv4 from "@/utils/Uuid";
 import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
 import SURE from "@/utils/abis/SureToken3.json";
 import axios from "axios";
+import PageLoading from "./LoadingPage/PageLoading";
 
 /**
- * TODO:
- * 1. refactor
+ * TODO
+ * 1.
  *
  */
 
-export default function BiconomyNavbar() {
-    const router = useRouter();
+export default function BiconomyWallet() {
     const {
         account,
         setAccount,
         socialLoginSDK,
         setSocialLoginSDK,
+        provider,
         setProvider,
         smartAccount,
         setSmartAccount,
@@ -45,6 +44,7 @@ export default function BiconomyNavbar() {
     const { setIsPageLoading } = useContext(LoadingContext);
 
     const connectWallet = useCallback(async () => {
+        setIsPageLoading(true);
         console.log("connectWallet()");
         if (typeof window === "undefined") return;
         console.log(`socialLoginSDK: ${socialLoginSDK}`);
@@ -147,25 +147,11 @@ export default function BiconomyNavbar() {
         }
     }, [smartAccount]);
 
-    const disconnectWallet = async () => {
-        if (!socialLoginSDK || !socialLoginSDK.web3auth) {
-            console.error("Binconomy SDK not initialized");
-            return;
-        }
-
-        await socialLoginSDK.logout();
-        setisSendAccountReady(false); // reset send account status
-        socialLoginSDK.hideWallet();
-        setProvider(undefined);
-        setAccount(undefined);
-        // setSmartContractWalletAddress("");
-    };
-
     useEffect(() => {
         if (socialLoginSDK && socialLoginSDK.provider) {
             socialLoginSDK.hideWallet();
         }
-    }, [account, socialLoginSDK]);
+    }, [account, socialLoginSDK, provider]);
 
     useEffect(() => {
         const interval = setInterval(async () => {
@@ -175,78 +161,34 @@ export default function BiconomyNavbar() {
             if (socialLoginSDK?.provider && !account) {
                 connectWallet();
             }
+
             return () => {
                 clearInterval(interval);
             };
         }, 1000);
     }, [account, connectWallet, socialLoginSDK]);
 
-    // useEffect(() => {
-    //     async function setupSmartAccount() {
-    //         const smartAccount = new SmartAccount(provider, {
-    //             activeNetworkId: ChainId.POLYGON_MUMBAI,
-    //             supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
-    //         });
-    //         await smartAccount.init();
-    //         const context = smartAccount.getSmartAccountContext();
-    //     }
-    //     if (!!provider && !!account) {
-    //         setupSmartAccount();
-    //         console.log(`Provider: ${provider}`);
-    //     }
-    // }, [account, provider]);
+    //持續檢查玩家未登入，如未登入就show wallet
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            if (window?.socialLoginSDK?.provider) {
+                clearInterval(interval);
+            }
+            if (!provider && !account) {
+                if (socialLoginSDK && socialLoginSDK.status !== "connected") {
+                    await socialLoginSDK.showWallet();
+                }
+            }
+
+            return () => {
+                clearInterval(interval);
+            };
+        }, 2000);
+    }, [account, socialLoginSDK, provider]);
 
     useEffect(() => {
         connectWallet();
     }, []);
 
-    return (
-        <>
-            {/* <nav className="w-full h-16 mt-auto max-w-5xl">
-                <div className="flex flex-row justify-between items-center h-full">
-                    <Link href="/" passHref>
-                        <span className="font-semibold text-xl cursor-pointer">Prediction World</span>
-                    </Link>
-                    {!router.asPath.includes("/market") && !router.asPath.includes("/admin") && (
-                        <div className="flex flex-row items-center justify-center h-full">
-                            <TabButton title="Market" isActive={router.asPath === "/"} url={"/"} />
-                            <TabButton title="Portfolio" isActive={router.asPath === "/portfolio"} url={"/portfolio"} />
-                        </div>
-                    )}
-
-                    {account ? (
-                        <div className="flex">
-                            <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer mx-4">
-                                <span className="text-lg text-white">{email || `${account.substr(0, 10)}...`}</span>
-                            </div>
-                            <div className="bg-green-500 px-6 py-2 rounded-md cursor-pointer" onClick={disconnectWallet}>
-                                <span className="text-lg text-white">Logout</span>
-                            </div>
-                        </div>
-                    ) : (
-                        <div
-                            className="bg-green-500 px-6 py-2 rounded-md cursor-pointer"
-                            onClick={connectWallet} // original code is load all data
-                        >
-                            <span className="text-lg text-white">Connect</span>
-                        </div>
-                    )}
-                </div>
-            </nav> */}
-        </>
-    );
+    return <PageLoading />;
 }
-
-const TabButton = ({ title, isActive, url }) => {
-    return (
-        <Link href={url} passHref>
-            <div
-                className={`h-full px-4 flex items-center border-b-2 font-semibold hover:border-blue-700 hover:text-blue-700 cursor-pointer ${
-                    isActive ? "border-blue-700 text-blue-700 text-lg font-semibold" : "border-white text-gray-400 text-lg"
-                }`}
-            >
-                <span>{title}</span>
-            </div>
-        </Link>
-    );
-};

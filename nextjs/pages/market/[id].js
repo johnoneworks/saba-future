@@ -20,7 +20,7 @@ import { Suspense, useCallback, useContext, useEffect, useState } from "react";
  7. 顯示資料 
  8. 將此頁移到 index.js */
 
-const BiconomyNavbar = dynamic(() => import("../../components/BiconomyNavbar").then((res) => res.default), {
+const BiconomyNavbar = dynamic(() => import("../../components/BiconomyWallet").then((res) => res.default), {
     ssr: false
 });
 

@@ -3,6 +3,7 @@ import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
+import useLogout from "@/hooks/useLogout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -20,7 +21,7 @@ import styles from "./Header.module.scss";
  * 1. return back button
  * 2. add MUI style √
  * 3. 個人資訊 icon √
- * 4. Login / Logout Logic
+ * 4. Login / Logout Logic √
  */
 
 const CustomPersonIcon = styled(PersonIcon)({
@@ -31,7 +32,7 @@ const CustomAccountBalanceWalletIcon = styled(AccountBalanceWalletIcon)({
     fontSize: 16
 });
 
-const BiconomyNavbar = dynamic(() => import("@/components/BiconomyNavbar").then((res) => res.default), {
+const BiconomyWallet = dynamic(() => import("@/components/BiconomyWallet").then((res) => res.default), {
     ssr: false
 });
 
@@ -65,17 +66,20 @@ const MenuTab = ({ tab }) => {
     );
 };
 
-export const Header = (isLogin) => {
+export const Header = () => {
     const { account, email } = useContext(BiconomyAccountContext);
     const { markets, updateMarkets } = useGetMarkets();
     const { balance, updateBalance } = useGetUserBalance();
+    const { disconnectWallet } = useLogout();
 
     const refreshMarkets = () => {
         updateMarkets();
     };
 
     const handleLogout = () => {
-        //TODO
+        if (account) {
+            disconnectWallet();
+        }
     };
 
     const handleReturnBack = () => {
@@ -85,7 +89,7 @@ export const Header = (isLogin) => {
     return (
         <>
             <Suspense>
-                <BiconomyNavbar />
+                <BiconomyWallet />
             </Suspense>
             <div className={styles.root}>
                 <div className={styles.header}>
@@ -93,7 +97,7 @@ export const Header = (isLogin) => {
                         <RefreshIcon />
                     </div>
                     <div> {account ? "Prediction World" : "Wallet Connecting..."} </div>
-                    <div onClick={handleLogout}>{isLogin ? <LoginIcon /> : <LogoutIcon />}</div>
+                    <div onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
                 </div>
                 {account && (
                     <div className={styles.headerInfo}>
