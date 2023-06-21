@@ -16,9 +16,7 @@ export const convertBigNumberToDate = (time) => {
     const minutes = date.getMinutes(); // 分钟
     const seconds = date.getSeconds(); // 秒
 
-    const outputDate = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")} ${hours.toString().padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    const outputDate = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
     return outputDate;
 };
 

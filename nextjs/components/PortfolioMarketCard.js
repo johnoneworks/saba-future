@@ -10,62 +10,64 @@ export default function PortfolioMarketCard({ id, title, betType, amount, totalY
     }
 
     return (
-        <Grid item xs={12} sm={6} md={6} key={id}>
-            <Card>
+        <Grid item xs={12} sm={6} md={4} key={id}>
+            <Card sx={{ boxShadow: 3 }}>
                 <Link href={`/market/${id}`} passHref>
                     <CardHeader
                         avatar={
-                            <Avatar aria-label="recipe">
-                                <Image src="/placeholder.jpg" alt="placeholder" className="rounded-full" width={55} height={55} />
+                            <Avatar aria-label="recipe" variant="rounded" sx={{ width: 64, height: 64 }}>
+                                <Image src="/placeholder.jpg" alt="placeholder" className="rounded-full" width={64} height={64} />
                             </Avatar>
                         }
                         title={title}
+                        titleTypographyProps={{ variant: "h5", fontWeight: "bold" }}
+                        sx={{ pb: 0 }}
                     />
-                    <CardContent sx={{ display: "flex", flexDirection: "column", cursor: "pointer" }}>
-                        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                            <Typography variant="caption" color="text.secondary">
-                                Your Bet
+                    <CardContent sx={{ display: "flex", flexDirection: "column", cursor: "pointer", pt: 0 }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                p: 1,
+                                m: 1,
+                                pb: 0
+                            }}
+                        >
+                            <Box>
+                                <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", mb: "3px", lineHeight: 1, pt: "5px" }}>
+                                    Outcome
+                                </Typography>
+                                <Typography variant="body1" sx={{ color: "#1A84F2", fontWeight: "bold" }}>
+                                    {hasResolved ? outcome.toString() : "In progress"}
+                                </Typography>
+                            </Box>
+                            <Box sx={{ bgcolor: "#3FB06B", pl: "8px", pr: "6px", borderRadius: "4px" }}>
+                                <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.65)", mb: "5px", lineHeight: 1, pt: "5px" }}>
+                                    Your Bet
+                                </Typography>
+                                <Typography variant="body1" sx={{ color: "#fff", fontWeight: "bold", lineHeight: 1 }}>
+                                    {betType}: {amount}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        <Box sx={{ pb: "10px" }}>
+                            <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", textAlign: "center", mb: 0 }}>
+                                Amount Added
                             </Typography>
-                            <Typography variant="button" sx={{ backgroundColor: "success.main", color: "white", px: 3 }}>
-                                <strong>{betType}:</strong> {amount}
+                            <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
+                                {`${totalYesAmount.toString()} SURE on `}
+                                <Typography sx={{ color: "#3FB06B", display: "inline", fontWeight: "bold" }}>Yes</Typography>
+                                {` / ${totalNoAmount.toString()} SURE on `}
+                                <Typography sx={{ color: "#E84D4D", display: "inline", fontWeight: "bold" }}>No</Typography>
                             </Typography>
                         </Box>
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Grid container spacing={2} alignItems="center">
-                                <Grid item xs={12} md={12}>
-                                    <Typography variant="caption" color="text.secondary">
-                                        Outcome
-                                    </Typography>
-                                    <Typography variant="body1">{hasResolved ? outcome.toString() : "In progress"}</Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <Typography variant="caption" color="text.secondary">
-                                        Added On
-                                    </Typography>
-                                    <Typography variant="body1">{convertBigNumberToDate(timestamp)}</Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <Typography variant="caption" color="text.secondary">
-                                        Ending In
-                                    </Typography>
-                                    <Typography variant="body1">{convertBigNumberToDate(endTimestamp)}</Typography>
-                                </Grid>
-                                <Grid item xs={12} md={12}>
-                                    <Grid item xs={12} md={12}>
-                                        <Typography variant="caption" color="text.secondary">
-                                            Amount Added
-                                        </Typography>
-                                    </Grid>
-                                    <Grid container xs={12} md={12}>
-                                        <Grid item xs={6} md={6}>
-                                            {totalYesAmount.toString()} SURE on Yes
-                                        </Grid>
-                                        <Grid item xs={6} md={6}>
-                                            {totalNoAmount.toString()} SURE on No
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
+                        <Box>
+                            <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", textAlign: "center", mb: 0 }}>
+                                Added On / Ending In
+                            </Typography>
+                            <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
+                                {`${convertBigNumberToDate(timestamp)} / ${convertBigNumberToDate(endTimestamp)}`}
+                            </Typography>
                         </Box>
                     </CardContent>
                 </Link>
