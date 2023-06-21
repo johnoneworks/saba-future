@@ -1,5 +1,5 @@
 import { BetArea } from "@/components/BetArea/BetArea";
-import ChartContainer from "@/components/ChartContainer";
+import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { Header } from "@/components/Header/Header";
 import PageLoading from "@/components/LoadingPage/PageLoading";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
@@ -139,17 +139,14 @@ export default function Detail() {
                         {/* market title */}
                         <MarketTitle title={market?.title} endTimestamp={market?.endTimestamp} totalAmount={market?.totalAmount} />
                         {/* market container */}
-                        <div className="flex flex-col space-y-3">
-                            <div className="w-full flex flex-row mt-5">
+                        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            {/* 下注區 */}
+                            <BetArea id={id} market={market} />
+                            <div className="w-full">
                                 {/* TODO: Market 的Yes No 詳細資料 */}
-                                <div className="w-2/3 border rounded-lg p-1 pb-4 border-gray-300 mr-2">
-                                    <ChartContainer questionId={id} />
-                                </div>
-
-                                {/* 下注區 */}
-                                <BetArea id={id} market={market} />
+                                <ChartContainer questionId={id} />
                             </div>
-                        </div>
+                        </Box>
                         {/* Market Description */}
                         <MarketDescription description={market?.description} resolverUrl={market?.resolverUrl} />
                     </div>
