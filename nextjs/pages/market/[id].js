@@ -139,13 +139,15 @@ export default function Detail() {
                         {/* market title */}
                         <MarketTitle title={market?.title} endTimestamp={market?.endTimestamp} totalAmount={market?.totalAmount} />
                         {/* market container */}
-                        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <Box className={styles.marketContainer}>
                             {/* 下注區 */}
-                            <BetArea id={id} market={market} />
-                            <div className="w-full">
-                                {/* TODO: Market 的Yes No 詳細資料 */}
+                            <Box className={styles.betArea}>
+                                <BetArea id={id} market={market} />
+                            </Box>
+                            {/* TODO: Market 的Yes No 詳細資料 */}
+                            <Box className={styles.chart}>
                                 <ChartContainer questionId={id} />
-                            </div>
+                            </Box>
                         </Box>
                         {/* Market Description */}
                         <MarketDescription description={market?.description} resolverUrl={market?.resolverUrl} />

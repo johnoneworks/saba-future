@@ -14,3 +14,24 @@
     width: 168px;
     border-radius: 4px;
 }
+// BetArea & Chart Container
+.marketContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @media (min-width: 768px) {
+        & {
+            flex-direction: row;
+            justify-content: space-between;
+            .betArea {
+                order: 2;
+                width: 48%;
+            }
+
+            .chart {
+                width: 48%;
+            }
+        }
+    }
+}

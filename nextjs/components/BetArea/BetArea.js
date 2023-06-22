@@ -1,19 +1,28 @@
 import { predictionWorld3Address, sureToken3Address } from "@/config";
 import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { Box, Button, InputAdornment, TextField, Typography } from '@mui/material';
+import classnames from "classnames";
 import { useContext, useState } from "react";
+import styles from "./BetArea.module.scss";
 
 const SelectButton = (props) => {
     const { type, selected, selectedAmount, totalAmount, onClick } = props;
     const buttonName = type;
     const totalAmountText = `${!totalAmount ? `0` : ((selectedAmount * 100) / totalAmount).toFixed(2)}%`;
-    const className = `w-full py-2 px-2 ${selected == type ? "bg-green-500 text-white" : "bg-gray-100"} mt-2 cursor-pointer`;
+    const selectedStyle = selected == type ? {backgroundColor: "#3FB06B", color: "white"} : {backgroundColor: "#F2F5FA"};
+    const buttonClass = `is-${buttonName}`;
 
     return (
-        <div id={buttonName} className={className} onClick={onClick}>
-            <span className="font-bold">{buttonName}</span>
-            {totalAmountText}
-        </div>
+        <Box 
+            id={buttonName}
+            style={selectedStyle}
+            className={classnames(styles.volumeButton, {[styles[buttonClass]]: type===buttonName})}
+            onClick={onClick}
+        >
+            <Typography sx={{fontWeight:"bold", mr:"4px"}} variant="subtitle1" component="span">{buttonName}</Typography>
+            <span style={{fontWeight:"bold", color:"rgba(0, 0, 0, 0.65)"}}>{totalAmountText}</span>
+        </Box>
     );
 };
 
@@ -58,47 +67,43 @@ export const BetArea = (props) => {
     };
 
     return (
-        <div className="w-1/3 rounded-lg border border-gray-300 ml-2">
-            <div className="flex flex-col items-start p-6">
-                <span className="text-lg font-bold m-auto pb-2">Buy</span>
-                <hr className="text-black w-full py-2" />
-                <span className="text-base">Pick Outcome</span>
-                <SelectButton
-                    type={BET_TYPE.YES}
-                    selected={selected}
-                    selectedAmount={market?.totalYesAmount}
-                    totalAmount={market?.totalAmount}
-                    onClick={() => setSelected(BET_TYPE.YES)}
-                />
-                <SelectButton
-                    type={BET_TYPE.NO}
-                    selected={selected}
-                    selectedAmount={market?.totalNoAmount}
-                    totalAmount={market?.totalAmount}
-                    onClick={() => setSelected(BET_TYPE.NO)}
-                />
-                <span className="text-sm mt-5 mb-4">How much?</span>
-
-                {/* TODO: Input可拆出來做 */}
-                <div className="w-full border border-gray-300 flex flex-row items-center">
-                    <input
-                        type="number"
-                        name="q"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="w-full py-2 px-2 text-base text-gray-700 border-gray-300 rounded-md focus:outline-none"
-                        placeholder="0"
-                        autoComplete="off"
-                        min={0}
-                    />
-                    <span className="whitespace-nowrap text-sm font-semibold">SURE</span>
-                </div>
-
-                {/* TODO: 下注按鈕，可拆出來做*/}
-                <button className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white" onClick={handleTrade}>
-                    Trade
-                </button>
-            </div>
-        </div>
-    );
+      <Box className={styles.betArea}>
+        <Typography variant="subtitle1" className={styles.title}>Buy</Typography>
+        <hr className="text-black w-full py-2" />
+        <Typography variant="body2" sx={{width: "100%", mb:1}}>Pick Outcome</Typography>
+        <SelectButton
+          type={BET_TYPE.YES}
+          selected={selected}
+          selectedAmount={market?.totalYesAmount}
+          totalAmount={market?.totalAmount}
+          onClick={() => setSelected(BET_TYPE.YES)}
+        />
+        <SelectButton
+          type={BET_TYPE.NO}
+          selected={selected}
+          selectedAmount={market?.totalNoAmount}
+          totalAmount={market?.totalAmount}
+          onClick={() => setSelected(BET_TYPE.NO)}
+        />
+        <Typography variant="body2" sx={{ m: 1,fontWeight:"bold",width:"100%" }}>How much?</Typography>
+        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+          <TextField
+            type="number"
+            name="q"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            sx={{ width: '100%', pt: 0.5,pb: 2, color: '#4B5563', borderColor: '#D1D5DB', borderRadius: 1, '&:focus': { outline: 'none' } }}
+            placeholder="0"
+            autoComplete="off"
+            min={0}
+               InputProps={{
+                 endAdornment: <InputAdornment position="end">SURE</InputAdornment>,
+               }}
+          />
+        </Box>
+        <Button className={styles.betButton} onClick={handleTrade}>
+          Trade
+        </Button>
+      </Box>
+  );
 };

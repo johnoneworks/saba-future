@@ -83,7 +83,7 @@ export default function ChartContainer({ questionId}) {
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", position: "relative" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", position: "relative",width:"100%" }}>
             <InfoTable title="Yes Info" buttonStyle={classnames(styles.infoDropdown, styles.isYes)} info={yesInfo} />
             <InfoTable title="No Info" buttonStyle={classnames(styles.infoDropdown, styles.isNo)} info={noInfo} />
         </Box>
