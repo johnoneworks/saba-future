@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header/Header";
 import MarketLoading from "@/components/LoadingPage/MarketLoading";
 import MarketCard from "@/components/MarketCard/MarketCard";
+import MarketDetail from "@/components/MarketDetail/MarketDetail";
 import { Statement } from "@/components/Statement/Statement";
 import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
@@ -59,7 +60,7 @@ export default function Home() {
     const { menu, marketId } = router.query;
     const { account } = useContext(BiconomyAccountContext);
     const { isMarketLoading } = useContext(LoadingContext);
-    const { currentMenu } = useContext(PageContext);
+    const { currentMenu, currentMarketID } = useContext(PageContext);
     const { markets, updateMarkets } = useGetMarkets();
 
     useEffect(() => {
@@ -76,7 +77,7 @@ export default function Home() {
             <Header />
             <main className="w-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap py-4 flex-grow max-w-5xl">
                 {/* TODO: refactor Markets 拆出去 */}
-                {account && menu === MENU_TYPE.MARKET && (
+                {account && menu === MENU_TYPE.MARKET && !currentMarketID && (
                     <>
                         <MarketLoading />
                         {!isMarketLoading && (
@@ -93,7 +94,8 @@ export default function Home() {
                     </>
                 )}
                 {/* TODO: STATEMENT */}
-                {menu === MENU_TYPE.STATEMENT && <Statement />}
+                {!currentMarketID && menu === MENU_TYPE.STATEMENT && <Statement />}
+                {currentMarketID ? <MarketDetail /> : false}
             </main>
         </div>
     );
