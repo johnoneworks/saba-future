@@ -16,7 +16,9 @@ This is the part with the smart contract related functions
 # Contract Address Info
 
 ## Main Net
+  - Admin Address: 0x158D23876645EBacA4942a23764446D5F74A4D8f
   - Sure: 0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c
+  - Proxy: 0x39a0D0715D61E6C553C9CE06ac026eEbDe5037bA
 
 # Usage (With Upgraded Proxy Support)
 
