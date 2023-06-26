@@ -5,6 +5,7 @@ import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useLogout from "@/hooks/useLogout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
@@ -102,9 +103,7 @@ export const Header = () => {
             <div className={styles.root}>
                 <div className={styles.header}>
                     {/* TODO return back icon */}
-                    <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>
-                        <RefreshIcon />
-                    </div>
+                    <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>{currentMarketID ? <ArrowBackIcon /> : <RefreshIcon />}</div>
                     <div> {account ? "Prediction World" : "Wallet Connecting..."} </div>
                     <div onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
                 </div>
