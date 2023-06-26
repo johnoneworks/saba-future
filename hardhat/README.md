@@ -41,11 +41,11 @@ This is the part with the smart contract related functions
 
           The proxy address. It will be generated after executing deployProxy.js. You don't have to set the variable before that. And it should not be updated when upgrading the new implementation contract.
 
-          Note: If the redeploy the proxy, it'll clear all data in the proxy.
+          Note: If you redeploy the proxy, it'll clear all (state) data in the proxy.
 
         - UPGRADING_CONTRACT
 
-          The new contrat name which you want to upgrade. It will use the variable when executing upgradeProxy.js. You don't have to set the variable before that.
+          The new contrat name which you want to upgrade. It will be the address of the result of executing upgradeProxy.js. You don't have to set the variable before that.
 
     - Deploy Sure Token
 
