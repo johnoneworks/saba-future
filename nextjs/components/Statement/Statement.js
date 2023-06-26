@@ -1,42 +1,52 @@
 import StatementMarketCard from "@/components/StatementMarketCard";
-import { useGetUserStatement } from "@/hooks/useGetUserStatement";
+import { MENU_TYPE } from "@/constants/Constant";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { PageContext } from "@/contexts/PageContext";
+import useGetUserStatement from "@/hooks/useGetUserStatement";
+import styles from "@/styles/Home.module.css";
 import { Grid } from "@mui/material";
-import styles from "../../styles/Home.module.css";
+import { useContext } from "react";
 import MarketLoading from "../LoadingPage/MarketLoading";
 
 /**
  * TODO:
- * 1. 切版
+ * 1. 切版 √
  * 2. 優化
  * 3. 用 hook 取資料 √
  * 4. refresh statement
  *
  */
 export const Statement = () => {
-    const { userTotalBetValue, userStatements, getStatement } = useGetUserStatement();
+    const { userTotalBetValue, userStatements } = useGetUserStatement();
+    const { account } = useContext(BiconomyAccountContext);
+    const { currentMenu, currentMarketID } = useContext(PageContext);
 
     return (
-        <div className={styles.container}>
-            <div className="w-full flex flex-col pt-1">
-                <MarketLoading />
-                <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    {userStatements.map((market, i) => (
-                        <StatementMarketCard
-                            id={market.id}
-                            key={i}
-                            title={market.title}
-                            betType={!!market.yesAmount ? "Yes" : "No"}
-                            amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
-                            totalYesAmount={market.totalYesAmount}
-                            totalNoAmount={market.totalNoAmount}
-                            endTimestamp={market.endTimestamp}
-                            timestamp={market.timestamp}
-                            hasResolved={market.hasResolved}
-                            outcome={market.outcome ? "Yes" : "No"}
-                        />
-                    ))}
-                </Grid>
-            </div>
-        </div>
+        <>
+            {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
+                <div className={styles.container}>
+                    <div className="w-full flex flex-col pt-1">
+                        <MarketLoading />
+                        <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                            {userStatements?.map((market, i) => (
+                                <StatementMarketCard
+                                    id={market.id}
+                                    key={i}
+                                    title={market.title}
+                                    betType={!!market.yesAmount ? "Yes" : "No"}
+                                    amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
+                                    totalYesAmount={market.totalYesAmount}
+                                    totalNoAmount={market.totalNoAmount}
+                                    endTimestamp={market.endTimestamp}
+                                    timestamp={market.timestamp}
+                                    hasResolved={market.hasResolved}
+                                    outcome={market.outcome ? "Yes" : "No"}
+                                />
+                            ))}
+                        </Grid>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
