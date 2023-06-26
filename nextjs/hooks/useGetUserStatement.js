@@ -12,7 +12,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
  *
  */
 
-export const useGetUserStatement = () => {
+const useGetUserStatement = () => {
     const { smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
     const { setIsMarketLoading } = useContext(LoadingContext);
     const [userTotalBetValue, setUserTotalBetValue] = useState(0);
@@ -141,3 +141,5 @@ export const useGetUserStatement = () => {
         getStatement
     };
 };
+
+export default useGetUserStatement;

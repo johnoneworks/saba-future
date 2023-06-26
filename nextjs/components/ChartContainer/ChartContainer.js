@@ -12,7 +12,6 @@ export default function ChartContainer() {
     const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
     const { currentMarketID } = useContext(PageContext);
 
-    console.error("Jim  ", currentMarketID);
     const getBets = useCallback(
         async (currentMarketID, predictionWorldContract) => {
             try {
