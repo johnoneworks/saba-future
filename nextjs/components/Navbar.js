@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useContext } from "react";
 import { AccountContext } from '../contexts/AccountContext';
-import { sureToken3Address } from "../config";
+import { sureTokenAddress } from "../config";
 
 export default function Navbar() {
   const router = useRouter();
@@ -101,7 +101,7 @@ export default function Navbar() {
         params: {
           type: 'ERC20', // Initially only supports ERC20, but eventually more!
           options: {
-            address: sureToken3Address, // The address that the token is at.
+            address: sureTokenAddress, // The address that the token is at.
             symbol: 'SURE', // A ticker symbol or shorthand, up to 5 chars.
             decimals: 18, // The number of decimals in the token
           },

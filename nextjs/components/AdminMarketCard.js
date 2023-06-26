@@ -1,7 +1,7 @@
 import Img from "next/image";
 import { useContext } from "react";
 
-import { predictionWorld3Address } from "@/config";
+import { predictionWorldAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 export default function PortfolioMarketCard({
@@ -42,7 +42,7 @@ export default function PortfolioMarketCard({
     );
 
     transactions = [{
-      to: predictionWorld3Address,
+      to: predictionWorldAddress,
       data: transactionData,
     }];
 
