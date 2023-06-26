@@ -2,9 +2,8 @@ import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import Image from "next/image";
 // import { useRouter } from "next/router";
 import { useContext } from "react";
 import styles from "./MarketDetail.module.scss";
@@ -27,6 +26,13 @@ const CustomTypography = styled(Typography)({
     lineHeight: 0.5
 });
 
+const CustomAvatar = styled(Avatar)({
+    "border-radius": "4px",
+    "margin-right": "4px",
+    width: "56px",
+    height: "56px"
+});
+
 const MarketTitle = (props) => {
     const { title, endTimestamp, totalAmount } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
@@ -35,9 +41,9 @@ const MarketTitle = (props) => {
     return (
         <Box className={styles.marketTitle}>
             <Box sx={{ display: "flex", mb: "10px" }}>
-                <Avatar sx={{ width: 55, height: 55, borderRadius: "4px" }}>
-                    <Image src="/placeholder.jpg" alt="placeholder" width={100} height={100} />
-                </Avatar>
+                <CustomAvatar>
+                    <Box component="img" src="/placeholder.jpg" alt="placeholder" sx={{ width: "100%", height: "100%" }} />
+                </CustomAvatar>
                 <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "8px" }}>
                     {title}
                 </Typography>
@@ -70,16 +76,20 @@ const MarketTitle = (props) => {
 const MarketDescription = (props) => {
     const { description, resolverUrl } = props;
     return (
-        <div className="w-2/3 flex flex-col">
-            <span className="text-base font-semibold py-3">Description</span>
-            {description && <span>{description}</span>}
-            <span className="text-base my-3 py-2 bg-gray-100 rounded-xl px-3">
-                Resolution Source :{" "}
-                <a className="text-blue-700" href={resolverUrl}>
-                    {resolverUrl}
-                </a>
-            </span>
-        </div>
+        <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                Description
+            </Typography>
+            {description && <Typography variant="body2">{description}</Typography>}
+            <Box className={styles.descriptionBox} sx={{ my: 2, py: 2, bgcolor: "grey.200", borderRadius: 1 }}>
+                <Typography variant="subtitle2" component="span" sx={{ px: 1 }}>
+                    Resolution Source :{" "}
+                    <Link href={resolverUrl} color="primary">
+                        {resolverUrl}
+                    </Link>
+                </Typography>
+            </Box>
+        </Box>
     );
 };
 
@@ -89,22 +99,18 @@ export default function MarketDetail() {
     return (
         <>
             {account && marketDetail && (
-                <div className="flex flex-col justify-center items-center h-full">
-                    <div className="w-full flex flex-col sm:flex-row py-4 max-w-5xl">
-                        <div className="w-full flex flex-col pt-1">
-                            <MarketTitle title={marketDetail?.title} endTimestamp={marketDetail?.endTimestamp} totalAmount={marketDetail?.totalAmount} />
-                            <Box className={styles.marketContainer}>
-                                <Box className={styles.betArea}>
-                                    <BetArea id={marketDetail?.id} market={marketDetail} />
-                                </Box>
-                                <Box className={styles.chart}>
-                                    <ChartContainer />
-                                </Box>
-                            </Box>
-                            <MarketDescription description={marketDetail?.description} resolverUrl={marketDetail?.resolverUrl} />
-                        </div>
-                    </div>
-                </div>
+                <>
+                    <MarketTitle title={marketDetail?.title} endTimestamp={marketDetail?.endTimestamp} totalAmount={marketDetail?.totalAmount} />
+                    <Grid container spacing={2} className={styles.marketContainer}>
+                        <Grid item xs={12} md={6} className={styles.betAreaContainer}>
+                            <BetArea id={marketDetail?.id} market={marketDetail} />
+                        </Grid>
+                        <Grid item xs={12} md={6} className={styles.chartContainer}>
+                            <ChartContainer />
+                        </Grid>
+                    </Grid>
+                    <MarketDescription description={marketDetail?.description} resolverUrl={marketDetail?.resolverUrl} />
+                </>
             )}
         </>
     );

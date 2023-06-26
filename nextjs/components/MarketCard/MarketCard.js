@@ -1,6 +1,6 @@
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
-import { Avatar, Box, CardContent, Typography } from "@mui/material";
+import { Avatar, Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import { useRouter } from "next/router";
@@ -31,13 +31,6 @@ const CustomTypography = styled(Typography)({
     fontSize: "12px",
     fontWeight: "normal",
     transform: "scale(0.8)"
-});
-
-const CustomCardContent = styled(CardContent)({
-    height: "136px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around"
 });
 
 export default function MarketCard({ id, title, outcome, yesBets, noBets, totalAmount, totalYesAmount, totalNoAmount, currentUser, isClosed }) {

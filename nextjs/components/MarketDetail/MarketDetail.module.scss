@@ -20,17 +20,18 @@
     flex-direction: column;
     align-items: center;
 
-    @media (min-width: 768px) {
+    .betAreaContainer,.chartContainer {
+        width: 100%;
+    }
+
+    @media (min-width: 900px) {
         & {
             flex-direction: row;
             justify-content: space-between;
-            .betArea {
-                order: 2;
-                width: 48%;
-            }
+            align-items: flex-start;
 
-            .chart {
-                width: 48%;
+            .betAreaContainer {
+                order: 2;
             }
         }
     }
