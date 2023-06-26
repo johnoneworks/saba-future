@@ -1,19 +1,22 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { PageContext } from "@/contexts/PageContext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import classnames from "classnames";
 import { useCallback, useContext, useEffect, useState } from "react";
 import styles from "./ChartContainer.module.scss";
 
-export default function ChartContainer({ questionId}) {
+export default function ChartContainer() {
     const [yesInfo, setYesInfo] = useState([]);
     const [noInfo, setNoInfo] = useState([]);
     const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { currentMarketID } = useContext(PageContext);
 
+    console.error("Jim  ", currentMarketID);
     const getBets = useCallback(
-        async (questionId, predictionWorldContract) => {
+        async (currentMarketID, predictionWorldContract) => {
             try {
-                let bets = await predictionWorldContract.getBets(Number(questionId));
+                let bets = await predictionWorldContract.getBets(Number(currentMarketID));
                 let yesBets = [];
                 let noBets = [];
                 // yes bets
@@ -36,14 +39,14 @@ export default function ChartContainer({ questionId}) {
                 console.error(`Error getting bets, ${error}`);
             }
         },
-        [questionId, predictionWorldContract]
+        [currentMarketID, predictionWorldContract]
     );
 
     useEffect(() => {
-        if (questionId && predictionWorldContract) {
-            getBets(questionId, predictionWorldContract);
+        if (currentMarketID && predictionWorldContract) {
+            getBets(currentMarketID, predictionWorldContract);
         }
-    }, [questionId, account, getBets]);
+    }, [currentMarketID, account, getBets]);
 
     function InfoTable({ info, title, buttonStyle }) {
         const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +57,7 @@ export default function ChartContainer({ questionId}) {
 
         return (
             <Box sx={{ marginBottom: "20px" }}>
-                <Button className={[buttonStyle, classnames({ [styles.isOpen]: isOpen })].join(' ')} onClick={handleClick}>
+                <Button className={[buttonStyle, classnames({ [styles.isOpen]: isOpen })].join(" ")} onClick={handleClick}>
                     {title}
                     <ExpandMoreIcon />
                 </Button>
@@ -63,15 +66,15 @@ export default function ChartContainer({ questionId}) {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={{ width: "50%", textAlign: "center",fontSize: "12px", p: 0.5 }}>Time</TableCell>
-                                    <TableCell sx={{ width: "50%", textAlign: "center",fontSize: "12px", p: 0.5 }}>Amount</TableCell>
+                                    <TableCell sx={{ width: "50%", textAlign: "center", fontSize: "12px", p: 0.5 }}>Time</TableCell>
+                                    <TableCell sx={{ width: "50%", textAlign: "center", fontSize: "12px", p: 0.5 }}>Amount</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {info.map((bet, i) => (
                                     <TableRow key={i}>
-                                        <TableCell sx={{ width: "50%", textAlign: "center", borderBottom:"none" }}>{bet.time.toLocaleString()}</TableCell>
-                                        <TableCell sx={{ width: "50%", textAlign: "center", borderBottom:"none" }}>{bet.amount}</TableCell>
+                                        <TableCell sx={{ width: "50%", textAlign: "center", borderBottom: "none" }}>{bet.time.toLocaleString()}</TableCell>
+                                        <TableCell sx={{ width: "50%", textAlign: "center", borderBottom: "none" }}>{bet.amount}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -83,7 +86,7 @@ export default function ChartContainer({ questionId}) {
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", position: "relative",width:"100%" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", position: "relative", width: "100%" }}>
             <InfoTable title="Yes Info" buttonStyle={classnames(styles.infoDropdown, styles.isYes)} info={yesInfo} />
             <InfoTable title="No Info" buttonStyle={classnames(styles.infoDropdown, styles.isNo)} info={noInfo} />
         </Box>

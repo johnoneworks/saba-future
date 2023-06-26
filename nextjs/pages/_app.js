@@ -35,7 +35,7 @@ export default function App({ Component, pageProps }) {
 
     //Page Context
     const [currentMenu, setCurrentMenu] = useState(defaultMenu);
-    const [selectedMarket, setSelectedMarket] = useState(null);
+    const [currentMarketID, setCurrentMarketID] = useState(null);
 
     const contextValue = {
         account2,
@@ -75,7 +75,7 @@ export default function App({ Component, pageProps }) {
                 }}
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
-                    <PageContext.Provider value={{ currentMenu, setCurrentMenu, selectedMarket, setSelectedMarket }}>
+                    <PageContext.Provider value={{ currentMenu, setCurrentMenu, currentMarketID, setCurrentMarketID }}>
                         <TestContext.Provider value={contextValue}>
                             <Component {...pageProps} />
                         </TestContext.Provider>

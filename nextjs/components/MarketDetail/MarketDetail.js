@@ -86,7 +86,6 @@ const MarketDescription = (props) => {
 export default function MarketDetail() {
     const { account } = useContext(BiconomyAccountContext);
     const { marketDetail } = useGetMarketDetail();
-
     return (
         <>
             {account && marketDetail && (
@@ -98,8 +97,9 @@ export default function MarketDetail() {
                                 <Box className={styles.betArea}>
                                     <BetArea id={marketDetail?.id} market={marketDetail} />
                                 </Box>
+                                {console.error("Jim Market Detail ", marketDetail)}
                                 <Box className={styles.chart}>
-                                    <ChartContainer questionId={marketDetail?.id} />
+                                    <ChartContainer />
                                 </Box>
                             </Box>
                             <MarketDescription description={marketDetail?.description} resolverUrl={marketDetail?.resolverUrl} />
