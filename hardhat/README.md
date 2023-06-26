@@ -13,6 +13,11 @@ This is the part with the smart contract related functions
     - Transfer SURE to PredictionWorld3
         - note, need to transfer token to PredictionWorld3
 
+# Contract Address Info
+
+## Main Net
+  - Sure: 0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c
+
 # Usage (With Upgraded Proxy Support)
 
     - Environment Variable
