@@ -39,7 +39,7 @@ This is the part with the smart contract related functions
 
         - PROXY_ADDRESS
 
-          The proxy address. It will be generated after executing deployProxy.js. You don't have to set the variable before that. And it should not be updated when upgrading the new contract.
+          The proxy address. It will be generated after executing deployProxy.js. You don't have to set the variable before that. And it should not be updated when upgrading the new implementation contract.
 
           Note: If the redeploy the proxy, it'll clear all data in the proxy.
 
