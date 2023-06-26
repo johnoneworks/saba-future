@@ -1,25 +1,23 @@
-.marketCardContainer {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.marketCard {
-    width: 33.3%;
-}
-
-@media (max-width: 768px) {
-    .marketCard {
-        width: 100%;
-    }
-}
-
-.container {
+.homeContainer {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
+}
+
+.homeContent {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    padding: 16px 8px;
+
+    @media (min-width: 1480px) {
+        & {
+            padding: 16px 10%;
+        }
+    }
 }
 
 .main {
@@ -125,11 +123,4 @@
 .logo {
     height: 1em;
     margin-left: 0.5rem;
-}
-
-@media (max-width: 600px) {
-    .grid {
-        width: 100%;
-        flex-direction: column;
-    }
 }

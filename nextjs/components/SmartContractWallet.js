@@ -1,10 +1,9 @@
-import { useState, useCallback, useEffect } from "react";
-import styles from "../styles/Home.module.css";
-import { ethers } from "ethers";
-import SocialLogin from "@biconomy/web3-auth";
-import SmartAccount from "@biconomy/smart-account";
 import { ChainId } from "@biconomy/core-types";
-import Head from "next/head";
+import SmartAccount from "@biconomy/smart-account";
+import SocialLogin from "@biconomy/web3-auth";
+import { ethers } from "ethers";
+import { useCallback, useEffect, useState } from "react";
+import styles from "../styles/Home.module.scss";
 
 export default function SmartContractWallet() {
     const [provider, setProvider] = useState(undefined);
@@ -21,9 +20,7 @@ export default function SmartContractWallet() {
 
         // use biconomy detected provider if it exists
         if (socialLoginSDK?.provider) {
-            const web3Provider = new ethers.providers.Web3Provider(
-                socialLoginSDK.provider
-            );
+            const web3Provider = new ethers.providers.Web3Provider(socialLoginSDK.provider);
             setProvider(web3Provider);
             const accounts = await web3Provider.listAccounts();
             setAccount(accounts[0]);
@@ -44,13 +41,12 @@ export default function SmartContractWallet() {
         await sdk.init({
             chainId: ethers.utils.hexValue(chainId),
             whitelistUrls: {
-                "https://saba-future.vercel.app": signature,
-            },
+                "https://saba-future.vercel.app": signature
+            }
         });
         setSocialLoginSDK(sdk);
         sdk.showWallet();
         return socialLoginSDK;
-
     }, [socialLoginSDK]);
 
     // if wallet is connected, close the widget
@@ -98,7 +94,7 @@ export default function SmartContractWallet() {
             // from docs I need the Dapp API key
             const smartAccount = new SmartAccount(provider, {
                 activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+                supportedNetworksIds: [ChainId.POLYGON_MUMBAI]
             });
             await smartAccount.init();
             const context = smartAccount.getSmartAccountContext();
@@ -110,16 +106,13 @@ export default function SmartContractWallet() {
             setupSmartAccount();
             console.log(`Provider: ${provider}`);
         }
-
     }, [account, provider]);
 
     return (
         <div className={styles.container}>
             <main className={styles.main}>
                 <h1>Biconomy Login</h1>
-                <button onClick={!account ? connectWeb3 : disconnectWeb3}>
-                    {!account ? "Connect Wallet" : "Disconnect Wallet"}
-                </button>
+                <button onClick={!account ? connectWeb3 : disconnectWeb3}>{!account ? "Connect Wallet" : "Disconnect Wallet"}</button>
                 {account && (
                     <div>
                         <h2>EOA Address</h2>

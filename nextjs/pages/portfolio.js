@@ -5,7 +5,7 @@ import { Suspense, useCallback, useContext, useEffect, useState } from "react";
 
 import StatementMarketCard from "@/components/StatementMarketCard";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Home.module.scss";
 
 const BiconomyNavbar = dynamic(() => import("../components/BiconomyWallet").then((res) => res.default), {
     ssr: false

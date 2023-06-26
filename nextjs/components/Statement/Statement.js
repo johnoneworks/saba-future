@@ -3,10 +3,8 @@ import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
-import styles from "@/styles/Home.module.css";
 import { Grid } from "@mui/material";
 import { useContext } from "react";
-import MarketLoading from "../LoadingPage/MarketLoading";
 
 /**
  * TODO:
@@ -24,28 +22,23 @@ export const Statement = () => {
     return (
         <>
             {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
-                <div className={styles.container}>
-                    <div className="w-full flex flex-col pt-1">
-                        <MarketLoading />
-                        <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                            {userStatements?.map((market, i) => (
-                                <StatementMarketCard
-                                    id={market.id}
-                                    key={i}
-                                    title={market.title}
-                                    betType={!!market.yesAmount ? "Yes" : "No"}
-                                    amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
-                                    totalYesAmount={market.totalYesAmount}
-                                    totalNoAmount={market.totalNoAmount}
-                                    endTimestamp={market.endTimestamp}
-                                    timestamp={market.timestamp}
-                                    hasResolved={market.hasResolved}
-                                    outcome={market.outcome ? "Yes" : "No"}
-                                />
-                            ))}
-                        </Grid>
-                    </div>
-                </div>
+                <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                    {userStatements.map((market, i) => (
+                        <StatementMarketCard
+                            id={market.id}
+                            key={i}
+                            title={market.title}
+                            betType={!!market.yesAmount ? "Yes" : "No"}
+                            amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
+                            totalYesAmount={market.totalYesAmount}
+                            totalNoAmount={market.totalNoAmount}
+                            endTimestamp={market.endTimestamp}
+                            timestamp={market.timestamp}
+                            hasResolved={market.hasResolved}
+                            outcome={market.outcome ? "Yes" : "No"}
+                        />
+                    ))}
+                </Grid>
             )}
         </>
     );

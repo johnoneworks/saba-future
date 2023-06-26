@@ -3,7 +3,6 @@ import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import classnames from "classnames";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import styles from "./MarketCard.module.scss";
@@ -23,7 +22,9 @@ const successIcon = (
 
 const CustomAvatar = styled(Avatar)({
     "border-radius": "4px",
-    "margin-right": "4px"
+    "margin-right": "4px",
+    width: "56px",
+    height: "56px"
 });
 
 const CustomTypography = styled(Typography)({
@@ -108,10 +109,10 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
 
     return (
         <Box onClick={handleSelectMarket}>
-            <CustomCardContent className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
+            <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
-                        <Image src="/placeholder.jpg" alt="placeholder" width={100} height={100} />
+                        <Box component="img" src="/placeholder.jpg" alt="placeholder" sx={{ width: "100%", height: "100%" }} />
                     </CustomAvatar>
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
                         {title}
@@ -176,7 +177,7 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
                         );
                     })}
                 </Box>
-            </CustomCardContent>
+            </Box>
         </Box>
     );
 }
