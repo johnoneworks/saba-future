@@ -13,14 +13,14 @@ This is the part with the smart contract related functions
     - Transfer SURE to PredictionWorld3
         - note, need to transfer token to PredictionWorld3
 
-# Usage (With Upgraded)
+# Usage (With Upgraded Proxy Support)
 
     - Environment Variable
 
         - API_URL
 
           Network URL. For different networks, it should be the specific url for the networks.
-          Mumbai: https://polygon-mumbai.g.alchemy.com/v2/B_OwiBiK0aenS3ooAxCMR9w45G1-gQ6Q
+          Mumbai: https://polygon-mumbai.g.alchemy.com/v2/GDTl7qsRqT4CbILRcYxCOC1DF2-jpNuF
 
         - PRIVATE_KEY
 
@@ -30,6 +30,7 @@ This is the part with the smart contract related functions
         - SCAN_KEY
 
           The api key of the scan (EtherScan, PolygonScan...).
+          Get it via going to the Blockchain Scan Site of your choice and from the API-keys
           After deploy the contract, it should verify the contract and the user could access the contrat by the Scan website.
 
         - SURE_TOKEN_ADDRESS
@@ -44,7 +45,7 @@ This is the part with the smart contract related functions
 
         - UPGRADING_CONTRACT
 
-          The new contrat name which you want to upgrade. It will use the varialbe when executing upgradeProxy.js. You don't have to set the variable before that.
+          The new contrat name which you want to upgrade. It will use the variable when executing upgradeProxy.js. You don't have to set the variable before that.
 
     - Deploy Sure Token
 
