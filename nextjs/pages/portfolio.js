@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import { Suspense, useCallback, useContext, useEffect, useState } from "react";
 
-import PortfolioMarketCard from "@/components/PortfolioMarketCard";
+import StatementMarketCard from "@/components/StatementMarketCard";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import styles from "../styles/Home.module.css";
 
@@ -112,7 +112,7 @@ export default function Portfolio() {
                     <span className="font-bold my-3 text-lg">Your Market Positions</span>
                     <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
                         {personalBetInfo.map((market, i) => (
-                            <PortfolioMarketCard
+                            <StatementMarketCard
                                 id={market.id}
                                 key={i}
                                 title={market.title}

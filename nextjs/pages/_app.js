@@ -13,9 +13,10 @@ import { AccountContext } from "../contexts/AccountContext";
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
-    const { menu, marketId } = router.query;
+    const { menu, marketid } = router.query;
     const [account, setAccount] = useState();
     const defaultMenu = menu ? menu : MENU_TYPE.MARKET;
+    const defaultMarketID = marketid ? marketid : null;
 
     // testing
     const [account2, setAccount2] = useState("no one yet");
@@ -35,7 +36,7 @@ export default function App({ Component, pageProps }) {
 
     //Page Context
     const [currentMenu, setCurrentMenu] = useState(defaultMenu);
-    const [currentMarketID, setCurrentMarketID] = useState(null);
+    const [currentMarketID, setCurrentMarketID] = useState(defaultMarketID);
 
     const contextValue = {
         account2,
@@ -46,7 +47,8 @@ export default function App({ Component, pageProps }) {
 
     useEffect(() => {
         setCurrentMenu(defaultMenu);
-    }, [menu]);
+        setCurrentMarketID(marketid);
+    }, [menu, marketid]);
 
     return (
         <AccountContext.Provider value={[account, setAccount]}>

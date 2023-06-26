@@ -67,7 +67,9 @@ const MenuTab = ({ tab }) => {
 };
 
 export const Header = () => {
+    const router = useRouter();
     const { account, email } = useContext(BiconomyAccountContext);
+    const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { markets, updateMarkets } = useGetMarkets();
     const { balance, updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
@@ -83,7 +85,13 @@ export const Header = () => {
     };
 
     const handleReturnBack = () => {
-        //TODO
+        if (currentMarketID) {
+            router.push({
+                pathname: `/`,
+                query: { menu: currentMenu }
+            });
+            setCurrentMarketID(null);
+        }
     };
 
     return (
@@ -93,7 +101,8 @@ export const Header = () => {
             </Suspense>
             <div className={styles.root}>
                 <div className={styles.header}>
-                    <div onClick={refreshMarkets}>
+                    {/* TODO return back icon */}
+                    <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>
                         <RefreshIcon />
                     </div>
                     <div> {account ? "Prediction World" : "Wallet Connecting..."} </div>
@@ -105,10 +114,12 @@ export const Header = () => {
                             <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
                             <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
                         </div>
-                        <div className={styles.tab}>
-                            <MenuTab tab={MENU_TYPE.MARKET} />
-                            <MenuTab tab={MENU_TYPE.STATEMENT} />
-                        </div>
+                        {!currentMarketID && (
+                            <div className={styles.tab}>
+                                <MenuTab tab={MENU_TYPE.MARKET} />
+                                <MenuTab tab={MENU_TYPE.STATEMENT} />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

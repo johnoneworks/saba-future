@@ -10,14 +10,14 @@ import { useContext } from "react";
 import styles from "./MarketDetail.module.scss";
 
 /** TODO LIST:
- 1. Return back button
+ 1. Return back button √
  2. Add loading 
  3. Add error handling
  4. Add chart √
  5. update bet button
  6. 下注後，要更新資料
- 7. 顯示資料 
- 8. 將此頁移到 index.js 
+ 7. 顯示資料 √
+ 8. 將此頁移到 index.js √
  */
 
 const CustomTypography = styled(Typography)({
@@ -97,7 +97,6 @@ export default function MarketDetail() {
                                 <Box className={styles.betArea}>
                                     <BetArea id={marketDetail?.id} market={marketDetail} />
                                 </Box>
-                                {console.error("Jim Market Detail ", marketDetail)}
                                 <Box className={styles.chart}>
                                     <ChartContainer />
                                 </Box>

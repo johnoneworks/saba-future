@@ -1,18 +1,35 @@
+import { PageContext } from "@/contexts/PageContext";
+import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext } from "react";
 import { convertBigNumberToDate } from "../utils/ConvertDate";
 
-export default function PortfolioMarketCard({ id, title, betType, amount, totalYesAmount, totalNoAmount, timestamp, endTimestamp, hasResolved, outcome }) {
+export default function StatementMarketCard({ id, title, betType, amount, totalYesAmount, totalNoAmount, timestamp, endTimestamp, hasResolved, outcome }) {
+    const router = useRouter();
+    const { currentMenu, setCurrentMarketID } = useContext(PageContext);
+    const { updateMarketDetail } = useGetMarketDetail();
+
     let bgColor = "";
     if (hasResolved) {
         bgColor = outcome === betType ? "success.light" : "error.light"; // TODO: add color
     }
 
+    const handleSelectMarket = () => {
+        const marketID = `${id}`;
+        router.push({
+            pathname: `/`,
+            query: { menu: currentMenu, marketid: marketID }
+        });
+        setCurrentMarketID(marketID);
+        updateMarketDetail(marketID);
+    };
+
     return (
         <Grid item xs={12} sm={6} md={4} key={id}>
             <Card sx={{ boxShadow: 3 }}>
-                <Link href={`/market/${id}`} passHref>
+                <div onClick={handleSelectMarket}>
                     <CardHeader
                         avatar={
                             <Avatar aria-label="recipe" variant="rounded" sx={{ width: 64, height: 64 }}>
@@ -70,7 +87,7 @@ export default function PortfolioMarketCard({ id, title, betType, amount, totalY
                             </Typography>
                         </Box>
                     </CardContent>
-                </Link>
+                </div>
             </Card>
         </Grid>
     );
