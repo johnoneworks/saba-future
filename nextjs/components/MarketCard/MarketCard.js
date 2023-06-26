@@ -1,9 +1,25 @@
+import { PageContext } from "@/contexts/PageContext";
+import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, CardContent, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/router";
+import { useContext } from "react";
 import styles from "./MarketCard.module.scss";
+
+const failIcon = (
+    <svg className="h-8 w-8 text-red-500" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" />
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+);
+const successIcon = (
+    <svg className="h-8 w-8 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="20 6 9 17 4 12" />
+    </svg>
+);
 
 const CustomAvatar = styled(Avatar)({
     "border-radius": "4px",
@@ -24,18 +40,9 @@ const CustomCardContent = styled(CardContent)({
 });
 
 export default function MarketCard({ id, title, outcome, yesBets, noBets, totalAmount, totalYesAmount, totalNoAmount, currentUser, isClosed }) {
-    const failIcon = (
-        <svg className="h-8 w-8 text-red-500" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-    );
-    const successIcon = (
-        <svg className="h-8 w-8 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-        </svg>
-    );
+    const router = useRouter();
+    const { setCurrentMarketID } = useContext(PageContext);
+    const { updateMarketDetail } = useGetMarketDetail();
     let titleWidth = "w-[calc(100%-72px)]";
     let win = false;
     let lost = false;
@@ -89,79 +96,87 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
         }
     ];
 
-    return (
-        <Box>
-            <Link href={`/market/${id}`} passHref>
-                <CustomCardContent className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
-                    <Box sx={{ display: "flex" }}>
-                        <CustomAvatar>
-                            <Image src="/placeholder.jpg" alt="placeholder" width={100} height={100} />
-                        </CustomAvatar>
-                        <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
-                            {title}
-                        </Typography>
-                    </Box>
-                    {win ? successIcon : null}
-                    {lost ? failIcon : null}
-                    <Box className={styles.valueContainer}>
-                        {cardValues.map((value, index) => {
-                            let displayElement;
+    const handleSelectMarket = () => {
+        const marketID = `${id}`;
+        router.push({
+            pathname: `/`,
+            query: { marketid: marketID }
+        });
+        setCurrentMarketID(marketID);
+        updateMarketDetail(marketID);
+    };
 
-                            if (index === 0) {
-                                displayElement = (
-                                    <Box className={styles.info}>
-                                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px" }}>
-                                            {cardValueTitle[0]}
-                                        </Typography>
-                                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: "#E84D4D" }}>
-                                            {outcomeValue}
-                                        </Typography>
+    return (
+        <Box onClick={handleSelectMarket}>
+            <CustomCardContent className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
+                <Box sx={{ display: "flex" }}>
+                    <CustomAvatar>
+                        <Image src="/placeholder.jpg" alt="placeholder" width={100} height={100} />
+                    </CustomAvatar>
+                    <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
+                        {title}
+                    </Typography>
+                </Box>
+                {win ? successIcon : null}
+                {lost ? failIcon : null}
+                <Box className={styles.valueContainer}>
+                    {cardValues.map((value, index) => {
+                        let displayElement;
+
+                        if (index === 0) {
+                            displayElement = (
+                                <Box className={styles.info}>
+                                    <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px" }}>
+                                        {cardValueTitle[0]}
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: "#E84D4D" }}>
+                                        {outcomeValue}
+                                    </Typography>
+                                </Box>
+                            );
+                        } else if (index === 1) {
+                            displayElement = (
+                                <Box className={styles.info} sx={{ display: "flex", flexDirection: "column" }}>
+                                    <Typography variant="filled">{value.isClosedOutcome}</Typography>
+                                    <CustomTypography>{value.title}</CustomTypography>
+                                </Box>
+                            );
+                        } else {
+                            displayElement = (
+                                <Box className={styles.info}>
+                                    <Typography variant="body2" sx={{ fontWeight: "bold", mr: "6px" }}>
+                                        {cardValueTitle[2]}
+                                    </Typography>
+                                    <Box className={styles.sureGroup}>
+                                        <Typography variant="filled">{bonus.toString()}</Typography>
+                                        <CustomTypography variant="body2">SURE</CustomTypography>
                                     </Box>
-                                );
-                            } else if (index === 1) {
-                                displayElement = (
-                                    <Box className={styles.info} sx={{ display: "flex", flexDirection: "column" }}>
-                                        <Typography variant="filled">{value.isClosedOutcome}</Typography>
-                                        <CustomTypography>{value.title}</CustomTypography>
-                                    </Box>
-                                );
-                            } else {
-                                displayElement = (
+                                </Box>
+                            );
+                        }
+
+                        return (
+                            <Box key={index} className={classnames(styles.valueBox, { [styles[value.openValueBgClass]]: !isClosed })}>
+                                {isClosed ? (
+                                    <Box className={styles.info}>{displayElement}</Box>
+                                ) : (
                                     <Box className={styles.info}>
-                                        <Typography variant="body2" sx={{ fontWeight: "bold", mr: "6px" }}>
-                                            {cardValueTitle[2]}
+                                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.openColor }}>
+                                            {value.title}
                                         </Typography>
                                         <Box className={styles.sureGroup}>
-                                            <Typography variant="filled">{bonus.toString()}</Typography>
+                                            <Typography variant="filled" sx={{ fontWeight: "bold" }}>
+                                                {value.openOutcome}
+                                            </Typography>
                                             <CustomTypography variant="body2">SURE</CustomTypography>
                                         </Box>
                                     </Box>
-                                );
-                            }
-
-                            return (
-                                <Box key={index} className={classnames(styles.valueBox, { [styles[value.openValueBgClass]]: !isClosed })}>
-                                    {isClosed ? (
-                                        <Box className={styles.info}>{displayElement}</Box>
-                                    ) : (
-                                        <Box className={styles.info}>
-                                            <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.openColor }}>
-                                                {value.title}
-                                            </Typography>
-                                            <Box className={styles.sureGroup}>
-                                                <Typography variant="filled" sx={{ fontWeight: "bold" }}>
-                                                    {value.openOutcome}
-                                                </Typography>
-                                                <CustomTypography variant="body2">SURE</CustomTypography>
-                                            </Box>
-                                        </Box>
-                                    )}
-                                </Box>
-                            );
-                        })}
-                    </Box>
-                </CustomCardContent>
-            </Link>
+                                )}
+                            </Box>
+                        );
+                    })}
+                </Box>
+            </CustomCardContent>
         </Box>
     );
 }
