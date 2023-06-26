@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 import Navbar from "@/components/Navbar";
-import { predictionWorld3Address } from "@/config";
-import PredictionWorld from "../../utils/abis/PredictionWorld3.json";
+import { predictionWorldAddress } from "@/config";
+import PredictionWorld from "../../utils/abis/PredictionWorld.json";
 import AdminMarketCard from "@/components/AdminMarketCard";
 
 export default function Markets() {
@@ -17,7 +17,7 @@ export default function Markets() {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const predictionWorldContract = new ethers.Contract(
-        predictionWorld3Address,
+        predictionWorldAddress,
         PredictionWorld.abi,
         signer
       );

@@ -4,7 +4,7 @@ import { Suspense, useContext, useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 import dynamic from "next/dynamic";
 
-import { predictionWorld3Address } from "@/config";
+import { predictionWorldAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 const BiconomyNavbar = dynamic(
@@ -62,7 +62,7 @@ export default function Admin() {
     );
 
     transactions = [{
-      to: predictionWorld3Address,
+      to: predictionWorldAddress,
       data: transactionData,
     }];
 

@@ -9,9 +9,9 @@ import dynamic from "next/dynamic";
 
 import Loading from "@/components/Loading";
 import ChartContainer from "@/components/ChartContainer";
-import { predictionWorld3Address, sureToken3Address } from "@/config";
-import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
-import SureToken from "@/utils/abis/SureToken3.json";
+import { predictionWorldAddress, sureTokenAddress } from "@/config";
+import PredictionWorld from "@/utils/abis/PredictionWorld.json";
+import SureToken from "@/utils/abis/SureToken.json";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 
@@ -77,12 +77,12 @@ export default function Detail() {
       //const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const sureTokenContract = new ethers.Contract(
-        sureToken3Address,
+        sureTokenAddress,
         SureToken.abi,
         signer
       );
       const predictionWorldContract = new ethers.Contract(
-        predictionWorld3Address,
+        predictionWorldAddress,
         PredictionWorld.abi,
         signer
       );
@@ -96,7 +96,7 @@ export default function Detail() {
       if (input && selected === "YES") {
         // if (parseInt(input) < balance) {
         try {
-          await sureTokenContract.approve(predictionWorld3Address, input, { gasLimit: 500000 });
+          await sureTokenContract.approve(predictionWorldAddress, input, { gasLimit: 500000 });
           console.log("we got here");
           const betTx = await predictionWorldContract.addYesBet(id, input);
           await betTx.wait();
@@ -106,7 +106,7 @@ export default function Detail() {
         // }
       } else if (input && selected === "NO") {
         // if (parseInt(input) < balance) {
-        await sureTokenContract.approve(predictionWorld3Address, input, { gasLimit: 500000 });
+        await sureTokenContract.approve(predictionWorldAddress, input, { gasLimit: 500000 });
         const betTx = await predictionWorldContract.addNoBet(id, input);
         await betTx.wait();
         // }
@@ -136,17 +136,17 @@ export default function Detail() {
         let transactions = [];
         try {
           const approveEncodedData = sureTokenInterface.encodeFunctionData(
-            'approve', [predictionWorld3Address, input]
+            'approve', [predictionWorldAddress, input]
           );
           const addYesBetEncodedData = predictionWorldInterface.encodeFunctionData(
             betFunction, [id, input]
           );
           transactions = [{
-            to: sureToken3Address,
+            to: sureTokenAddress,
             data: approveEncodedData,
             gasLimit: 500000,
           }, {
-            to: predictionWorld3Address,
+            to: predictionWorldAddress,
             data: addYesBetEncodedData,
           }];
 

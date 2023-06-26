@@ -7,9 +7,9 @@ import SmartAccount from "@biconomy/smart-account";
 import { ChainId } from "@biconomy/core-types";
 import "@biconomy/web3-auth/dist/src/style.css";
 
-import SURE from "@/utils/abis/SureToken3.json";
-import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
-import { predictionWorld3Address, sureToken3Address } from "@/config";
+import SURE from "@/utils/abis/SureToken.json";
+import PredictionWorld from "@/utils/abis/PredictionWorld.json";
+import { predictionWorldAddress, sureTokenAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 export default function BiconomyNavbar() {
@@ -42,7 +42,7 @@ export default function BiconomyNavbar() {
         if (!sdk.isInit) {
             const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
             await sdk.init({
-                chainId: ethers.utils.hexValue(ChainId.POLYGON_MUMBAI),
+                chainId: ethers.utils.hexValue(ChainId.POLYGON_MAINNET),
                 whitelistUrls: {
                     "https://saba-future.vercel.app": signature,
                 },
@@ -59,13 +59,13 @@ export default function BiconomyNavbar() {
             console.log(`account:${accounts[0]}`);
 
             const smartAccountOptions = {
-                activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+                activeNetworkId: ChainId.POLYGON_MAINNET,
+                supportedNetworksIds: [ChainId.POLYGON_MAINNET],
                 networkConfig: [
                     {
-                        chainId: ChainId.POLYGON_MUMBAI,
-                        dappAPIKey: "WFa23cEs2.8010afd7-00e3-48a5-9f14-183faf9a8361", // TODO: should use .env
-                        providerUrl: "https://polygon-mumbai.g.alchemy.com/v2/GDTl7qsRqT4CbILRcYxCOC1DF2-jpNuF", // TODO: should use .env
+                        chainId: ChainId.POLYGON_MAINNET,
+                        dappAPIKey: "2fu2Q9CXC.d4df3fa8-3a7e-46d5-be06-046a3610bd83", // TODO: should use .env
+                        providerUrl: "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvCxizWmyNG5yOeGoMqF1j-T", // TODO: should use .env
                     }
                 ],
             }
@@ -77,14 +77,14 @@ export default function BiconomyNavbar() {
 
             const signer = web3Provider.getSigner();
             const sureTokenContract = new ethers.Contract(
-                sureToken3Address,
+                sureTokenAddress,
                 SURE.abi,
                 signer
             );
             const sureTokenInterface = new ethers.utils.Interface(SURE.abi);
             
             const predictionWorldContract = new ethers.Contract(
-                predictionWorld3Address,
+                predictionWorldAddress,
                 PredictionWorld.abi,
                 signer
             );
