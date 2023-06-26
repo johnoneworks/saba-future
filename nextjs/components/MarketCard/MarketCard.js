@@ -41,7 +41,7 @@ const CustomCardContent = styled(CardContent)({
 
 export default function MarketCard({ id, title, outcome, yesBets, noBets, totalAmount, totalYesAmount, totalNoAmount, currentUser, isClosed }) {
     const router = useRouter();
-    const { setCurrentMarketID } = useContext(PageContext);
+    const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { updateMarketDetail } = useGetMarketDetail();
     let titleWidth = "w-[calc(100%-72px)]";
     let win = false;
@@ -100,7 +100,7 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
         const marketID = `${id}`;
         router.push({
             pathname: `/`,
-            query: { marketid: marketID }
+            query: { menu: currentMenu, marketid: marketID }
         });
         setCurrentMarketID(marketID);
         updateMarketDetail(marketID);

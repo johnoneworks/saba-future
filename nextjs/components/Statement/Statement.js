@@ -1,4 +1,4 @@
-import PortfolioMarketCard from "@/components/PortfolioMarketCard";
+import StatementMarketCard from "@/components/StatementMarketCard";
 import { useGetUserStatement } from "@/hooks/useGetUserStatement";
 import { Grid } from "@mui/material";
 import styles from "../../styles/Home.module.css";
@@ -21,7 +21,7 @@ export const Statement = () => {
                 <MarketLoading />
                 <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
                     {userStatements.map((market, i) => (
-                        <PortfolioMarketCard
+                        <StatementMarketCard
                             id={market.id}
                             key={i}
                             title={market.title}
