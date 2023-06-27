@@ -45,7 +45,7 @@ const useGetUserStatement = () => {
         setUserStatements(StatementsInfo);
     };
 
-    const getStatement = useCallback(async () => {
+    const updateStatements = useCallback(async () => {
         //使用假資料，不需要就 false 掉
         if (IsLocal()) {
             useTestData();
@@ -131,14 +131,14 @@ const useGetUserStatement = () => {
 
     useEffect(() => {
         if (smartAccount && predictionWorldContract) {
-            getStatement();
+            updateStatements();
         }
-    }, [smartAccount, getStatement]);
+    }, [smartAccount, updateStatements]);
 
     return {
         userTotalBetValue,
         userStatements,
-        getStatement
+        updateStatements
     };
 };
 

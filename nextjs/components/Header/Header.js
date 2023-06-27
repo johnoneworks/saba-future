@@ -3,6 +3,7 @@ import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
+import useGetUserStatement from "@/hooks/useGetUserStatement";
 import useLogout from "@/hooks/useLogout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -19,7 +20,7 @@ import styles from "./Header.module.scss";
 
 /**
  * TODO:
- * 1. return back button
+ * 1. return back button √
  * 2. add MUI style √
  * 3. 個人資訊 icon √
  * 4. Login / Logout Logic √
@@ -71,12 +72,15 @@ export const Header = () => {
     const router = useRouter();
     const { account, email } = useContext(BiconomyAccountContext);
     const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
-    const { markets, updateMarkets } = useGetMarkets();
+    const { updateMarkets } = useGetMarkets();
+    const { updateStatements } = useGetUserStatement();
     const { balance, updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
 
     const refreshMarkets = () => {
         updateMarkets();
+        updateStatements();
+        updateBalance();
     };
 
     const handleLogout = () => {
