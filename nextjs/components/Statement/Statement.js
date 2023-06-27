@@ -3,7 +3,7 @@ import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
-import { Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useContext } from "react";
 
 /**
@@ -22,23 +22,35 @@ export const Statement = () => {
     return (
         <>
             {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
-                <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    {userStatements.map((market, i) => (
-                        <StatementMarketCard
-                            id={market.id}
-                            key={i}
-                            title={market.title}
-                            betType={!!market.yesAmount ? "Yes" : "No"}
-                            amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
-                            totalYesAmount={market.totalYesAmount}
-                            totalNoAmount={market.totalNoAmount}
-                            endTimestamp={market.endTimestamp}
-                            timestamp={market.timestamp}
-                            hasResolved={market.hasResolved}
-                            outcome={market.outcome ? "Yes" : "No"}
-                        />
-                    ))}
-                </Grid>
+                <>
+                    <Box
+                        sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 0.5, mb: 1, backgroundColor: "#1A84F2", borderRadius: "4px" }}
+                    >
+                        <Typography variant="subtitle2" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold" }}>
+                            Portfoilo Value
+                        </Typography>
+                        <Typography variant="h5" sx={{ fontWeight: "bold", color: "#fff" }}>
+                            450
+                        </Typography>
+                    </Box>
+                    <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                        {userStatements.map((market, i) => (
+                            <StatementMarketCard
+                                id={market.id}
+                                key={i}
+                                title={market.title}
+                                betType={!!market.yesAmount ? "Yes" : "No"}
+                                amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
+                                totalYesAmount={market.totalYesAmount}
+                                totalNoAmount={market.totalNoAmount}
+                                endTimestamp={market.endTimestamp}
+                                timestamp={market.timestamp}
+                                hasResolved={market.hasResolved}
+                                outcome={market.outcome ? "Yes" : "No"}
+                            />
+                        ))}
+                    </Grid>
+                </>
             )}
         </>
     );
