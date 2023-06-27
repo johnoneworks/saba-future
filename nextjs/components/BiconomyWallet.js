@@ -5,14 +5,14 @@ import "@biconomy/web3-auth/dist/src/style.css";
 import { ethers } from "ethers";
 import { useCallback, useContext, useEffect } from "react";
 
-import { predictionWorld3Address, sureToken3Address } from "@/config";
+import { predictionWorldAddress, sureTokenAddress } from "@/config";
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
-import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
-import SURE from "@/utils/abis/SureToken3.json";
+import PredictionWorld from "@/utils/abis/PredictionWorld.json";
+import SURE from "@/utils/abis/SureToken.json";
 import axios from "axios";
 import PageLoading from "./LoadingPage/PageLoading";
 
@@ -92,10 +92,10 @@ export default function BiconomyWallet() {
             console.log("%c⧭ Smart Contract Wallet:", "color: #007300", smartAccountSdk.address);
 
             const signer = web3Provider.getSigner();
-            const sureTokenContract = new ethers.Contract(sureToken3Address, SURE.abi, signer);
+            const sureTokenContract = new ethers.Contract(sureTokenAddress, SURE.abi, signer);
             const sureTokenInterface = new ethers.utils.Interface(SURE.abi);
 
-            const predictionWorldContract = new ethers.Contract(predictionWorld3Address, PredictionWorld.abi, signer);
+            const predictionWorldContract = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, signer);
             const predictionWorldInterface = new ethers.utils.Interface(PredictionWorld.abi);
 
             setAccount(accounts[0]);

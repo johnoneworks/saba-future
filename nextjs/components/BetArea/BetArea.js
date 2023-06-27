@@ -1,4 +1,4 @@
-import { predictionWorld3Address, sureToken3Address } from "@/config";
+import { predictionWorldAddress } from "@/config";
 import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
@@ -57,16 +57,16 @@ export const BetArea = (props) => {
 
             try {
                 setIsPageLoading(true);
-                const approveEncodedData = sureTokenInterface.encodeFunctionData("approve", [predictionWorld3Address, input]);
+                const approveEncodedData = sureTokenInterface.encodeFunctionData("approve", [predictionWorldAddress, input]);
                 const addYesBetEncodedData = predictionWorldInterface.encodeFunctionData(betFunctionName, [id, input]);
                 const transactions = [
                     {
-                        to: sureToken3Address,
+                        to: sureTokenAddress,
                         data: approveEncodedData,
                         gasLimit: 500000
                     },
                     {
-                        to: predictionWorld3Address,
+                        to: predictionWorldAddress,
                         data: addYesBetEncodedData
                     }
                 ];
