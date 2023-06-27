@@ -2,6 +2,8 @@ import { predictionWorld3Address, sureToken3Address } from "@/config";
 import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { PageContext } from "@/contexts/PageContext";
+import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
 import classnames from "classnames";
@@ -39,9 +41,12 @@ const SelectButton = (props) => {
 
 export const BetArea = (props) => {
     const { id, market } = props;
-    const { smartAccount, predictionWorldInterface, sureTokenInterface } = useContext(BiconomyAccountContext);
+    const { smartAccount, predictionWorldInterface, sureTokenInterface, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { currentMarketID } = useContext(PageContext);
     const { setIsPageLoading } = useContext(LoadingContext);
     const { updateMarketDetail } = useGetMarketDetail();
+    const { updateBetsInfo } = useGetBetsInfo();
+
     const [selected, setSelected] = useState(BET_TYPE.YES);
     const [input, setInput] = useState("");
 
@@ -79,6 +84,7 @@ export const BetArea = (props) => {
             console.error(`Error trading: ${error}`);
         } finally {
             updateMarketDetail();
+            updateBetsInfo(currentMarketID, predictionWorldContract);
             setInput("");
             setIsPageLoading(false);
         }

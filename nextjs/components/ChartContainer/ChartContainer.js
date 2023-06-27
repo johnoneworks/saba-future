@@ -1,55 +1,16 @@
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { PageContext } from "@/contexts/PageContext";
+import { BetsInfoContext } from "@/contexts/BetsInfoContext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import classnames from "classnames";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./ChartContainer.module.scss";
 
 export default function ChartContainer() {
-    const [yesInfo, setYesInfo] = useState([]);
-    const [noInfo, setNoInfo] = useState([]);
-    const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { currentMarketID } = useContext(PageContext);
+    const { yesInfo, noInfo } = useContext(BetsInfoContext);
 
-    const getBets = useCallback(
-        async (currentMarketID, predictionWorldContract) => {
-            try {
-                let bets = await predictionWorldContract.getBets(Number(currentMarketID));
-                let yesBets = [];
-                let noBets = [];
-                // yes bets
-                bets["0"].forEach((bet) => {
-                    yesBets.push({
-                        time: new Date(parseInt(bet.timestamp + "000")),
-                        amount: bet.amount.toNumber()
-                    });
-                });
-                setYesInfo(yesBets);
-                // no bets
-                bets["1"].forEach((bet) => {
-                    noBets.push({
-                        time: new Date(parseInt(bet.timestamp + "000")),
-                        amount: bet.amount.toNumber()
-                    });
-                });
-                setNoInfo(noBets);
-            } catch (error) {
-                console.error(`Error getting bets, ${error}`);
-            }
-        },
-        [currentMarketID, predictionWorldContract]
-    );
-
-    useEffect(() => {
-        if (currentMarketID && predictionWorldContract) {
-            getBets(currentMarketID, predictionWorldContract);
-        }
-    }, [currentMarketID, account, getBets]);
-
-    function InfoTable({ info, title, buttonStyle }) {
+    const InfoTable = ({ info, title, buttonStyle }) => {
         const theme = createTheme();
         const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
         const [isOpen, setIsOpen] = useState(isDesktop);
@@ -92,12 +53,12 @@ export default function ChartContainer() {
                 </Box>
             </ThemeProvider>
         );
-    }
+    };
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", position: "relative", width: "100%" }}>
-            <InfoTable title="Yes Info" buttonStyle={classnames(styles.infoDropdown, styles.isYes)} info={yesInfo} />
-            <InfoTable title="No Info" buttonStyle={classnames(styles.infoDropdown, styles.isNo)} info={noInfo} />
+            <InfoTable title={`Yes Info (${yesInfo.length})`} buttonStyle={classnames(styles.infoDropdown, styles.isYes)} info={yesInfo} />
+            <InfoTable title={`No Info (${noInfo.length})`} buttonStyle={classnames(styles.infoDropdown, styles.isNo)} info={noInfo} />
         </Box>
     );
 }
