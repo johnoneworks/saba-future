@@ -8,6 +8,7 @@ const useGetMarketDetail = () => {
     const { currentMarketID } = useContext(PageContext);
 
     const [marketDetail, setMarket] = useState({
+        id: null,
         title: "title of market",
         endTimestamp: "1681681545",
         totalAmount: 0,
@@ -24,6 +25,7 @@ const useGetMarketDetail = () => {
                 const market = await predictionWorldContract.markets(currentMarketID);
                 const date = moment.unix(market.info.endTimestamp / 1000).format("MMMM D, YYYY");
                 setMarket({
+                    id: currentMarketID,
                     title: market.info.question,
                     endTimestamp: date,
                     totalAmount: market.totalAmount,
