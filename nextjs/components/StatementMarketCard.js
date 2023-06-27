@@ -18,6 +18,15 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
         bgColor = "#E84D4D";
     }
 
+    let outcomeColor = "#1A84F2";
+    if (outcome === "Yes") {
+        outcomeColor = "#3FB06B";
+    } else if (outcome === "No" && hasResolved === true) {
+        outcomeColor = "#E84D4D";
+    }
+
+    console.log(outcome);
+
     const handleSelectMarket = () => {
         const marketID = `${id}`;
         router.push({
@@ -37,7 +46,12 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
 
     return (
         <Grid item xs={12} sm={6} md={4} key={id}>
-            <Card sx={{ boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.15)" }}>
+            <Card
+                style={{
+                    backgroundColor: hasResolved ? "#E4E9F0" : "#fff",
+                    boxShadow: hasResolved ? "none" : "0px 0px 8px rgba(0, 0, 0, 0.15)"
+                }}
+            >
                 <div onClick={handleSelectMarket}>
                     <CardHeader
                         avatar={
@@ -63,7 +77,7 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
                                 <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", mb: "3px", lineHeight: 1, pt: "5px" }}>
                                     Outcome
                                 </Typography>
-                                <Typography variant="body1" sx={{ color: "#1A84F2", fontWeight: "bold" }}>
+                                <Typography variant="body1" sx={{ color: outcomeColor, fontWeight: "bold" }}>
                                     {hasResolved ? outcome.toString() : "In progress"}
                                 </Typography>
                             </Box>
