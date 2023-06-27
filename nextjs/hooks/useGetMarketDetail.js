@@ -14,7 +14,8 @@ const useGetMarketDetail = () => {
         totalYesAmount: 0,
         totalNoAmount: 0,
         description: "",
-        resolverUrl: null
+        resolverUrl: null,
+        isClose: undefined
     });
 
     const updateMarketDetail = useCallback(
@@ -29,7 +30,8 @@ const useGetMarketDetail = () => {
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,
                     description: market.info.description,
-                    resolverUrl: market.info.resolverUrl
+                    resolverUrl: market.info.resolverUrl,
+                    isClose: market.marketClosed
                 });
             } catch (error) {
                 console.error(`Error getting market detail, ${error}`);

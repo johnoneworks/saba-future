@@ -4,7 +4,6 @@ import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-// import { useRouter } from "next/router";
 import { useContext } from "react";
 import styles from "./MarketDetail.module.scss";
 
@@ -102,9 +101,11 @@ export default function MarketDetail() {
                 <>
                     <MarketTitle title={marketDetail?.title} endTimestamp={marketDetail?.endTimestamp} totalAmount={marketDetail?.totalAmount} />
                     <Grid container spacing={2} className={styles.marketContainer}>
-                        <Grid item xs={12} md={6} className={styles.betAreaContainer}>
-                            <BetArea id={marketDetail?.id} market={marketDetail} />
-                        </Grid>
+                        {marketDetail.isClose == false && (
+                            <Grid item xs={12} md={6} className={styles.betAreaContainer}>
+                                <BetArea id={marketDetail?.id} market={marketDetail} />
+                            </Grid>
+                        )}
                         <Grid item xs={12} md={6} className={styles.chartContainer}>
                             <ChartContainer />
                         </Grid>
