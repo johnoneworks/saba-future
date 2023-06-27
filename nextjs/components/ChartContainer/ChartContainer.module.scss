@@ -3,8 +3,16 @@
     border: 1px solid rgba(0, 0, 0, 0.25);
     border-radius: 8px;
 
+    .arrowIcon {
+        transition: 0.3s;
+    }
+
     &.isOpen {
         border-radius: 8px 8px 0 0;
+
+        .arrowIcon {
+            transform: rotate(180deg);
+        }
     }
 }
 
