@@ -1,0 +1,42 @@
+.infoDropdown {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+
+    .arrowIcon {
+        transition: 0.3s;
+    }
+
+    &.isOpen {
+        border-radius: 8px 8px 0 0;
+
+        .arrowIcon {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.isYes {
+    background-color: #E9F6EE;
+    color: #3FB06B;
+
+    &:hover {
+        background-color: #d9f7e4;
+    }
+}
+
+.isNo {
+    background-color: #FDEDED;
+    color: #E84D4D;
+
+    &:hover {
+        background-color: #ffe7e7;
+    }
+}
+
+.tableContainer {
+    background-color: #fff;
+    border-radius: 0 0 8px 8px;
+    border-color: rgba(0, 0, 0, 0.25);
+    border-width: 0 1px 1px 1px;
+}

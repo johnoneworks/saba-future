@@ -1,0 +1,13 @@
+.vscode
+.vscode/*
+
+build
+dist
+
+node_modules
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+
+stats.html
