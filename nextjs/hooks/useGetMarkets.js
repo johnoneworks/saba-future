@@ -14,7 +14,7 @@ import { useContext, useEffect, useState } from "react";
 const useGetMarkets = () => {
     const [markets, setMarkets] = useState();
     const { account, smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { isMarketLoading, setIsMarketLoading } = useContext(LoadingContext);
+    const { setIsMarketLoading } = useContext(LoadingContext);
 
     const useTestData = () => {
         let tempMarkets = testMarketsData;
