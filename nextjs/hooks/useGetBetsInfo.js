@@ -1,12 +1,10 @@
+import { BetsInfoContext } from "@/contexts/BetsInfoContext";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 const useGetBetsInfo = () => {
-    const [yesInfo, setYesInfo] = useState([]);
-    const [noInfo, setNoInfo] = useState([]);
-    const [yesInfoAmount, setYesInfoAmount] = useState(0);
-    const [noInfoAmount, setNoInfoAmount] = useState(0);
+    const { setYesInfo, setNoInfo } = useContext(BetsInfoContext);
     const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
     const { currentMarketID } = useContext(PageContext);
 
@@ -24,8 +22,7 @@ const useGetBetsInfo = () => {
                     });
                 });
                 setYesInfo(yesBets);
-                setYesInfoAmount(yesBets.length);
-                console.log("yesInfo.length", yesBets);
+
                 // no bets
                 bets["1"].forEach((bet) => {
                     noBets.push({
@@ -34,8 +31,6 @@ const useGetBetsInfo = () => {
                     });
                 });
                 setNoInfo(noBets);
-                setNoInfoAmount(noBets.length);
-                console.log("totalInfoAmount setTotalInfoAmount: ", yesBets.length + noBets.length);
             } catch (error) {
                 console.error(`Error getting bets, ${error}`);
             }
@@ -49,7 +44,7 @@ const useGetBetsInfo = () => {
         }
     }, [currentMarketID, account, updateBetsInfo]);
 
-    return { yesInfo, noInfo, yesInfoAmount, noInfoAmount, updateBetsInfo };
+    return { updateBetsInfo };
 };
 
 export default useGetBetsInfo;

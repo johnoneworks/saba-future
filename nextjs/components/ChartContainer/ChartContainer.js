@@ -1,14 +1,14 @@
-import useGetBetsInfo from "@/hooks/useGetBetsInfo";
+import { BetsInfoContext } from "@/contexts/BetsInfoContext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import classnames from "classnames";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./ChartContainer.module.scss";
 
 export default function ChartContainer() {
-    const { yesInfo, noInfo, yesInfoAmount, noInfoAmount } = useGetBetsInfo();
+    const { yesInfo, noInfo } = useContext(BetsInfoContext);
 
     const InfoTable = ({ info, title, buttonStyle }) => {
         const theme = createTheme();
@@ -55,11 +55,10 @@ export default function ChartContainer() {
         );
     };
 
-    console.log("totalInfoAmount: ", yesInfoAmount + noInfoAmount);
     return (
         <Box sx={{ display: "flex", flexDirection: "column", position: "relative", width: "100%" }}>
-            <InfoTable title={`Yes Info (${yesInfoAmount})`} buttonStyle={classnames(styles.infoDropdown, styles.isYes)} info={yesInfo} />
-            <InfoTable title={`No Info (${noInfoAmount})`} buttonStyle={classnames(styles.infoDropdown, styles.isNo)} info={noInfo} />
+            <InfoTable title={`Yes Info (${yesInfo.length})`} buttonStyle={classnames(styles.infoDropdown, styles.isYes)} info={yesInfo} />
+            <InfoTable title={`No Info (${noInfo.length})`} buttonStyle={classnames(styles.infoDropdown, styles.isNo)} info={noInfo} />
         </Box>
     );
 }

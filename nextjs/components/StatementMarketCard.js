@@ -25,8 +25,6 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
         outcomeColor = "#E84D4D";
     }
 
-    console.log(outcome);
-
     const handleSelectMarket = () => {
         const marketID = `${id}`;
         router.push({
