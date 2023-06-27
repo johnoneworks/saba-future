@@ -51,17 +51,13 @@ export const Markets = () => {
     return (
         <>
             {!isMarketLoading && account && currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
-                <>
-                    {!isMarketLoading && account && currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
-                        <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                            <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
-                            <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1 }}>
-                                Closed Markets
-                            </Typography>
-                            <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
-                        </Grid>
-                    )}
-                </>
+                <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                    <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
+                    <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1 }}>
+                        Closed Markets
+                    </Typography>
+                    <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
+                </Grid>
             )}
         </>
     );
