@@ -11,9 +11,11 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { updateMarketDetail } = useGetMarketDetail();
 
-    let bgColor = "";
-    if (hasResolved) {
-        bgColor = outcome === betType ? "success.light" : "error.light"; // TODO: add color
+    let bgColor = "#3FB06B";
+    if (betType === "Yes") {
+        bgColor = "#3FB06B";
+    } else {
+        bgColor = "#E84D4D";
     }
 
     const handleSelectMarket = () => {
@@ -65,7 +67,7 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
                                     {hasResolved ? outcome.toString() : "In progress"}
                                 </Typography>
                             </Box>
-                            <Box sx={{ bgcolor: "#3FB06B", pl: 2, pr: 3, borderRadius: "4px" }}>
+                            <Box sx={{ backgroundColor: bgColor, pl: 2, pr: 3, borderRadius: "4px" }}>
                                 <Typography variant="caption" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold" }}>
                                     Your Bet
                                 </Typography>

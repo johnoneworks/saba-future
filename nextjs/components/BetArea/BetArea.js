@@ -12,14 +12,21 @@ const SelectButton = (props) => {
     const { type, selected, selectedAmount, totalAmount, onClick } = props;
     const buttonName = type;
     const totalAmountText = `${!totalAmount ? `0` : ((selectedAmount * 100) / totalAmount).toFixed(2)}%`;
-    const selectedStyle = selected == type ? { backgroundColor: "#3FB06B", color: "white" } : { backgroundColor: "#F2F5FA" };
-    const buttonClass = `is-${buttonName}`;
+    const buttonClass = `is${buttonName}`;
+    let selectedStyle;
+    if (type === BET_TYPE.YES) {
+        selectedStyle = selected === type ? "#3FB06B" : "#F2F5FA";
+    } else if (type === BET_TYPE.NO) {
+        selectedStyle = selected === type ? "#E84D4D" : "#F2F5FA";
+    }
+
+    console.log(selected);
 
     return (
         <Box
             id={buttonName}
-            style={selectedStyle}
-            className={classnames(styles.volumeButton, { [styles[buttonClass]]: type === buttonName })}
+            style={{ backgroundColor: selectedStyle }}
+            className={classnames(styles.volumeButton, styles[buttonClass], { [styles.selected]: selected === type })}
             onClick={onClick}
         >
             <Typography sx={{ fontWeight: "bold", mr: "4px" }} variant="subtitle1" component="span">

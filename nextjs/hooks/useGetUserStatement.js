@@ -33,7 +33,7 @@ const useGetUserStatement = () => {
                     totalAmount: market?.totalAmount,
                     totalYesAmount: market?.totalYesAmount,
                     totalNoAmount: market?.totalNoAmount,
-                    hasResolved: market?.hasResolved,
+                    hasResolved: market?.marketClosed,
                     endTimestamp: market?.info.endTimestamp,
                     timestamp: market?.info.timestamp,
                     outcome: market?.outcome
@@ -112,7 +112,7 @@ const useGetUserStatement = () => {
                         totalAmount: market?.totalAmount,
                         totalYesAmount: market?.totalYesAmount,
                         totalNoAmount: market?.totalNoAmount,
-                        hasResolved: market?.hasResolved,
+                        hasResolved: market?.marketClosed,
                         endTimestamp: market?.endTimestamp,
                         timestamp: market?.timestamp,
                         outcome: market?.outcome

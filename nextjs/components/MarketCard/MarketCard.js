@@ -131,7 +131,11 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
                                     <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px" }}>
                                         {cardValueTitle[0]}
                                     </Typography>
-                                    <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: "#E84D4D" }}>
+                                    <Typography
+                                        className={classnames(styles.outcomeValue, { [styles.isYes]: outcome === true, [styles.isNo]: outcome === false })}
+                                        variant="body1"
+                                        sx={{ fontWeight: "bold", mr: "6px" }}
+                                    >
                                         {outcomeValue}
                                     </Typography>
                                 </Box>

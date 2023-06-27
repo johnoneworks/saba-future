@@ -28,12 +28,16 @@
         margin-top: 8px;
     }
 
-    &.is-YES {
+    &.isYES {
         color: #3FB06B;
     }
 
-    &.is-NO {
+    &.isNO {
         color: #E84D4D;
+    }
+
+    &.selected {
+        color: #fff;
     }
 }
 
