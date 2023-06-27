@@ -14,8 +14,8 @@
 //Proxy contract address: 0x92eE4757F0f83f0Ab7290434f75cA9512b17e892
 //Implementation contract address: 0xB177993a2ACFf972540B0f3Aeb9E402a29ad17E6
 
-export const sureToken3Address = "0x8744A70D3A8D5cC95Ef882cED9e62De94B0F3B75";
-export const predictionWorld3Address = "0xf3466268C35615c45704784bb6c58E2F72f53489";
+export const sureTokenAddress = "0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c";
+export const predictionWorldAddress = "0x39a0D0715D61E6C553C9CE06ac026eEbDe5037bA";
 
 export const sureToken2Address = "0xd63E83580bBEc586665ABBD4e1B02f8bBD6F8bE0";
 export const predictionWorld2Address = "0xa33984BDD910d25C9d4ad11dD50E2ba18E0Ab7FD";

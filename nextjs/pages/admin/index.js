@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { Header } from "@/components/Header/Header";
-import { predictionWorld3Address } from "@/config";
+import { predictionWorldAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 export default function Admin() {
@@ -47,7 +47,7 @@ export default function Admin() {
 
         transactions = [
             {
-                to: predictionWorld3Address,
+                to: predictionWorldAddress,
                 data: transactionData
             }
         ];

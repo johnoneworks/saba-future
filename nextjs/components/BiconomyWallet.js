@@ -5,22 +5,16 @@ import "@biconomy/web3-auth/dist/src/style.css";
 import { ethers } from "ethers";
 import { useCallback, useContext, useEffect } from "react";
 
-import { predictionWorld3Address, sureToken3Address } from "@/config";
+import { predictionWorldAddress, sureTokenAddress } from "@/config";
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
-import PredictionWorld from "@/utils/abis/PredictionWorld3.json";
+import PredictionWorld from "@/utils/abis/PredictionWorld.json";
 import SURE from "@/utils/abis/SureToken3.json";
 import axios from "axios";
 import PageLoading from "./LoadingPage/PageLoading";
-
-/**
- * TODO
- * 1.
- *
- */
 
 export default function BiconomyWallet() {
     const {
@@ -59,7 +53,7 @@ export default function BiconomyWallet() {
         if (!sdk.isInit) {
             const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
             await sdk.init({
-                chainId: ethers.utils.hexValue(ChainId.POLYGON_MUMBAI),
+                chainId: ethers.utils.hexValue(ChainId.POLYGON_MAINNET),
                 whitelistUrls: {
                     "https://saba-future.vercel.app": signature
                 }
@@ -74,13 +68,13 @@ export default function BiconomyWallet() {
             console.log(`account:${accounts[0]}`);
 
             const smartAccountOptions = {
-                activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+                activeNetworkId: ChainId.POLYGON_MAINNET,
+                supportedNetworksIds: [ChainId.POLYGON_MAINNET],
                 networkConfig: [
                     {
-                        chainId: ChainId.POLYGON_MUMBAI,
-                        dappAPIKey: "WFa23cEs2.8010afd7-00e3-48a5-9f14-183faf9a8361", // TODO: should use .env
-                        providerUrl: "https://polygon-mumbai.g.alchemy.com/v2/GDTl7qsRqT4CbILRcYxCOC1DF2-jpNuF" // TODO: should use .env
+                        chainId: ChainId.POLYGON_MAINNET,
+                        dappAPIKey: "2fu2Q9CXC.d4df3fa8-3a7e-46d5-be06-046a3610bd83", // TODO: should use .env
+                        providerUrl: "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvCxizWmyNG5yOeGoMqF1j-T" // TODO: should use .env
                     }
                 ]
             };
@@ -92,10 +86,10 @@ export default function BiconomyWallet() {
             console.log("%c⧭ Smart Contract Wallet:", "color: #007300", smartAccountSdk.address);
 
             const signer = web3Provider.getSigner();
-            const sureTokenContract = new ethers.Contract(sureToken3Address, SURE.abi, signer);
+            const sureTokenContract = new ethers.Contract(sureTokenAddress, SURE.abi, signer);
             const sureTokenInterface = new ethers.utils.Interface(SURE.abi);
 
-            const predictionWorldContract = new ethers.Contract(predictionWorld3Address, PredictionWorld.abi, signer);
+            const predictionWorldContract = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, signer);
             const predictionWorldInterface = new ethers.utils.Interface(PredictionWorld.abi);
 
             setAccount(accounts[0]);

@@ -2,25 +2,20 @@ import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { Header } from "@/components/Header/Header";
 import PageLoading from "@/components/LoadingPage/PageLoading";
+import moment from "moment";
+import { useRouter } from "next/router";
+import { useCallback, useContext, useEffect, useState } from "react";
+
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { Avatar, Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import moment from "moment";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useCallback, useContext, useEffect, useState } from "react";
 import styles from "./MarketDetail.module.scss";
 
-/** TODO LIST:
- 1. Return back button
- 2. Add loading
- 3. Add error handling
- 4. Add chart
- 5. update bet button
- 6. 下注後，要更新資料
- 7. 顯示資料 
- 8. 將此頁移到 index.js */
+/**
+ * 此頁不再維護，請參考 nextjs\components\MarketDetail\MarketDetail.js
+ */
 
 const CustomTypography = styled(Typography)({
     fontSize: "12px",

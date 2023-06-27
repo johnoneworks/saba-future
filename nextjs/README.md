@@ -18,9 +18,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
   ![deposit-gas](./doc/images/biconomy-dashboard-05.png)
   - Add the Sure Token contracts to GasTank
   ![add-suretoken-to-gastank](./doc/images/biconomy-dashboard-06.png)
+  ![add-suretoken-methods-to-gastank](./doc/images/biconomy-dashboard-09.png)
   - Add the Prediction World contracts to GasTank
   ![add-predictionworld-to-gastank](./doc/images/biconomy-dashboard-07.png)
-
+  ![add-predictionworld-methods-to-gastank](./doc/images/biconomy-dashboard-10.png)
 
 ### Deploy
 
@@ -45,6 +46,45 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
   # or
   pnpm dev
   ```
+
+### Admin
+
+  - Add/Remove the admin users
+
+    - Get the Smart Contract Wallet (SCW) of the admin user
+
+      - Login to Prediction World website with the admin user
+
+      - Open devtool (F12) and copy the SCW
+      ![smart-contract-wallet](./doc/images/smart-contract-wallet-01.png)
+
+    - Add/Remove the admin users by PolygonScan
+
+      - Open the link. https://mumbai.polygonscan.com/address/<Contract Address>#writeProxyContract
+
+      - Connect to Web3 with the contract **owner address**
+      ![connect-to-web3](./doc/images/polygonscan-01.png)
+
+      - Paste the admin user's SCW to add/remove.
+      ![connect-to-web3](./doc/images/polygonscan-02.png)
+
+  - Create the predictions
+
+    - Open the link. https://saba-future.vercel.app/admin
+
+    - Login with the admin user.
+
+    - Fill out the form and press the "Create Market" button.
+    ![create-market](./doc/images/prediction-world-admin-01.png)
+
+  - Close the predictions
+
+    - Open the link. https://saba-future.vercel.app/admin/markets
+
+    - Login with the admin user.
+
+    - Press the "Resovle YES" or "Resovle YES" button which you want to close.
+    ![create-market](./doc/images/prediction-world-admin-02.png)
 
 ### Playground
 
