@@ -1,3 +1,5 @@
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, Typography } from "@mui/material";
@@ -37,6 +39,8 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { updateMarketDetail } = useGetMarketDetail();
+    const { isMarketLoading } = useContext(LoadingContext);
+
     let titleWidth = "w-[calc(100%-72px)]";
     let win = false;
     let lost = false;
@@ -99,6 +103,10 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
         setCurrentMarketID(marketID);
         updateMarketDetail(marketID);
     };
+
+    if (isMarketLoading) {
+        return <LoadingSkeleton />;
+    }
 
     return (
         <Box onClick={handleSelectMarket}>
