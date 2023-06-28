@@ -95,6 +95,7 @@ const MarketDescription = (props) => {
 export default function MarketDetail() {
     const { account } = useContext(BiconomyAccountContext);
     const { marketDetail } = useContext(MarketContext);
+    const isMarketClose = marketDetail?.isClose === true;
 
     return (
         <>
@@ -102,12 +103,12 @@ export default function MarketDetail() {
                 <>
                     <MarketTitle title={marketDetail?.title} endTimestamp={marketDetail?.endTimestamp} totalAmount={marketDetail?.totalAmount} />
                     <Grid container spacing={2} className={styles.marketContainer}>
-                        {marketDetail.isClose == false && (
+                        {!isMarketClose && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
                                 <BetArea id={marketDetail?.id} market={marketDetail} />
                             </Grid>
                         )}
-                        <Grid item xs={12} md={6} className={styles.chartContainer}>
+                        <Grid item xs={12} md={isMarketClose ? 12 : 6} className={styles.chartContainer}>
                             <ChartContainer />
                         </Grid>
                     </Grid>
