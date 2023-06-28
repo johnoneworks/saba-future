@@ -64,6 +64,8 @@ const useGetMarkets = () => {
             setIsMarketLoading(true);
             let marketCount = await predictionWorldContract.totalMarkets();
             let tempMarkets = [];
+            setMarkets(new Array(marketCount.toNumber()));
+
             for (let i = 0; i < marketCount; i++) {
                 let market = await predictionWorldContract.markets(i);
                 console.log(i);
@@ -88,9 +90,10 @@ const useGetMarkets = () => {
                 tempMarkets.push(mt);
             }
             setMarkets(tempMarkets);
-            setIsMarketLoading(false);
         } catch (error) {
             console.error(`Error getting market: ${error}`);
+        } finally {
+            setIsMarketLoading(false);
         }
     };
 

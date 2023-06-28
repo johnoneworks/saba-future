@@ -1,5 +1,4 @@
 import { Header } from "@/components/Header/Header";
-import MarketLoading from "@/components/LoadingPage/MarketLoading";
 import MarketDetail from "@/components/MarketDetail/MarketDetail";
 import { Markets } from "@/components/Markets/Markets";
 import { Statement } from "@/components/Statement/Statement";
@@ -21,7 +20,7 @@ import { PageContext } from "../contexts/PageContext";
 
 export default function Home() {
     const router = useRouter();
-    const { menu, marketId } = router.query;
+    const { menu } = router.query;
     const { account } = useContext(BiconomyAccountContext);
     const { currentMenu, currentMarketID } = useContext(PageContext);
 
@@ -38,7 +37,6 @@ export default function Home() {
         <Box className={styles.homeContainer}>
             <Header />
             <Box className={styles.homeContent}>
-                <MarketLoading />
                 <Markets />
                 <Statement />
                 {account && currentMarketID && <MarketDetail />}

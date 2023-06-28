@@ -1,3 +1,4 @@
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
@@ -50,14 +51,19 @@ export const Markets = () => {
 
     return (
         <>
-            {!isMarketLoading && account && currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
-                <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
-                    <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1, mt: 2 }}>
-                        Closed Markets
-                    </Typography>
-                    <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
-                </Grid>
+            {account && currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
+                <>
+                    {isMarketLoading && markets && <LoadingSkeleton amount={markets.length} />}
+                    {!isMarketLoading && markets && (
+                        <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                            <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
+                            <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1, mt: 2 }}>
+                                Closed Markets
+                            </Typography>
+                            <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
+                        </Grid>
+                    )}
+                </>
             )}
         </>
     );
