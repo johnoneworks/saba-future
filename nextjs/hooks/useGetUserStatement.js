@@ -1,9 +1,10 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { UserInfoContext } from "@/contexts/UserInfoContext";
 import { testMarketsData } from "@/testData/testMarketsData";
 import { testUserBetList } from "@/testData/testStatementsData";
 import { IsLocal } from "@/utils/IsLocal";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 /**
  * TODO
@@ -14,9 +15,8 @@ import { useCallback, useContext, useEffect, useState } from "react";
 
 const useGetUserStatement = () => {
     const { smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { setUserTotalBetValue, setUserStatements } = useContext(UserInfoContext);
     const { setIsMarketLoading } = useContext(LoadingContext);
-    const [userTotalBetValue, setUserTotalBetValue] = useState(0);
-    const [userStatements, setUserStatements] = useState([]);
 
     const useTestData = () => {
         let tempMarkets = testMarketsData;
@@ -135,11 +135,7 @@ const useGetUserStatement = () => {
         }
     }, [smartAccount, updateStatements]);
 
-    return {
-        userTotalBetValue,
-        userStatements,
-        updateStatements
-    };
+    return { updateStatements };
 };
 
 export default useGetUserStatement;
