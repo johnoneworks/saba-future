@@ -1,8 +1,9 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { MarketContext } from "@/contexts/MarketContext";
 import { testMarketsData } from "@/testData/testMarketsData";
 import { IsLocal } from "@/utils/IsLocal";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
 /**
  * TODO:
@@ -12,7 +13,7 @@ import { useContext, useEffect, useState } from "react";
  */
 
 const useGetMarkets = () => {
-    const [markets, setMarkets] = useState();
+    const { markets, setMarkets } = useContext(MarketContext);
     const { account, smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
     const { setIsMarketLoading } = useContext(LoadingContext);
 
