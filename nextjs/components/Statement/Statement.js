@@ -2,7 +2,7 @@ import StatementMarketCard from "@/components/StatementMarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
-import useGetUserStatement from "@/hooks/useGetUserStatement";
+import { UserInfoContext } from "@/contexts/UserInfoContext";
 import { Grid } from "@mui/material";
 import { useContext } from "react";
 
@@ -15,7 +15,7 @@ import { useContext } from "react";
  *
  */
 export const Statement = () => {
-    const { userTotalBetValue, userStatements } = useGetUserStatement();
+    const { userTotalBetValue, userStatements } = useContext(UserInfoContext);
     const { account } = useContext(BiconomyAccountContext);
     const { currentMenu, currentMarketID } = useContext(PageContext);
 
