@@ -21,19 +21,7 @@ const ShowMarkets = (props) => {
                     if (isAvailable) {
                         accumulator.push(
                             <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                                <MarketCard
-                                    id={market.id}
-                                    key={market.id}
-                                    title={market.question}
-                                    totalAmount={market.totalAmount}
-                                    totalYesAmount={market.totalYesAmount}
-                                    totalNoAmount={market.totalNoAmount}
-                                    outcome={market.outcome}
-                                    yesBets={market.yesBets}
-                                    noBets={market.noBets}
-                                    currentUser={account}
-                                    isClosed={isClose}
-                                />
+                                <MarketCard market={market} currentUser={account} isClosed={isClose} />
                             </Grid>
                         );
                     }
