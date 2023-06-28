@@ -6,6 +6,7 @@ import { MENU_TYPE } from "@/constants/Constant";
 import { BetsInfoContext } from "@/contexts/BetsInfoContext";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import { TestContext } from "@/contexts/TestContext";
 import { useRouter } from "next/router";
@@ -39,7 +40,8 @@ export default function App({ Component, pageProps }) {
     const [currentMenu, setCurrentMenu] = useState(defaultMenu);
     const [currentMarketID, setCurrentMarketID] = useState(defaultMarketID);
 
-    //BetsInfoContext
+    //Markets Context
+    const [markets, setMarkets] = useState();
     const [yesInfo, setYesInfo] = useState([]);
     const [noInfo, setNoInfo] = useState([]);
 
@@ -83,11 +85,13 @@ export default function App({ Component, pageProps }) {
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
                     <PageContext.Provider value={{ currentMenu, setCurrentMenu, currentMarketID, setCurrentMarketID }}>
-                        <BetsInfoContext.Provider value={{ yesInfo, setYesInfo, noInfo, setNoInfo }}>
-                            <TestContext.Provider value={contextValue}>
-                                <Component {...pageProps} />
-                            </TestContext.Provider>
-                        </BetsInfoContext.Provider>
+                        <MarketContext.Provider value={{ markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo }}>
+                            <BetsInfoContext.Provider value={{ yesInfo, setYesInfo, noInfo, setNoInfo }}>
+                                <TestContext.Provider value={contextValue}>
+                                    <Component {...pageProps} />
+                                </TestContext.Provider>
+                            </BetsInfoContext.Provider>
+                        </MarketContext.Provider>
                     </PageContext.Provider>
                 </LoadingContext.Provider>
             </BiconomyAccountContext.Provider>

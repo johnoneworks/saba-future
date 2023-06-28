@@ -2,8 +2,8 @@ import MarketCard from "@/components/MarketCard/MarketCard";
 import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
-import useGetMarkets from "@/hooks/useGetMarkets";
 import styles from "@/styles/Home.module.scss";
 import { Grid, Typography } from "@mui/material";
 import { useContext } from "react";
@@ -46,7 +46,7 @@ export const Markets = () => {
     const { account } = useContext(BiconomyAccountContext);
     const { currentMenu, currentMarketID } = useContext(PageContext);
     const { isMarketLoading } = useContext(LoadingContext);
-    const { markets } = useGetMarkets();
+    const { markets } = useContext(MarketContext);
 
     return (
         <>

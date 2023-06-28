@@ -1,10 +1,10 @@
-import { BetsInfoContext } from "@/contexts/BetsInfoContext";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import { useCallback, useContext, useEffect } from "react";
 
 const useGetBetsInfo = () => {
-    const { setYesInfo, setNoInfo } = useContext(BetsInfoContext);
+    const { setYesInfo, setNoInfo } = useContext(MarketContext);
     const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
     const { currentMarketID } = useContext(PageContext);
 

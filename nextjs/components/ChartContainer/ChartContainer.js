@@ -1,4 +1,4 @@
-import { BetsInfoContext } from "@/contexts/BetsInfoContext";
+import { MarketContext } from "@/contexts/MarketContext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -8,7 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import styles from "./ChartContainer.module.scss";
 
 export default function ChartContainer() {
-    const { yesInfo, noInfo } = useContext(BetsInfoContext);
+    const { yesInfo, noInfo } = useContext(MarketContext);
 
     const InfoTable = ({ info, title, buttonStyle }) => {
         const theme = createTheme();
