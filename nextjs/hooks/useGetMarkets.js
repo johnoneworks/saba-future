@@ -74,7 +74,7 @@ const useGetMarkets = () => {
                 let mt = {
                     id: market.id,
                     question: market.info.question,
-                    imageHash: market.info.creatorImageHash,
+                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : "/placeholder.jpg",
                     totalAmount: market.totalAmount,
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,

@@ -1,5 +1,4 @@
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
@@ -36,9 +35,8 @@ const CustomTypography = styled(Typography)({
     transform: "scale(0.8)"
 });
 
-export default function MarketCard({ id, title, outcome, yesBets, noBets, totalAmount, totalYesAmount, totalNoAmount, currentUser, isClosed }) {
+export default function MarketCard({ market, currentUser, isClosed }) {
     const router = useRouter();
-    const { predictionWorldContract } = useContext(BiconomyAccountContext);
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { updateMarketDetail } = useGetMarketDetail();
     const { isMarketLoading } = useContext(LoadingContext);
@@ -46,15 +44,15 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
     let titleWidth = "w-[calc(100%-72px)]";
     let win = false;
     let lost = false;
-    if (yesBets?.filter((bet) => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
-        if (outcome) {
+    if (market.yesBets?.filter((bet) => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
+        if (market.outcome) {
             win = true;
         } else {
             lost = true;
         }
     }
-    if (noBets?.filter((bet) => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
-        if (outcome) {
+    if (market.noBets?.filter((bet) => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
+        if (market.outcome) {
             lost = true;
         } else {
             win = true;
@@ -65,16 +63,16 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
     } else if (win || lost) {
         titleWidth = "w-[calc(100%-120px)]";
     }
-    const outcomeValue = outcome ? "Yes" : "No";
-    const winnersCount = outcome ? yesBets?.length : noBets?.length;
-    const bonus = outcome ? totalYesAmount : totalNoAmount;
+    const outcomeValue = market.outcome ? "Yes" : "No";
+    const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
+    const bonus = market.outcome ? market.totalYesAmount : market.totalNoAmount;
     const cardValueTitle = isClosed ? ["Outcome", "Winners Count", "Bonus"] : ["Volume", "Yes", "No"];
     const cardValues = [
         {
             title: cardValueTitle[0],
             openValueBgClass: "isVolume",
             isClosedOutcome: outcomeValue,
-            openOutcome: totalAmount.toString(),
+            openOutcome: market.totalAmount.toString(),
             openColor: "",
             isClosedcolor: "#E84D4D"
         },
@@ -82,7 +80,7 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
             title: cardValueTitle[1],
             openValueBgClass: "isYes",
             isClosedOutcome: winnersCount,
-            openOutcome: totalYesAmount.toString(),
+            openOutcome: market.totalYesAmount.toString(),
             openColor: "#3FB06B",
             isClosedcolor: ""
         },
@@ -90,20 +88,20 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
             title: cardValueTitle[2],
             openValueBgClass: "isNo",
             isClosedOutcome: bonus.toString(),
-            openOutcome: totalNoAmount.toString(),
+            openOutcome: market.totalNoAmount.toString(),
             openColor: "#E84D4D",
             isClosedcolor: ""
         }
     ];
 
     const handleSelectMarket = () => {
-        const marketID = `${id}`;
+        const marketID = `${market.id}`;
         router.push({
             pathname: `/`,
             query: { menu: currentMenu, marketid: marketID }
         });
         setCurrentMarketID(marketID);
-        updateMarketDetail(marketID, predictionWorldContract);
+        updateMarketDetail(marketID);
     };
 
     if (isMarketLoading) {
@@ -115,10 +113,10 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
-                        <Box component="img" src="/placeholder.jpg" alt="placeholder" sx={{ width: "100%", height: "100%" }} />
+                        <Box component="img" src={market.imageHash} alt="placeholder" sx={{ width: "100%", height: "100%" }} />
                     </CustomAvatar>
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
-                        {title}
+                        {market.question}
                     </Typography>
                 </Box>
                 {win ? successIcon : null}
@@ -134,7 +132,10 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
                                         {cardValueTitle[0]}
                                     </Typography>
                                     <Typography
-                                        className={classnames(styles.outcomeValue, { [styles.isYes]: outcome === true, [styles.isNo]: outcome === false })}
+                                        className={classnames(styles.outcomeValue, {
+                                            [styles.isYes]: market.outcome === true,
+                                            [styles.isNo]: market.outcome === false
+                                        })}
                                         variant="body1"
                                         sx={{ fontWeight: "bold", mr: "6px" }}
                                     >
