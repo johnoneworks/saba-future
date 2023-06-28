@@ -3,7 +3,7 @@ import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
-import { Box, Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useContext } from "react";
 
 /**
@@ -23,7 +23,7 @@ export const Statement = () => {
         <>
             {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
                 <>
-                    <Box
+                    {/* <Box
                         sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 0.5, mb: 1, backgroundColor: "#1A84F2", borderRadius: "4px" }}
                     >
                         <Typography variant="subtitle2" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold" }}>
@@ -32,7 +32,7 @@ export const Statement = () => {
                         <Typography variant="h5" sx={{ fontWeight: "bold", color: "#fff" }}>
                             450
                         </Typography>
-                    </Box>
+                    </Box> */}
                     <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
                         {userStatements.map((market, i) => (
                             <StatementMarketCard
