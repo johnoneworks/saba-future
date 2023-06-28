@@ -3,12 +3,12 @@ import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
 
 import { MENU_TYPE } from "@/constants/Constant";
-import { BetsInfoContext } from "@/contexts/BetsInfoContext";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import { TestContext } from "@/contexts/TestContext";
+import { UserInfoContext } from "@/contexts/UserInfoContext";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AccountContext } from "../contexts/AccountContext";
@@ -44,6 +44,11 @@ export default function App({ Component, pageProps }) {
     const [markets, setMarkets] = useState();
     const [yesInfo, setYesInfo] = useState([]);
     const [noInfo, setNoInfo] = useState([]);
+
+    //UserInfo Context
+    const [balance, setBalance] = useState(0);
+    const [userTotalBetValue, setUserTotalBetValue] = useState(0);
+    const [userStatements, setUserStatements] = useState([]);
 
     const contextValue = {
         account2,
@@ -86,11 +91,13 @@ export default function App({ Component, pageProps }) {
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
                     <PageContext.Provider value={{ currentMenu, setCurrentMenu, currentMarketID, setCurrentMarketID }}>
                         <MarketContext.Provider value={{ markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo }}>
-                            <BetsInfoContext.Provider value={{ yesInfo, setYesInfo, noInfo, setNoInfo }}>
+                            <UserInfoContext.Provider
+                                value={{ balance, setBalance, userTotalBetValue, setUserTotalBetValue, userStatements, setUserStatements }}
+                            >
                                 <TestContext.Provider value={contextValue}>
                                     <Component {...pageProps} />
                                 </TestContext.Provider>
-                            </BetsInfoContext.Provider>
+                            </UserInfoContext.Provider>
                         </MarketContext.Provider>
                     </PageContext.Provider>
                 </LoadingContext.Provider>

@@ -1,6 +1,7 @@
 import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
+import { UserInfoContext } from "@/contexts/UserInfoContext";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
@@ -72,9 +73,10 @@ export const Header = () => {
     const router = useRouter();
     const { account, email } = useContext(BiconomyAccountContext);
     const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
+    const { balance } = useContext(UserInfoContext);
     const { updateMarkets } = useGetMarkets();
     const { updateStatements } = useGetUserStatement();
-    const { balance, updateBalance } = useGetUserBalance();
+    const { updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
 
     const refreshMarkets = () => {

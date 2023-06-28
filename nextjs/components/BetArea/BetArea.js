@@ -5,6 +5,7 @@ import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
+import useGetUserBalance from "@/hooks/useGetUserBalance";
 import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
 import classnames from "classnames";
 import { useContext, useState } from "react";
@@ -42,6 +43,7 @@ const SelectButton = (props) => {
 export const BetArea = (props) => {
     const { id, market } = props;
     const { smartAccount, predictionWorldInterface, sureTokenInterface, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { updateBalance } = useGetUserBalance();
     const { currentMarketID } = useContext(PageContext);
     const { setIsPageLoading } = useContext(LoadingContext);
     const { updateMarketDetail } = useGetMarketDetail();
@@ -84,6 +86,7 @@ export const BetArea = (props) => {
             console.error(`Error trading: ${error}`);
         } finally {
             updateMarketDetail();
+            updateBalance();
             updateBetsInfo(currentMarketID, predictionWorldContract);
             setInput("");
             setIsPageLoading(false);
