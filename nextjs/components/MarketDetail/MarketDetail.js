@@ -26,8 +26,8 @@ const CustomTypography = styled(Typography)({
 });
 
 const CustomAvatar = styled(Avatar)({
-    "border-radius": "4px",
-    "margin-right": "4px",
+    borderRadius: "4px",
+    marginRight: "4px",
     width: "56px",
     height: "56px"
 });

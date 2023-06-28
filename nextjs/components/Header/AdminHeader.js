@@ -1,19 +1,15 @@
-import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
-import { UserInfoContext } from "@/contexts/UserInfoContext";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
 import useLogout from "@/hooks/useLogout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { styled } from "@mui/system";
-import classnames from "classnames";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Suspense, useContext } from "react";
@@ -21,10 +17,7 @@ import styles from "./Header.module.scss";
 
 /**
  * TODO:
- * 1. return back button √
- * 2. add MUI style √
- * 3. 個人資訊 icon √
- * 4. Login / Logout Logic √
+ * 1. refesh all markets
  */
 
 const CustomPersonIcon = styled(PersonIcon)({
@@ -50,33 +43,13 @@ const ProfileItem = ({ type, text }) => {
     );
 };
 
-const MenuTab = ({ tab }) => {
-    const { currentMenu, setCurrentMenu } = useContext(PageContext);
-    const router = useRouter();
-    return (
-        <div
-            className={classnames(styles.tabItem, { [styles.active]: tab === currentMenu })}
-            onClick={() => {
-                setCurrentMenu(tab);
-                router.push({
-                    pathname: `/`,
-                    query: { menu: tab }
-                });
-            }}
-        >
-            <span>{tab}</span>
-        </div>
-    );
-};
-
-export const Header = () => {
+export const AdminHeader = () => {
     const router = useRouter();
     const { account, email } = useContext(BiconomyAccountContext);
     const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
-    const { balance } = useContext(UserInfoContext);
     const { updateMarkets } = useGetMarkets();
     const { updateStatements } = useGetUserStatement();
-    const { updateBalance } = useGetUserBalance();
+    const { balance, updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
 
     const refreshMarkets = () => {
@@ -109,7 +82,7 @@ export const Header = () => {
             <div className={styles.root}>
                 <div className={styles.header}>
                     {/* TODO return back icon */}
-                    <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>{currentMarketID ? <ArrowBackIcon /> : <RefreshIcon />}</div>
+                    <div onClick={refreshMarkets}>{<RefreshIcon />}</div>
                     <div> {account ? "Saba Future" : "Wallet Connecting..."} </div>
                     <div onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
                 </div>
@@ -119,12 +92,6 @@ export const Header = () => {
                             <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
                             <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
                         </div>
-                        {!currentMarketID && (
-                            <div className={styles.tab}>
-                                <MenuTab tab={MENU_TYPE.MARKET} />
-                                <MenuTab tab={MENU_TYPE.STATEMENT} />
-                            </div>
-                        )}
                     </div>
                 )}
             </div>
