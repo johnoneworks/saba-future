@@ -13,7 +13,7 @@ import styles from "./MarketDetail.module.scss";
  3. Add error handling
  4. Add chart √
  5. update bet button
- 6. 下注後，要更新資料
+ 6. 下注後，要更新資料 √
  7. 顯示資料 √
  8. 將此頁移到 index.js √
  */

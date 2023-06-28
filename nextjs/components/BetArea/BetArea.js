@@ -1,4 +1,4 @@
-import { predictionWorldAddress } from "@/config";
+import { predictionWorldAddress, sureTokenAddress } from "@/config";
 import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
