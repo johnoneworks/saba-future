@@ -1,10 +1,11 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { UserInfoContext } from "@/contexts/UserInfoContext";
 import { ethers } from "ethers";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
 const useGetUserBalance = () => {
     const { account, sureTokenContract, smartAccount } = useContext(BiconomyAccountContext);
-    const [balance, setBalance] = useState(0);
+    const { setBalance } = useContext(UserInfoContext);
 
     const updateBalance = async () => {
         try {
@@ -23,7 +24,7 @@ const useGetUserBalance = () => {
         updateBalance();
     }, [account]);
 
-    return { balance, updateBalance };
+    return { updateBalance };
 };
 
 export default useGetUserBalance;
