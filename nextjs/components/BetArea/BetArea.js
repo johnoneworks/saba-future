@@ -23,8 +23,6 @@ const SelectButton = (props) => {
         selectedStyle = selected === type ? "#E84D4D" : "#F2F5FA";
     }
 
-    console.log(selected);
-
     return (
         <Box
             id={buttonName}
@@ -43,9 +41,10 @@ const SelectButton = (props) => {
 export const BetArea = (props) => {
     const { id, market } = props;
     const { smartAccount, predictionWorldInterface, sureTokenInterface, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { updateBalance } = useGetUserBalance();
     const { currentMarketID } = useContext(PageContext);
     const { setIsPageLoading } = useContext(LoadingContext);
+
+    const { updateBalance } = useGetUserBalance();
     const { updateMarketDetail } = useGetMarketDetail();
     const { updateBetsInfo } = useGetBetsInfo();
 
@@ -85,7 +84,7 @@ export const BetArea = (props) => {
             setIsPageLoading(false);
             console.error(`Error trading: ${error}`);
         } finally {
-            updateMarketDetail();
+            updateMarketDetail(currentMarketID, predictionWorldContract);
             updateBalance();
             updateBetsInfo(currentMarketID, predictionWorldContract);
             setInput("");

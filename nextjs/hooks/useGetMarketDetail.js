@@ -1,30 +1,20 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import moment from "moment";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 const useGetMarketDetail = () => {
     const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { setMarketDetail } = useContext(MarketContext);
     const { currentMarketID } = useContext(PageContext);
-
-    const [marketDetail, setMarket] = useState({
-        id: null,
-        title: "title of market",
-        endTimestamp: "1681681545",
-        totalAmount: 0,
-        totalYesAmount: 0,
-        totalNoAmount: 0,
-        description: "",
-        resolverUrl: null,
-        isClose: undefined
-    });
 
     const updateMarketDetail = useCallback(
         async (currentMarketID, predictionWorldContract) => {
             try {
                 const market = await predictionWorldContract.markets(currentMarketID);
                 const date = moment.unix(market.info.endTimestamp / 1000).format("MMMM D, YYYY");
-                setMarket({
+                setMarketDetail({
                     id: currentMarketID,
                     title: market.info.question,
                     endTimestamp: date,
@@ -48,7 +38,7 @@ const useGetMarketDetail = () => {
         }
     }, [currentMarketID, account, updateMarketDetail]);
 
-    return { marketDetail, updateMarketDetail };
+    return { updateMarketDetail };
 };
 
 export default useGetMarketDetail;

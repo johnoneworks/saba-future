@@ -1,7 +1,7 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import useGetMarketDetail from "@/hooks/useGetMarketDetail";
+import { MarketContext } from "@/contexts/MarketContext";
 import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useContext } from "react";
@@ -94,7 +94,8 @@ const MarketDescription = (props) => {
 
 export default function MarketDetail() {
     const { account } = useContext(BiconomyAccountContext);
-    const { marketDetail } = useGetMarketDetail();
+    const { marketDetail } = useContext(MarketContext);
+
     return (
         <>
             {account && marketDetail && (
