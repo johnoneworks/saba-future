@@ -13,6 +13,11 @@
 
 //Proxy contract address: 0x92eE4757F0f83f0Ab7290434f75cA9512b17e892
 //Implementation contract address: 0xB177993a2ACFf972540B0f3Aeb9E402a29ad17E6
+import { ChainId } from "@biconomy/core-types";
+
+export const chainId = ChainId.POLYGON_MAINNET;
+export const dappAPIKey = "FQUVHGUDQV26BNGRFNE8V6UUXBXHWGM3WA"; // TODO: should use .env
+export const providerUrl = "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvCxizWmyNG5yOeGoMqF1j-T" // TODO: should use .env
 
 export const sureTokenAddress = "0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c";
 export const predictionWorldAddress = "0x39a0D0715D61E6C553C9CE06ac026eEbDe5037bA";
