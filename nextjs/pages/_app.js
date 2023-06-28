@@ -44,6 +44,17 @@ export default function App({ Component, pageProps }) {
     const [markets, setMarkets] = useState();
     const [yesInfo, setYesInfo] = useState([]);
     const [noInfo, setNoInfo] = useState([]);
+    const [marketDetail, setMarketDetail] = useState({
+        id: null,
+        title: "title of market",
+        endTimestamp: "1681681545",
+        totalAmount: 0,
+        totalYesAmount: 0,
+        totalNoAmount: 0,
+        description: "",
+        resolverUrl: null,
+        isClose: undefined
+    });
 
     //UserInfo Context
     const [balance, setBalance] = useState(0);
@@ -90,7 +101,7 @@ export default function App({ Component, pageProps }) {
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
                     <PageContext.Provider value={{ currentMenu, setCurrentMenu, currentMarketID, setCurrentMarketID }}>
-                        <MarketContext.Provider value={{ markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo }}>
+                        <MarketContext.Provider value={{ markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo, marketDetail, setMarketDetail }}>
                             <UserInfoContext.Provider
                                 value={{ balance, setBalance, userTotalBetValue, setUserTotalBetValue, userStatements, setUserStatements }}
                             >

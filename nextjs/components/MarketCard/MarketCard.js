@@ -1,4 +1,5 @@
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
@@ -37,6 +38,7 @@ const CustomTypography = styled(Typography)({
 
 export default function MarketCard({ id, title, outcome, yesBets, noBets, totalAmount, totalYesAmount, totalNoAmount, currentUser, isClosed }) {
     const router = useRouter();
+    const { predictionWorldContract } = useContext(BiconomyAccountContext);
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { updateMarketDetail } = useGetMarketDetail();
     const { isMarketLoading } = useContext(LoadingContext);
@@ -101,7 +103,7 @@ export default function MarketCard({ id, title, outcome, yesBets, noBets, totalA
             query: { menu: currentMenu, marketid: marketID }
         });
         setCurrentMarketID(marketID);
-        updateMarketDetail(marketID);
+        updateMarketDetail(marketID, predictionWorldContract);
     };
 
     if (isMarketLoading) {
