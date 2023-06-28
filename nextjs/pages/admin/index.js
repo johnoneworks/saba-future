@@ -1,10 +1,10 @@
+import { AdminHeader } from "@/components/Header/AdminHeader";
+import { predictionWorldAddress } from "@/config";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { useCallback, useContext, useEffect, useState } from "react";
-
-import { Header } from "@/components/Header/Header";
-import { predictionWorldAddress } from "@/config";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 
 export default function Admin() {
     const [submitButtonText, setSubmitButtonText] = useState("Create Market");
@@ -64,67 +64,115 @@ export default function Admin() {
     }, [account, getBalance]);
 
     return (
-        <>
-            <div className="flex flex-col justify-center items-center h-full p-5">
-                <Header />
-                <main className="w-full flex flex-col py-4 max-w-5xl pb-6">
-                    <Link href="/admin/markets" className="mt-5 rounded-lg py-3 text-center w-full bg-blue-700 text-white font-bold mb-5">
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%"
+            }}
+        >
+            <AdminHeader />
+            <Container maxWidth="md" component="main">
+                <Link href="/admin/markets">
+                    <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
                         See All Markets
-                    </Link>
-                    You have: {balance} SURE tokens
-                    <div className="w-full flex flex-col pt-1 border border-gray-300 p-5 rounded-lg ">
-                        <span className="text-lg font-semibold mt-4">Add New Market</span>
-                        <span className="text-lg font mt-6 mb-1">Market Title</span>
-                        <input
-                            type="input"
-                            name="title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
-                            placeholder="Title"
-                            autoComplete="off"
-                        />
-                        <span className="text-lg font mt-6 mb-1">Market Description</span>
-                        <textarea
-                            name="description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
-                            placeholder="Description"
-                            autoComplete="off"
-                        ></textarea>
-                        <span className="text-lg font mt-6 mb-1">Resolve URL</span>
-                        <input
-                            type="input"
-                            name="resolverUrl"
-                            value={resolverUrl}
-                            onChange={(e) => setResolverUrl(e.target.value)}
-                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
-                            placeholder="URL"
-                            autoComplete="off"
-                        />
-                        <span className="text-lg font mt-6 mb-1">End Date</span>
-                        <input
-                            type="date"
-                            name="timestamp"
-                            // value={timestamp}
-                            onChange={(e) => {
-                                setTimestamp(e.target.valueAsDate?.getTime());
-                            }}
-                            className="w-full py-3 px-3 text-base text-gray-700 bg-gray-100 rounded-md focus:outline-none"
-                            autoComplete="off"
-                        />
-                        <button
-                            className="mt-5 rounded-lg py-3 text-center w-full bg-green-500 text-white font-bold"
-                            onClick={() => {
-                                handleSubmit();
-                            }}
-                        >
-                            {submitButtonText}
-                        </button>
-                    </div>
-                </main>
-            </div>
-        </>
+                    </Button>
+                </Link>
+                You have: {balance} SURE tokens
+                <Box
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        mt: 1,
+                        borderColor: "divider",
+                        borderWidth: 1,
+                        borderRadius: 1,
+                        p: 2
+                    }}
+                >
+                    <Typography variant="h6" component="div" sx={{ mt: 1 }}>
+                        Add New Market
+                    </Typography>
+                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
+                        Market Title
+                    </Typography>
+                    <TextField
+                        type="input"
+                        name="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        fullWidth
+                        placeholder="Title"
+                        autoComplete="off"
+                    />
+                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
+                        Market Description
+                    </Typography>
+                    <TextField
+                        name="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        fullWidth
+                        placeholder="Description"
+                        autoComplete="off"
+                        multiline
+                    />
+                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
+                        Market Image URL
+                    </Typography>
+                    <TextField
+                        type="input"
+                        name="resolverUrl"
+                        value={resolverUrl}
+                        onChange={(e) => setResolverUrl(e.target.value)}
+                        fullWidth
+                        placeholder="URL"
+                        autoComplete="off"
+                    />
+                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
+                        Resolve URL
+                    </Typography>
+                    <TextField
+                        type="input"
+                        name="resolverUrl"
+                        value={resolverUrl}
+                        onChange={(e) => setResolverUrl(e.target.value)}
+                        fullWidth
+                        placeholder="URL"
+                        autoComplete="off"
+                    />
+                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
+                        End Date
+                    </Typography>
+                    <TextField
+                        type="date"
+                        name="timestamp"
+                        // value={timestamp}
+                        onChange={(e) => {
+                            setTimestamp(e.target.valueAsDate?.getTime());
+                        }}
+                        fullWidth
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
+                    <Button
+                        variant="contained"
+                        color="success"
+                        fullWidth
+                        style={{ backgroundColor: "#2e7d32" }}
+                        sx={{ mt: 2 }}
+                        onClick={() => {
+                            handleSubmit();
+                        }}
+                    >
+                        {submitButtonText}
+                    </Button>
+                </Box>
+            </Container>
+        </Box>
     );
 }
