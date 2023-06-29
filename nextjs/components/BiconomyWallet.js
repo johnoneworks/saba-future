@@ -1,11 +1,10 @@
-import { ChainId } from "@biconomy/core-types";
 import SmartAccount from "@biconomy/smart-account";
 import SocialLogin from "@biconomy/web3-auth";
 import "@biconomy/web3-auth/dist/src/style.css";
 import { ethers } from "ethers";
 import { useCallback, useContext, useEffect } from "react";
 
-import { predictionWorldAddress, sureTokenAddress } from "@/config";
+import { chainId, dappAPIKey, predictionWorldAddress, providerUrl, sureTokenAddress } from "@/config";
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
@@ -59,7 +58,7 @@ export default function BiconomyWallet() {
         if (!sdk.isInit) {
             const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
             await sdk.init({
-                chainId: ethers.utils.hexValue(ChainId.POLYGON_MUMBAI),
+                chainId: ethers.utils.hexValue(chainId),
                 whitelistUrls: {
                     "https://saba-future.vercel.app": signature
                 }
@@ -74,13 +73,13 @@ export default function BiconomyWallet() {
             console.log(`account:${accounts[0]}`);
 
             const smartAccountOptions = {
-                activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI],
+                activeNetworkId: chainId,
+                supportedNetworksIds: [chainId],
                 networkConfig: [
                     {
-                        chainId: ChainId.POLYGON_MUMBAI,
-                        dappAPIKey: "WFa23cEs2.8010afd7-00e3-48a5-9f14-183faf9a8361", // TODO: should use .env
-                        providerUrl: "https://polygon-mumbai.g.alchemy.com/v2/GDTl7qsRqT4CbILRcYxCOC1DF2-jpNuF" // TODO: should use .env
+                        chainId: chainId,
+                        dappAPIKey: dappAPIKey,
+                        providerUrl: providerUrl,
                     }
                 ]
             };

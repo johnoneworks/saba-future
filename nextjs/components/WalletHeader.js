@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { chainId } from "@/config";
+import { useEffect, useState } from "react";
 
 export default function WalletHeader() {
     const [currentAccount, setCurrentAccount] = useState("");
@@ -29,23 +30,17 @@ export default function WalletHeader() {
 				console.log('Metamask not detected');
 				return;
 			}
-			let chainId = await ethereum.request({ method: 'eth_chainId' });
-			console.log(`Connected to chain: ${chainId}`);
-
-			const mumbaiChainId = '0x13881';
-
-			const devChainId = 1337;
-			const localhostChainId = `0x${Number(devChainId).toString(16)}`;
+			let currentChainId = await ethereum.request({ method: 'eth_chainId' });
 
             await ethereum.request({
                 method: 'wallet_switchEthereumChain',
-                params: [{ chainId: mumbaiChainId }],
+                params: [{ chainId: chainId }],
             });
 
-            console.log(`Connected to chain: ${chainId}`);
+            currentChainId = await ethereum.request({ method: 'eth_chainId' });
 
-			if (chainId !== mumbaiChainId && chainId !== localhostChainId) {
-				alert('You are not connected to the Mumbai Testnet!');
+			if (currentChainId !== chainId) {
+				alert(`You are not connected to the correct net! Yours: ${currentChainId}, Correct: ${chainId}`);
 				return;
 			}
 
