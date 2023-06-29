@@ -1,4 +1,4 @@
-import { ChainId } from "@biconomy/core-types";
+import { chainId } from "@/config";
 import SmartAccount from "@biconomy/smart-account";
 import SocialLogin from "@biconomy/web3-auth";
 import { ethers } from "ethers";
@@ -35,7 +35,6 @@ export default function SmartContractWallet() {
 
         // no biconomy SDK, initialize it
         const sdk = new SocialLogin();
-        const chainId = 80001; // mumbai
         // according to document, will need to whitelistUrl for deployment
         const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
         await sdk.init({
@@ -93,8 +92,8 @@ export default function SmartContractWallet() {
             setSmartContractWalletLoading(true);
             // from docs I need the Dapp API key
             const smartAccount = new SmartAccount(provider, {
-                activeNetworkId: ChainId.POLYGON_MUMBAI,
-                supportedNetworksIds: [ChainId.POLYGON_MUMBAI]
+                activeNetworkId: chainId,
+                supportedNetworksIds: [chainId]
             });
             await smartAccount.init();
             const context = smartAccount.getSmartAccountContext();
