@@ -1,5 +1,5 @@
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { PageContext } from "@/contexts/PageContext";
+import { UserInfoContext } from "@/contexts/UserInfoContext";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
@@ -8,10 +8,8 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import { styled } from "@mui/system";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { Suspense, useContext } from "react";
 import styles from "./Header.module.scss";
 
@@ -44,12 +42,11 @@ const ProfileItem = ({ type, text }) => {
 };
 
 export const AdminHeader = () => {
-    const router = useRouter();
     const { account, email } = useContext(BiconomyAccountContext);
-    const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { updateMarkets } = useGetMarkets();
     const { updateStatements } = useGetUserStatement();
-    const { balance, updateBalance } = useGetUserBalance();
+    const { updateBalance } = useGetUserBalance();
+    const { balance } = useContext(UserInfoContext);
     const { disconnectWallet } = useLogout();
 
     const refreshMarkets = () => {
@@ -64,16 +61,6 @@ export const AdminHeader = () => {
         }
     };
 
-    const handleReturnBack = () => {
-        if (currentMarketID) {
-            router.push({
-                pathname: `/`,
-                query: { menu: currentMenu }
-            });
-            setCurrentMarketID(null);
-        }
-    };
-
     return (
         <>
             <Suspense>
@@ -81,8 +68,8 @@ export const AdminHeader = () => {
             </Suspense>
             <div className={styles.root}>
                 <div className={styles.header}>
-                    {/* TODO return back icon */}
-                    <div onClick={refreshMarkets}>{<RefreshIcon />}</div>
+                    {/* TODO refresh logic */}
+                    {/* <div onClick={refreshMarkets}>{<RefreshIcon />}</div> */}
                     <div> {account ? "Saba Future" : "Wallet Connecting..."} </div>
                     <div onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
                 </div>
