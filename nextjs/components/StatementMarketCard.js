@@ -1,3 +1,4 @@
+import { BET_TYPE } from "@/constants/Constant";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
@@ -6,27 +7,21 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { convertBigNumberToDate } from "../utils/ConvertDate";
 
-export default function StatementMarketCard({ id, title, betType, amount, totalYesAmount, totalNoAmount, timestamp, endTimestamp, hasResolved, outcome }) {
+/**
+ * TODO:
+ * 1. refactor
+ */
+
+export default function StatementMarketCard({ market }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { updateMarketDetail } = useGetMarketDetail();
-
-    let bgColor = "#3FB06B";
-    if (betType === "Yes") {
-        bgColor = "#3FB06B";
-    } else {
-        bgColor = "#E84D4D";
-    }
-
-    let outcomeColor = "#1A84F2";
-    if (outcome === "Yes") {
-        outcomeColor = "#3FB06B";
-    } else if (outcome === "No" && hasResolved === true) {
-        outcomeColor = "#E84D4D";
-    }
+    const userBetType = !!market.yesAmount ? BET_TYPE.YES : BET_TYPE.NO;
+    const amount = userBetType === BET_TYPE.YES ? market.yesAmount : market.noAmount;
+    const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
 
     const handleSelectMarket = () => {
-        const marketID = `${id}`;
+        const marketID = `${market.id}`;
         router.push({
             pathname: `/`,
             query: { menu: currentMenu, marketid: marketID }
@@ -43,21 +38,21 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
     });
 
     return (
-        <Grid item xs={12} sm={6} md={4} key={id}>
+        <Grid item xs={12} sm={6} md={4} key={market.id}>
             <Card
                 style={{
-                    backgroundColor: hasResolved ? "#E4E9F0" : "#fff",
-                    boxShadow: hasResolved ? "none" : "0px 0px 8px rgba(0, 0, 0, 0.15)"
+                    backgroundColor: market.hasResolved ? "#E4E9F0" : "#fff",
+                    boxShadow: market.hasResolved ? "none" : "0px 0px 8px rgba(0, 0, 0, 0.15)"
                 }}
             >
                 <div onClick={handleSelectMarket}>
                     <CardHeader
                         avatar={
                             <CustomAvatar>
-                                <Box component="img" src="/placeholder.jpg" alt="placeholder" sx={{ width: "100%", height: "100%" }} />
+                                <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
                             </CustomAvatar>
                         }
-                        title={title}
+                        title={market.title}
                         titleTypographyProps={{ variant: "subtitle1", fontWeight: "bold" }}
                         sx={{ pb: 0, alignItems: "flex-start" }}
                     />
@@ -75,16 +70,19 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
                                 <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", mb: "3px", lineHeight: 1, pt: "5px" }}>
                                     Outcome
                                 </Typography>
-                                <Typography variant="body1" sx={{ color: outcomeColor, fontWeight: "bold" }}>
-                                    {hasResolved ? outcome.toString() : "In progress"}
+                                <Typography
+                                    variant="body1"
+                                    sx={{ color: market.hasResolved ? (outcome === BET_TYPE.YES ? "#3FB06B" : "#E84D4D") : "#1A84F2", fontWeight: "bold" }}
+                                >
+                                    {market.hasResolved ? outcome.toString() : "In progress"}
                                 </Typography>
                             </Box>
-                            <Box sx={{ backgroundColor: bgColor, pl: 2, pr: 3, borderRadius: "4px" }}>
+                            <Box sx={{ backgroundColor: userBetType === BET_TYPE.YES ? "#3FB06B" : "#E84D4D", pl: 2, pr: 3, borderRadius: "4px" }}>
                                 <Typography variant="caption" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold" }}>
                                     Your Bet
                                 </Typography>
                                 <Typography variant="body1" sx={{ color: "#fff", fontWeight: "bold", lineHeight: 1 }}>
-                                    {betType}: {amount}
+                                    {userBetType}: {amount}
                                 </Typography>
                             </Box>
                         </Box>
@@ -93,9 +91,9 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
                                 Amount Added
                             </Typography>
                             <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
-                                {`${totalYesAmount.toString()} SURE on `}
+                                {`${market.totalYesAmount.toString()} SURE on `}
                                 <Typography sx={{ color: "#3FB06B", display: "inline", fontWeight: "bold" }}>Yes</Typography>
-                                {` / ${totalNoAmount.toString()} SURE on `}
+                                {` / ${market.totalNoAmount.toString()} SURE on `}
                                 <Typography sx={{ color: "#E84D4D", display: "inline", fontWeight: "bold" }}>No</Typography>
                             </Typography>
                         </Box>
@@ -104,7 +102,7 @@ export default function StatementMarketCard({ id, title, betType, amount, totalY
                                 Added On / Ending In
                             </Typography>
                             <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
-                                {`${convertBigNumberToDate(timestamp)} / ${convertBigNumberToDate(endTimestamp)}`}
+                                {`${convertBigNumberToDate(market.timestamp)} / ${convertBigNumberToDate(market.endTimestamp)}`}
                             </Typography>
                         </Box>
                     </CardContent>

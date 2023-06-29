@@ -30,19 +30,7 @@ export const Statement = () => {
                     {!isMarketLoading && (
                         <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
                             {userStatements.map((market, i) => (
-                                <StatementMarketCard
-                                    id={market.id}
-                                    key={i}
-                                    title={market.title}
-                                    betType={!!market.yesAmount ? "Yes" : "No"}
-                                    amount={!!market.yesAmount ? market.yesAmount : market.noAmount}
-                                    totalYesAmount={market.totalYesAmount}
-                                    totalNoAmount={market.totalNoAmount}
-                                    endTimestamp={market.endTimestamp}
-                                    timestamp={market.timestamp}
-                                    hasResolved={market.hasResolved}
-                                    outcome={market.outcome ? "Yes" : "No"}
-                                />
+                                <StatementMarketCard market={market} />
                             ))}
                         </Grid>
                     )}
