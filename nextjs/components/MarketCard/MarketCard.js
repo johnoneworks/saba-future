@@ -113,7 +113,7 @@ export default function MarketCard({ market, currentUser, isClosed }) {
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
-                        <Box component="img" src={market.imageHash} alt="placeholder" sx={{ width: "100%", height: "100%" }} />
+                        <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
                     </CustomAvatar>
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
                         {market.question}

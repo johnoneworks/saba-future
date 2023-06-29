@@ -17,6 +17,7 @@ const useGetMarketDetail = () => {
                 setMarketDetail({
                     id: currentMarketID,
                     title: market.info.question,
+                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : "/placeholder.jpg",
                     endTimestamp: date,
                     totalAmount: market.totalAmount,
                     totalYesAmount: market.totalYesAmount,
