@@ -62,7 +62,7 @@ const useGetUserStatement = () => {
                 markets.push({
                     id: market.id,
                     title: market.info.question,
-                    imageHash: "", // temp holder
+                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : "/placeholder.jpg",
                     totalAmount: market.totalAmount,
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,
@@ -112,7 +112,7 @@ const useGetUserStatement = () => {
                         totalAmount: market?.totalAmount,
                         totalYesAmount: market?.totalYesAmount,
                         totalNoAmount: market?.totalNoAmount,
-                        hasResolved: market?.marketClosed,
+                        hasResolved: market?.hasResolved,
                         endTimestamp: market?.endTimestamp,
                         timestamp: market?.timestamp,
                         outcome: market?.outcome
