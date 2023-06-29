@@ -47,6 +47,7 @@ export default function App({ Component, pageProps }) {
     const [marketDetail, setMarketDetail] = useState({
         id: null,
         title: "title of market",
+        imageHash: "",
         endTimestamp: "1681681545",
         totalAmount: 0,
         totalYesAmount: 0,

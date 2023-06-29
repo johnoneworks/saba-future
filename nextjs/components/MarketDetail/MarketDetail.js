@@ -33,7 +33,7 @@ const CustomAvatar = styled(Avatar)({
 });
 
 const MarketTitle = (props) => {
-    const { title, endTimestamp, totalAmount } = props;
+    const { title, endTimestamp, totalAmount, imageHash } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
     const totalSureAmount = `${totalAmount}`;
 
@@ -41,7 +41,7 @@ const MarketTitle = (props) => {
         <Box className={styles.marketTitle}>
             <Box sx={{ display: "flex", mb: "10px" }}>
                 <CustomAvatar>
-                    <Box component="img" src="/placeholder.jpg" alt="placeholder" sx={{ width: "100%", height: "100%" }} />
+                    <Box component="img" src={imageHash} alt="titleImage" sx={{ width: "100%", height: "100%" }} />
                 </CustomAvatar>
                 <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "8px" }}>
                     {title}
@@ -101,7 +101,12 @@ export default function MarketDetail() {
         <>
             {account && marketDetail && (
                 <>
-                    <MarketTitle title={marketDetail?.title} endTimestamp={marketDetail?.endTimestamp} totalAmount={marketDetail?.totalAmount} />
+                    <MarketTitle
+                        title={marketDetail?.title}
+                        endTimestamp={marketDetail?.endTimestamp}
+                        totalAmount={marketDetail?.totalAmount}
+                        imageHash={marketDetail?.imageHash}
+                    />
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
