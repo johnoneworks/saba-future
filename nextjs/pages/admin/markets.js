@@ -1,11 +1,10 @@
+import AdminMarketCard from "@/components/AdminMarketCard";
+import { AdminHeader } from "@/components/Header/AdminHeader";
+import { predictionWorldAddress } from "@/config";
+import { Button } from "@mui/material";
 import { ethers } from "ethers";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-import AdminMarketCard from "@/components/AdminMarketCard";
-import { Header } from "@/components/Header/Header";
-
-import { predictionWorldAddress } from "@/config";
 import PredictionWorld from "../../utils/abis/PredictionWorld.json";
 
 export default function Markets() {
@@ -47,18 +46,12 @@ export default function Markets() {
     return (
         <>
             <div className="flex flex-col justify-center items-center h-full">
-                <Header />
-                <div className="w-full max-w-5xl m-auto">
-                    <Link legacyBehavior href="/admin">
-                        <a
-                            type="button"
-                            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                            onClick={() => {}}
-                        >
-                            Back
-                        </a>
-                    </Link>
-                </div>
+                <AdminHeader />
+                <Link href="/admin">
+                    <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
+                        Back
+                    </Button>
+                </Link>
 
                 <main className="w-full flex flex-row flex-wrap py-4 max-w-5xl pb-6">
                     {markets.map((market) => (

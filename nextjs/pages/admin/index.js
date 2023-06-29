@@ -80,7 +80,6 @@ export default function Admin() {
                         See All Markets
                     </Button>
                 </Link>
-                You have: {balance} SURE tokens
                 <Box
                     sx={{
                         width: "100%",
