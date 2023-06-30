@@ -1,9 +1,3 @@
-import SmartAccount from "@biconomy/smart-account";
-import SocialLogin from "@biconomy/web3-auth";
-import "@biconomy/web3-auth/dist/src/style.css";
-import { ethers } from "ethers";
-import { useCallback, useContext, useEffect } from "react";
-
 import { chainId, dappAPIKey, predictionWorldAddress, providerUrl, sureTokenAddress } from "@/config";
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
@@ -12,14 +6,13 @@ import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
 import PredictionWorld from "@/utils/abis/PredictionWorld.json";
 import SURE from "@/utils/abis/SureToken.json";
+import SmartAccount from "@biconomy/smart-account";
+import SocialLogin from "@biconomy/web3-auth";
+import "@biconomy/web3-auth/dist/src/style.css";
 import axios from "axios";
+import { ethers } from "ethers";
+import { useCallback, useContext, useEffect } from "react";
 import PageLoading from "./LoadingPage/PageLoading";
-
-/**
- * TODO
- * 1.
- *
- */
 
 export default function BiconomyWallet() {
     const {
@@ -79,7 +72,7 @@ export default function BiconomyWallet() {
                     {
                         chainId: chainId,
                         dappAPIKey: dappAPIKey,
-                        providerUrl: providerUrl,
+                        providerUrl: providerUrl
                     }
                 ]
             };

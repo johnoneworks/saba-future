@@ -1,4 +1,3 @@
-import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
@@ -104,10 +103,6 @@ export default function MarketCard({ market, currentUser, isClosed }) {
         setCurrentMarketID(marketID);
         updateMarketDetail(marketID);
     };
-
-    if (isMarketLoading) {
-        return <LoadingSkeleton />;
-    }
 
     return (
         <Box onClick={handleSelectMarket}>
