@@ -13,14 +13,8 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import styles from "./MarketDetail.module.scss";
 
 /** TODO LIST:
- 1. Return back button
- 2. Add loading
- 3. Add error handling
- 4. Add chart
- 5. update bet button
- 6. 下注後，要更新資料
- 7. 顯示資料 
- 8. 將此頁移到 index.js */
+ * 此頁已不再維護
+ */
 
 const CustomTypography = styled(Typography)({
     fontSize: "12px",
