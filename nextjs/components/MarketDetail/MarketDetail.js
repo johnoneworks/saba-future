@@ -1,5 +1,6 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
+import { BACKUP_IMAGE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
@@ -41,7 +42,15 @@ const MarketTitle = (props) => {
         <Box className={styles.marketTitle}>
             <Box sx={{ display: "flex", mb: "10px" }}>
                 <CustomAvatar>
-                    <Box component="img" src={imageHash} alt="titleImage" sx={{ width: "100%", height: "100%" }} />
+                    <Box
+                        component="img"
+                        src={imageHash}
+                        onError={(e) => {
+                            e.target.src = { BACKUP_IMAGE }; // 設置備用圖片的 URL
+                        }}
+                        alt="titleImage"
+                        sx={{ width: "100%", height: "100%" }}
+                    />
                 </CustomAvatar>
                 <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "8px" }}>
                     {title}

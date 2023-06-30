@@ -1,4 +1,4 @@
-import { BET_TYPE } from "@/constants/Constant";
+import { BACKUP_IMAGE, BET_TYPE } from "@/constants/Constant";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
@@ -49,7 +49,15 @@ export default function StatementMarketCard({ market }) {
                     <CardHeader
                         avatar={
                             <CustomAvatar>
-                                <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
+                                <Box
+                                    component="img"
+                                    src={market.imageHash}
+                                    onError={(e) => {
+                                        e.target.src = { BACKUP_IMAGE }; // 設置備用圖片的 URL
+                                    }}
+                                    alt="marketImage"
+                                    sx={{ width: "100%", height: "100%" }}
+                                />
                             </CustomAvatar>
                         }
                         title={market.title}

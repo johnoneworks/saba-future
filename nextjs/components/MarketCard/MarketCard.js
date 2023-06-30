@@ -1,4 +1,5 @@
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { BACKUP_IMAGE } from "@/constants/Constant";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
@@ -113,7 +114,15 @@ export default function MarketCard({ market, currentUser, isClosed }) {
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
-                        <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
+                        <Box
+                            component="img"
+                            src={market.imageHash}
+                            onError={(e) => {
+                                e.target.src = { BACKUP_IMAGE }; // 設置備用圖片的 URL
+                            }}
+                            alt="marketImage"
+                            sx={{ width: "100%", height: "100%" }}
+                        />
                     </CustomAvatar>
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
                         {market.question}

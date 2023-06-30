@@ -1,3 +1,4 @@
+import { BACKUP_IMAGE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
@@ -17,7 +18,7 @@ const useGetMarketDetail = () => {
                 setMarketDetail({
                     id: currentMarketID,
                     title: market.info.question,
-                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : "/placeholder.jpg",
+                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : BACKUP_IMAGE,
                     endTimestamp: date,
                     totalAmount: market.totalAmount,
                     totalYesAmount: market.totalYesAmount,
