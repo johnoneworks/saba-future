@@ -1,3 +1,4 @@
+import ProfileDialog from "@/components/ProfileDialog";
 import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
@@ -16,7 +17,7 @@ import { styled } from "@mui/system";
 import classnames from "classnames";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, useState } from "react";
 import styles from "./Header.module.scss";
 
 /**
@@ -71,13 +72,14 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, email } = useContext(BiconomyAccountContext);
+    const { account, email, smartAccount } = useContext(BiconomyAccountContext);
     const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { balance } = useContext(UserInfoContext);
     const { updateMarkets } = useGetMarkets();
     const { updateStatements } = useGetUserStatement();
     const { updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
+    const [openProfileDialog, setOpenProfileDialog] = useState(false);
 
     const refreshMarkets = () => {
         updateMarkets();
@@ -101,6 +103,14 @@ export const Header = () => {
         }
     };
 
+    const handleClickProfile = () => {
+        setOpenProfileDialog(true);
+    };
+
+    const handleCloseProfileDialog = () => {
+        setOpenProfileDialog(false);
+    };
+
     return (
         <>
             <Suspense>
@@ -115,7 +125,7 @@ export const Header = () => {
                 </div>
                 {account && (
                     <div className={styles.headerInfo}>
-                        <div className={styles.profile}>
+                        <div className={styles.profile} onClick={handleClickProfile}>
                             <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
                             <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
                         </div>
@@ -128,6 +138,13 @@ export const Header = () => {
                     </div>
                 )}
             </div>
+            <ProfileDialog
+                open={openProfileDialog}
+                smartAccount={smartAccount}
+                email={email}
+                balance={balance}
+                onClose={handleCloseProfileDialog}
+            />
         </>
     );
 };
