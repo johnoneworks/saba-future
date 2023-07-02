@@ -17,14 +17,12 @@
   },
   "homepage": "https://github.com/johnoneworks/saba-future#readme",
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "hardhat": "^2.13.0"
-  },
-  "dependencies": {
-    "@nomiclabs/hardhat-waffle": "^2.0.5",
-    "@openzeppelin/contracts": "^4.8.2",
-    "@openzeppelin/contracts-upgradeable": "^4.8.3",
-    "@openzeppelin/hardhat-upgrades": "^1.26.0",
-    "dotenv": "^16.0.3"
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "@openzeppelin/hardhat-upgrades": "^1.28.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.2"
   }
 }
