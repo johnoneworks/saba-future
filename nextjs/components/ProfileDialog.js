@@ -61,7 +61,7 @@ export default function ProfileDialog(props) {
                             <AccountBalanceWalletIcon />
                         </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={smartAccount?.address} />
+                    <ListItemText primary={smartAccount?.address} noWrap sx={{ overflow: "hidden", textOverflow: "ellipsis" }}/>
                     <IconButton onClick={handleCopySmartContractWallet}>
                         <ContentCopyIcon />
                     </IconButton>
