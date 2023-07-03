@@ -15,7 +15,7 @@ import styles from "./BetArea.module.scss";
 const SelectButton = (props) => {
     const { type, selected, selectedAmount, totalAmount, onClick } = props;
     const buttonName = type;
-    const totalAmountText = `${!totalAmount ? `0` : ((selectedAmount * 100) / totalAmount).toFixed(2)}%`;
+    const totalAmountText = `${totalAmount == 0 ? `0` : ((selectedAmount * 100) / totalAmount).toFixed(2)}%`;
     const buttonClass = `is${buttonName}`;
     let selectedStyle;
     if (type === BET_TYPE.YES) {
