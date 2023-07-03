@@ -6,6 +6,12 @@ import { Avatar, Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useContext } from "react";
 
+/**
+ * TODO:
+ * 1. 畫面優化
+ * 2. distributeWithGasless 行為拆出去做
+ */
+
 const CustomAvatar = styled(Avatar)({
     borderRadius: "4px",
     marginRight: "4px",

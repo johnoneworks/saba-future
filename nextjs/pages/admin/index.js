@@ -7,6 +7,12 @@ import { ethers } from "ethers";
 import Link from "next/link";
 import { useCallback, useContext, useEffect, useState } from "react";
 
+/**
+ * TODO:
+ * 1. 畫面優化
+ * 2. is production 的條件
+ */
+
 export default function Admin() {
     const { isPageLoading } = useContext(LoadingContext);
     const [submitButtonText, setSubmitButtonText] = useState("Create Market");

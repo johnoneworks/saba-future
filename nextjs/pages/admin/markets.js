@@ -2,9 +2,16 @@ import AdminMarketCard from "@/components/AdminMarketCard";
 import { AdminHeader } from "@/components/Header/AdminHeader";
 import { BACKUP_IMAGE, MARKET_STATUS } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { Button, Grid, Typography } from "@mui/material";
+import styles from "@/styles/Home.module.scss";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
+
+/**
+ * TODO:
+ * 1. 畫面優化
+ * 2. confirm page
+ */
 
 const ShowMarkets = (props) => {
     const { marketStatus, markets } = props;
@@ -22,7 +29,7 @@ const ShowMarkets = (props) => {
                     const isAvailable = isClose ? market.hasResolved : !market.hasResolved;
                     if (isAvailable) {
                         accumulator.push(
-                            <div key={market.id} className="w-1/2 pr-2">
+                            <div key={market.id} className={styles.adminMarketCard}>
                                 <AdminMarketCard id={market.id} market={market} />
                             </div>
                         );
@@ -68,20 +75,22 @@ export default function Markets() {
 
     return (
         <>
-            <div className="flex flex-col justify-center items-center h-full">
+            <Box className={styles.homeContainer}>
                 <AdminHeader />
-                <Link href="/admin">
-                    <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
-                        Back
-                    </Button>
-                </Link>
-                <Grid spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                    <main className="w-full flex flex-row flex-wrap py-4 max-w-5xl pb-6">
-                        <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} />
-                        <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} />
-                    </main>
-                </Grid>
-            </div>
+                <Box className={styles.adminMarketContent}>
+                    <Link href="/admin">
+                        <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
+                            Back
+                        </Button>
+                    </Link>
+                    <Grid columns={{ xs: 12, sm: 12, md: 12 }}>
+                        <main className="w-full flex flex-row flex-wrap py-4 pb-6">
+                            <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} />
+                            <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} />
+                        </main>
+                    </Grid>
+                </Box>
+            </Box>
         </>
     );
 }
