@@ -1,22 +1,16 @@
 import AdminMarketCard from "@/components/AdminMarketCard";
 import { AdminHeader } from "@/components/Header/AdminHeader";
-import { predictionWorldAddress } from "@/config";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { Button } from "@mui/material";
-import { ethers } from "ethers";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import PredictionWorld from "../../utils/abis/PredictionWorld.json";
+import { useContext, useEffect, useState } from "react";
 
 export default function Markets() {
     const [markets, setMarkets] = useState([]);
+    const { predictionWorldContract } = useContext(BiconomyAccountContext);
 
     const getMarkets = async () => {
         try {
-            const { ethereum } = window;
-            const provider = new ethers.providers.Web3Provider(ethereum);
-            const signer = provider.getSigner();
-            const predictionWorldContract = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, signer);
-
             let marketCount = await predictionWorldContract.totalMarkets();
             let markets = [];
 
