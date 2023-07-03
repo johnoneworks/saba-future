@@ -1,4 +1,5 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
+import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
@@ -38,6 +39,7 @@ const CustomTypography = styled(Typography)({
 export default function MarketCard({ market, currentUser, isClosed }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
+    const { predictionWorldContract } = useContext(BiconomyAccountContext);
     const { updateMarketDetail } = useGetMarketDetail();
     const { isMarketLoading } = useContext(LoadingContext);
 
@@ -101,7 +103,7 @@ export default function MarketCard({ market, currentUser, isClosed }) {
             query: { menu: currentMenu, marketid: marketID }
         });
         setCurrentMarketID(marketID);
-        updateMarketDetail(marketID);
+        updateMarketDetail(marketID, predictionWorldContract);
     };
 
     return (
