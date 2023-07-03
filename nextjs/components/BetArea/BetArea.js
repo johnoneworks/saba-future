@@ -6,6 +6,7 @@ import { PageContext } from "@/contexts/PageContext";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
+import useGetUserStatement from "@/hooks/useGetUserStatement";
 import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
 import classnames from "classnames";
 import { useContext, useState } from "react";
@@ -47,6 +48,7 @@ export const BetArea = (props) => {
     const { updateBalance } = useGetUserBalance();
     const { updateMarketDetail } = useGetMarketDetail();
     const { updateBetsInfo } = useGetBetsInfo();
+    const { updateStatements } = useGetUserStatement();
 
     const [selected, setSelected] = useState(BET_TYPE.YES);
     const [input, setInput] = useState("");
@@ -86,6 +88,7 @@ export const BetArea = (props) => {
         } finally {
             updateMarketDetail(currentMarketID, predictionWorldContract);
             updateBalance();
+            updateStatements();
             updateBetsInfo(currentMarketID, predictionWorldContract);
             setInput("");
             setIsPageLoading(false);
