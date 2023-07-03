@@ -20,7 +20,8 @@
     box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.15);
 }
 
-.profile,.tab {
+.profile,
+.tab {
     display: flex;
     justify-content: center;
     width: 100%;
@@ -29,6 +30,7 @@
 .profile {
     padding: 3px 4px;
     font-size: 12px;
+    cursor: pointer;
 }
 
 .profileItem {
@@ -45,7 +47,7 @@
     position: relative;
     margin: 0 20px;
     height: 100%;
-    
+
     &.active {
         color: #1A84F2;
 
@@ -67,6 +69,7 @@
     .profileItem {
         margin: 0 14px;
     }
+
     .tabItem {
         margin: 0 40px;
     }
