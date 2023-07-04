@@ -60,7 +60,7 @@ export default function App({ Component, pageProps }) {
     //UserInfo Context
     const [balance, setBalance] = useState(0);
     const [userTotalBetValue, setUserTotalBetValue] = useState(0);
-    const [userStatements, setUserStatements] = useState([]);
+    const [userStatements, setUserStatements] = useState(null);
 
     const contextValue = {
         account2,

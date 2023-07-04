@@ -25,7 +25,7 @@ export default function ChartContainer() {
 
         return (
             <ThemeProvider theme={theme}>
-                <Box sx={{ marginBottom: "20px" }}>
+                <Box className={styles.infoDropdownContainer}>
                     <Button className={[buttonStyle, classnames({ [styles.isOpen]: isOpen })].join(" ")} onClick={handleClick}>
                         {title}
                         <ExpandMoreIcon className={styles.arrowIcon} />

@@ -19,6 +19,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Suspense, useContext, useState } from "react";
+import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
 
 /**
@@ -27,6 +28,7 @@ import styles from "./Header.module.scss";
  * 2. add MUI style √
  * 3. 個人資訊 icon √
  * 4. Login / Logout Logic √
+ * 5. newbie dialog refactor
  */
 
 const CustomPersonIcon = styled(PersonIcon)({
@@ -142,6 +144,7 @@ export const Header = () => {
                 )}
             </div>
             <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
+            <NewbieDialog />
         </>
     );
 };

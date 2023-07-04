@@ -1,35 +1,39 @@
-.infoDropdown {
-    width: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    border-radius: 8px;
+.infoDropdownContainer {
+    margin-bottom: 20px;
 
-    .arrowIcon {
-        transition: 0.3s;
-    }
-
-    &.isOpen {
-        border-radius: 8px 8px 0 0;
+    .infoDropdown {
+        width: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
 
         .arrowIcon {
-            transform: rotate(180deg);
+            transition: 0.3s;
         }
-    }
 
-    &.isYes {
-        background-color: #E9F6EE;
-        color: #3FB06B;
+        &.isOpen {
+            border-radius: 8px 8px 0 0;
 
-        &:hover {
-            background-color: #d9f7e4;
+            .arrowIcon {
+                transform: rotate(180deg);
+            }
         }
-    }
 
-    &.isNo {
-        background-color: #FDEDED;
-        color: #E84D4D;
+        &.isYes {
+            background-color: #E9F6EE;
+            color: #3FB06B;
 
-        &:hover {
-            background-color: #ffe7e7;
+            &:hover {
+                background-color: #d9f7e4;
+            }
+        }
+
+        &.isNo {
+            background-color: #FDEDED;
+            color: #E84D4D;
+
+            &:hover {
+                background-color: #ffe7e7;
+            }
         }
     }
 }

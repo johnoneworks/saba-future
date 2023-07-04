@@ -1,6 +1,7 @@
 import { predictionWorldAddress } from "@/config";
 import { BACKUP_IMAGE, BET_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { LoadingContext } from "@/contexts/LoadingContext";
 import { convertBigNumberToDate } from "@/utils/ConvertDate";
 import { Avatar, Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
@@ -20,7 +21,8 @@ const CustomAvatar = styled(Avatar)({
     height: "56px"
 });
 
-export default function PortfolioMarketCard({ id, market }) {
+export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
+    const { setIsPageLoading } = useContext(LoadingContext);
     const { smartAccount, predictionWorldInterface } = useContext(BiconomyAccountContext);
     const [selectedResolve, setSelectedResolve] = useState(null);
     const isResolved = market.hasResolved;
@@ -33,12 +35,15 @@ export default function PortfolioMarketCard({ id, market }) {
     const onConfirmResolve = async () => {
         if (selectedResolve === null) return;
         try {
+            setIsPageLoading(true);
             await distributeWithGasless(selectedResolve === BET_TYPE.YES);
             alert("Success!");
         } catch (err) {
             console.error(err);
             alert("Error!!");
         } finally {
+            onUpdateMarkets();
+            setIsPageLoading(false);
             setSelectedResolve(null);
         }
     };
