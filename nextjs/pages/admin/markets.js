@@ -11,11 +11,16 @@ import { useContext, useEffect, useState } from "react";
  * TODO:
  * 1. 畫面優化
  * 2. confirm page
+ * 3. 優化 update markets 行為
  */
 
 const ShowMarkets = (props) => {
-    const { marketStatus, markets } = props;
+    const { marketStatus, markets, updateMarkets } = props;
     const isClose = marketStatus !== MARKET_STATUS.OPEN;
+
+    const onUpdateMarkets = () => {
+        updateMarkets();
+    };
 
     return (
         <>
@@ -30,7 +35,7 @@ const ShowMarkets = (props) => {
                     if (isAvailable) {
                         accumulator.push(
                             <div key={market.id} className={styles.adminMarketCard}>
-                                <AdminMarketCard id={market.id} market={market} />
+                                <AdminMarketCard id={market.id} market={market} onUpdateMarkets={onUpdateMarkets} />
                             </div>
                         );
                     }
@@ -85,8 +90,8 @@ export default function Markets() {
                     </Link>
                     <Grid columns={{ xs: 12, sm: 12, md: 12 }}>
                         <main className="w-full flex flex-row flex-wrap py-4 pb-6">
-                            <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} />
-                            <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} />
+                            <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} updateMarkets={getMarkets} />
+                            <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} updateMarkets={getMarkets} />
                         </main>
                     </Grid>
                 </Box>
