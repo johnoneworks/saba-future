@@ -84,15 +84,15 @@ const MarketTitle = (props) => {
 const MarketDescription = (props) => {
     const { description, resolverUrl } = props;
     return (
-        <Box>
+        <Box sx={{ width: "100%" }}>
             <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                 Description
             </Typography>
             {description && <Typography variant="body2">{description}</Typography>}
             <Box className={styles.descriptionBox} sx={{ my: 2, py: 2, bgcolor: "grey.200", borderRadius: 1 }}>
-                <Typography variant="subtitle2" component="span" sx={{ px: 1 }}>
+                <Typography variant="subtitle2" component="" sx={{ px: 1 }}>
                     Resolution Source :{" "}
-                    <Link href={resolverUrl} color="primary">
+                    <Link href={resolverUrl} color="primary" sx={{ display: "block", wordBreak: "break-all" }}>
                         {resolverUrl}
                     </Link>
                 </Typography>
