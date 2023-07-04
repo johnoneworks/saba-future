@@ -1,3 +1,4 @@
+import { BET_TYPE } from "@/constants/Constant";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -6,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 
 export const AdminConfirmPage = (props) => {
-    const { onClose, open, onConfirm, selectedResolve } = props;
+    const { title, onClose, open, onConfirm, selectedResolve } = props;
 
     const handleConfirm = () => {
         onConfirm();
@@ -17,12 +18,14 @@ export const AdminConfirmPage = (props) => {
     };
 
     return (
-        <Dialog onClose={handleClose} open={open}>
-            <DialogTitle>Confirm market result?</DialogTitle>
-
+        <Dialog sx={{ textAlign: "center" }} onClose={handleClose} open={open}>
+            <DialogTitle sx={{ color: "#1A84F2" }}>{title}</DialogTitle>
             <CardContent>
-                <Typography sx={{ fontSize: 18, textAlign: "center" }} color="text.secondary" gutterBottom>
-                    Your setting : {selectedResolve}
+                <Typography sx={{ fontSize: 14, textAlign: "center" }} color="text.secondary" gutterBottom>
+                    Your setting :
+                </Typography>
+                <Typography sx={{ fontSize: 18, textAlign: "center" }} color={selectedResolve === BET_TYPE.YES ? "#3FB06B" : "#E84D4D"} gutterBottom>
+                    {selectedResolve}
                 </Typography>
             </CardContent>
             <CardActions sx={{ display: "flex", justifyContent: "center" }}>
