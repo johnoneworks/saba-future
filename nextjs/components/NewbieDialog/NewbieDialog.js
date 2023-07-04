@@ -31,7 +31,7 @@ export const NewbieDialog = () => {
 
     return (
         <Dialog sx={{ textAlign: "center" }} onClose={() => setIsNewbie(false)} open={isNewbie}>
-            <Paper sx={{ backgroundImage: "linear-gradient(145deg, #1A84F2, #ce5eff)" }}>
+            <Paper className={styles.dialog}>
                 <DialogTitle sx={{ fontSize: 16 }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <span style={{ width: "10px", height: "1px", backgroundColor: "#fff", marginRight: "4px" }}></span>
