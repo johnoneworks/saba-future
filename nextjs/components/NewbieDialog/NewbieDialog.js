@@ -22,10 +22,12 @@ export const NewbieDialog = () => {
     const { balance, userStatements, hasGetFirstData } = useContext(UserInfoContext);
     const { account } = useContext(BiconomyAccountContext);
     const [isNewbie, setIsNewbie] = useState(false);
+    const [hasShow, setHasShow] = useState(false);
 
     useEffect(() => {
-        if (account && balance == 0 && hasGetFirstData && userStatements.length == 0) {
+        if (account && balance == 0 && hasGetFirstData && userStatements.length == 0 && !hasShow) {
             setIsNewbie(true);
+            setHasShow(true);
         }
     }, [account, balance, userStatements, hasGetFirstData]);
 
