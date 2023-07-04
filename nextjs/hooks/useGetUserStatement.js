@@ -9,14 +9,14 @@ import { useCallback, useContext, useEffect } from "react";
 
 /**
  * TODO
- * 1. 確認資料正確
+ * 1. 確認資料正確 √
  * 2. 優化速度
- *
+ * 3. setHasGetFirstData 優化
  */
 
 const useGetUserStatement = () => {
     const { smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { setUserTotalBetValue, setUserStatements } = useContext(UserInfoContext);
+    const { setUserTotalBetValue, setUserStatements, setHasGetFirstData } = useContext(UserInfoContext);
     const { setIsMarketLoading } = useContext(LoadingContext);
 
     const useTestData = () => {
@@ -124,6 +124,7 @@ const useGetUserStatement = () => {
 
             setUserTotalBetValue(totalBetAmount);
             setUserStatements(StatementsInfo);
+            setHasGetFirstData(true);
             setIsMarketLoading(false);
         } catch (error) {
             console.error(`Error getting markets, ${error}`);
