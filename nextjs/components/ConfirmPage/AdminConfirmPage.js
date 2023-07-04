@@ -11,6 +11,7 @@ export const AdminConfirmPage = (props) => {
 
     const handleConfirm = () => {
         onConfirm();
+        onClose();
     };
 
     const handleClose = () => {

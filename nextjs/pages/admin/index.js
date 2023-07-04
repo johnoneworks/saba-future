@@ -3,9 +3,8 @@ import { predictionWorldAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { ethers } from "ethers";
 import Link from "next/link";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 /**
  * TODO:
@@ -14,30 +13,18 @@ import { useCallback, useContext, useEffect, useState } from "react";
  */
 
 export default function Admin() {
-    const { isPageLoading } = useContext(LoadingContext);
+    const { isPageLoading, setIsPageLoading } = useContext(LoadingContext);
     const [submitButtonText, setSubmitButtonText] = useState("Create Market");
-    const [balance, setBalance] = useState(0);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [resolverUrl, setResolverUrl] = useState("");
     const [timestamp, setTimestamp] = useState(Date());
-    const { provider, sureTokenContract, account, smartAccount, predictionWorldInterface } = useContext(BiconomyAccountContext);
-
-    const getBalance = useCallback(async () => {
-        try {
-            if (!account) {
-                return;
-            }
-            let balance = await sureTokenContract.balanceOf(account);
-            setBalance(ethers.utils.commify(balance));
-        } catch (error) {
-            console.error(`Error getting balance, ${error}`);
-        }
-    }, [account]);
+    const { provider, smartAccount, predictionWorldInterface } = useContext(BiconomyAccountContext);
 
     const handleSubmit = async () => {
         try {
+            setIsPageLoading(true);
             setSubmitButtonText("Creating");
             await createMarketWithGasless();
             alert("Success!");
@@ -46,6 +33,7 @@ export default function Admin() {
             console.error(error);
             alert("Error!!");
         } finally {
+            setIsPageLoading(false);
             setSubmitButtonText("Create Market");
         }
     };
@@ -67,10 +55,6 @@ export default function Admin() {
         console.log("Tx hash", txReceipt.transactionHash);
         const txReceipt2 = await provider.getTransactionReceipt(txReceipt.transactionHash);
     };
-
-    useEffect(() => {
-        getBalance();
-    }, [account, getBalance]);
 
     return (
         <Box
