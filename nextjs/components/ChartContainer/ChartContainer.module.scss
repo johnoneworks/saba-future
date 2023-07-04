@@ -14,23 +14,23 @@
             transform: rotate(180deg);
         }
     }
-}
 
-.isYes {
-    background-color: #E9F6EE;
-    color: #3FB06B;
+    &.isYes {
+        background-color: #E9F6EE;
+        color: #3FB06B;
 
-    &:hover {
-        background-color: #d9f7e4;
+        &:hover {
+            background-color: #d9f7e4;
+        }
     }
-}
 
-.isNo {
-    background-color: #FDEDED;
-    color: #E84D4D;
+    &.isNo {
+        background-color: #FDEDED;
+        color: #E84D4D;
 
-    &:hover {
-        background-color: #ffe7e7;
+        &:hover {
+            background-color: #ffe7e7;
+        }
     }
 }
 

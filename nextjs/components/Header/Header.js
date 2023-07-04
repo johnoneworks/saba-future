@@ -16,6 +16,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { Suspense, useContext, useState } from "react";
 import styles from "./Header.module.scss";
@@ -118,9 +119,11 @@ export const Header = () => {
             </Suspense>
             <div className={styles.root}>
                 <div className={styles.header}>
-                    {/* TODO return back icon */}
                     <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>{currentMarketID ? <ArrowBackIcon /> : <RefreshIcon />}</div>
-                    <div> {account ? "Saba Future" : "Wallet Connecting..."} </div>
+                    <div className={styles.logo}>
+                        <Image src="/logo.svg" alt="placeholder" width={20} height={20} margin={20} />
+                        <span style={{ marginLeft: 10 }}>{account ? "Saba Future" : "Wallet Connecting..."} </span>
+                    </div>
                     <div onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
                 </div>
                 {account && (
@@ -138,13 +141,7 @@ export const Header = () => {
                     </div>
                 )}
             </div>
-            <ProfileDialog
-                open={openProfileDialog}
-                smartAccount={smartAccount}
-                email={email}
-                balance={balance}
-                onClose={handleCloseProfileDialog}
-            />
+            <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
         </>
     );
 };
