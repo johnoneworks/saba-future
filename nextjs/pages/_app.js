@@ -1,4 +1,3 @@
-//import '@/styles/globals.css'
 import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
 
@@ -61,6 +60,7 @@ export default function App({ Component, pageProps }) {
     const [balance, setBalance] = useState(0);
     const [userTotalBetValue, setUserTotalBetValue] = useState(0);
     const [userStatements, setUserStatements] = useState(null);
+    const [hasGetFirstData, setHasGetFirstData] = useState(false);
 
     const contextValue = {
         account2,
@@ -104,7 +104,16 @@ export default function App({ Component, pageProps }) {
                     <PageContext.Provider value={{ currentMenu, setCurrentMenu, currentMarketID, setCurrentMarketID }}>
                         <MarketContext.Provider value={{ markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo, marketDetail, setMarketDetail }}>
                             <UserInfoContext.Provider
-                                value={{ balance, setBalance, userTotalBetValue, setUserTotalBetValue, userStatements, setUserStatements }}
+                                value={{
+                                    balance,
+                                    setBalance,
+                                    userTotalBetValue,
+                                    setUserTotalBetValue,
+                                    userStatements,
+                                    setUserStatements,
+                                    hasGetFirstData,
+                                    setHasGetFirstData
+                                }}
                             >
                                 <TestContext.Provider value={contextValue}>
                                     <Component {...pageProps} />

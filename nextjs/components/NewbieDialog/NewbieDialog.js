@@ -19,15 +19,15 @@ import styles from "./NewbieDialog.module.scss";
  */
 
 export const NewbieDialog = () => {
-    const { balance, userStatements } = useContext(UserInfoContext);
+    const { balance, userStatements, hasGetFirstData } = useContext(UserInfoContext);
     const { account } = useContext(BiconomyAccountContext);
     const [isNewbie, setIsNewbie] = useState(false);
 
     useEffect(() => {
-        if (account && balance === 0 && !userStatements) {
+        if (account && balance == 0 && hasGetFirstData && userStatements.length == 0) {
             setIsNewbie(true);
         }
-    }, [account, balance, userStatements]);
+    }, [account, balance, userStatements, hasGetFirstData]);
 
     return (
         <Dialog sx={{ textAlign: "center" }} onClose={() => setIsNewbie(false)} open={isNewbie}>
