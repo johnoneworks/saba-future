@@ -24,7 +24,7 @@ export const NewbieDialog = () => {
     const [isNewbie, setIsNewbie] = useState(false);
 
     useEffect(() => {
-        if (account && balance === 0 && userStatements?.length === 0) {
+        if (account && balance === 0 && !userStatements) {
             setIsNewbie(true);
         }
     }, [account, balance, userStatements]);
@@ -52,7 +52,7 @@ export const NewbieDialog = () => {
                             Make your first bet and get <div style={{ fontWeight: "bold", fontSize: 30 }}>1000</div> free SURE tokens!
                         </Typography>
                     </CardContent>
-                    <CardActions sx={{}}>
+                    <CardActions>
                         <Button onClick={() => setIsNewbie(false)} className={styles.btn}>
                             Claim Now
                         </Button>
