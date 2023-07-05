@@ -21,6 +21,7 @@ export const providerUrl = "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvC
 
 export const sureTokenAddress = "0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c";
 export const predictionWorldAddress = "0x39a0D0715D61E6C553C9CE06ac026eEbDe5037bA";
+export const earlyBirdAddress = "0x1Ca626a3CE3DC6E01BD1839DA142482dD39Deccc";
 
 export const sureToken2Address = "0xd63E83580bBEc586665ABBD4e1B02f8bBD6F8bE0";
 export const predictionWorld2Address = "0xa33984BDD910d25C9d4ad11dD50E2ba18E0Ab7FD";
