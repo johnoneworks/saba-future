@@ -102,6 +102,7 @@ export const Header = () => {
                 pathname: `/`,
                 query: { menu: currentMenu }
             });
+            refreshMarkets();
             setCurrentMarketID(null);
         }
     };
