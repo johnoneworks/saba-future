@@ -29,6 +29,9 @@ export default function App({ Component, pageProps }) {
     const [predictionWorldContract, setPredictionWorldContract] = useState(null);
     const [predictionWorldInterface, setPredictionWorldInterface] = useState(null);
     const [email, setEmail] = useState("");
+    const [earlyBirdContract, setEarlyBirdContract] = useState(null);
+    const [earlyBirdInterface, setEarlyBirdInterface] = useState(null);
+    const [earlyBirdValidState, setEarlyBirdValidState] = useState(0);
 
     //Loading Context
     const [isPageLoading, setIsPageLoading] = useState(false);
@@ -97,7 +100,13 @@ export default function App({ Component, pageProps }) {
                     email,
                     setEmail,
                     isSendAccountReady,
-                    setisSendAccountReady
+                    setisSendAccountReady,
+                    earlyBirdContract,
+                    setEarlyBirdContract,
+                    earlyBirdInterface,
+                    setEarlyBirdInterface,
+                    earlyBirdValidState,
+                    setEarlyBirdValidState,
                 }}
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>

@@ -80,7 +80,7 @@ export const BetArea = (props) => {
                 console.log("Tx hash", txReceipt.transactionHash);
             } catch (error) {
                 setIsPageLoading(false);
-                console.error(`Error: ${error}`);
+                console.error(error);
             }
         } catch (error) {
             setIsPageLoading(false);

@@ -1,9 +1,10 @@
-import { chainId, dappAPIKey, predictionWorldAddress, providerUrl, sureTokenAddress } from "@/config";
+import { chainId, dappAPIKey, earlyBirdAddress, predictionWorldAddress, providerUrl, sureTokenAddress } from "@/config";
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
+import EarlyBird from "@/utils/abis/EarlyBird.json";
 import PredictionWorld from "@/utils/abis/PredictionWorld.json";
 import SURE from "@/utils/abis/SureToken.json";
 import SmartAccount from "@biconomy/smart-account";
@@ -28,10 +29,13 @@ export default function BiconomyWallet() {
         setSureTokenInterface,
         setPredictionWorldContract,
         setPredictionWorldInterface,
+        setEarlyBirdContract,
+        setEarlyBirdInterface,
         email,
         setEmail,
         isSendAccountReady,
-        setisSendAccountReady
+        setisSendAccountReady,
+        setEarlyBirdValidState,
     } = useContext(BiconomyAccountContext);
     const { setIsPageLoading } = useContext(LoadingContext);
 
@@ -90,6 +94,14 @@ export default function BiconomyWallet() {
             const predictionWorldContract = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, signer);
             const predictionWorldInterface = new ethers.utils.Interface(PredictionWorld.abi);
 
+            const earlyBirdContract = new ethers.Contract(earlyBirdAddress, EarlyBird.abi, signer);
+            const earlyBirdInterface = new ethers.utils.Interface(EarlyBird.abi);
+
+            // 1: Valid
+            // 2: All Occupied
+            // 3: Already Exists
+            const earlyBirdValidState = await earlyBirdContract.validate(smartAccountSdk.address);
+
             setAccount(accounts[0]);
             setProvider(web3Provider);
             setSmartAccount(smartAccountSdk);
@@ -97,7 +109,10 @@ export default function BiconomyWallet() {
             setSureTokenInterface(sureTokenInterface);
             setPredictionWorldContract(predictionWorldContract);
             setPredictionWorldInterface(predictionWorldInterface);
+            setEarlyBirdContract(earlyBirdContract);
+            setEarlyBirdInterface(earlyBirdInterface);
             setIsPageLoading(false);
+            setEarlyBirdValidState(earlyBirdValidState);
         }
 
         if (sdk.web3auth.status === "connected") {
