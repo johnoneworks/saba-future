@@ -5,26 +5,37 @@ const { expect } = require("chai");
 
 describe("PredictionWorld4", function () {
 
-  const earlyBirdLimit = 3;
-  const earlyBirdTokenValue = ethers.BigNumber.from(1000);
-  const earlyBirdTokenTotal = ethers.BigNumber.from(earlyBirdLimit * earlyBirdTokenValue);
+  const defaultAmount = ethers.BigNumber.from(1000);
 
   async function deploySurePredictionWorldFixture() {
     const [owner, other1, other2, other3, other4] = await ethers.getSigners();
     const SureToken = await ethers.getContractFactory("SureToken3");
     const sureToken = await SureToken.deploy();
     const decimals = await sureToken.decimals()
-
     
     const PredictionWorld = await ethers.getContractFactory("PredictionWorld4");
-    const proxy = await upgrades.deployProxy(PredictionWorld, [sureToken.address, earlyBirdLimit, earlyBirdTokenValue]);
+    const proxy = await upgrades.deployProxy(PredictionWorld, [sureToken.address]);
     await proxy.deployed();
 
     const implementationAddress = await upgrades.erc1967.getImplementationAddress(
       proxy.address
     );
 
-    await sureToken.transfer(proxy.address, earlyBirdTokenTotal);
+    // It should approve the allowance first.
+    const ownerContract = sureToken.connect(owner);
+    await ownerContract.approve(proxy.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
+    const other1TokenContract = sureToken.connect(other1);
+    await other1TokenContract.approve(proxy.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
+    const other2TokenContract = sureToken.connect(other2);
+    await other2TokenContract.approve(proxy.address, ethers.utils.parseUnits(dummyYesBet2.marketValue.toString(), decimals));
+    const other3TokenContract = sureToken.connect(other3);
+    await other3TokenContract.approve(proxy.address, ethers.utils.parseUnits(dummyNoBet1.marketValue.toString(), decimals));
+
+    // Transfer the default Sure tokens.
+    await sureToken.transfer(other1.address, defaultAmount);
+    await sureToken.transfer(other2.address, defaultAmount);
+    await sureToken.transfer(other3.address, defaultAmount);
+    await sureToken.transfer(other4.address, defaultAmount);
 
     return { predictionWorld: proxy, sureToken, owner, other1, other2, other3, other4, decimals };
   }
@@ -109,10 +120,6 @@ describe("PredictionWorld4", function () {
       // Save the original balance
       const ownerBalance = await sureToken.balanceOf(owner.address);
 
-      // It should approve the allowance first.
-      const ownerContract = sureToken.connect(owner);
-      await ownerContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
-
       // Add yes bets with dummyYesBet1 and dummyYesBet2
       // Add a no bet with dummyNoBet1
       await predictionWorld.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
@@ -123,15 +130,9 @@ describe("PredictionWorld4", function () {
       const totalNoValue = dummyNoBet1.marketValue;
       const totalMarketValue = totalYesValue.add(totalNoValue);
 
-      // Check the contract's balance
-      // Default early bird tokens + all bets tokens
-      expect(await sureToken.balanceOf(predictionWorld.address)).to.equal(
-        earlyBirdTokenTotal.sub(earlyBirdTokenValue).add(totalMarketValue));
-
       // Check the owner's balance
       // Original tokens + Early bird tokens - all bets tokens
-      expect(await sureToken.balanceOf(owner.address)).to.equal(
-        ownerBalance.add(earlyBirdTokenValue).sub(totalMarketValue));
+      expect(await sureToken.balanceOf(owner.address)).to.equal(ownerBalance.sub(totalMarketValue));
 
       // Check the amount in the market
       const updatedMarket = await predictionWorld.markets(0);
@@ -150,7 +151,7 @@ describe("PredictionWorld4", function () {
     it("Should distribute YES winning amount", async function () {
 
       // There are 3 persons => other1, other2, other3
-      // All of them are early birds. Will get 1000 tokens.
+      // All of them have 1000 tokens.
       // 
       // other1 add yes bet with 100.
       // other2 add yes bet with 50.
@@ -172,14 +173,6 @@ describe("PredictionWorld4", function () {
         dummyMarket1.endTimestamp
       );
 
-      // It should approve the allowance first.
-      const other1TokenContract = sureToken.connect(other1);
-      await other1TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
-      const other2TokenContract = sureToken.connect(other2);
-      await other2TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet2.marketValue.toString(), decimals));
-      const other3TokenContract = sureToken.connect(other3);
-      await other3TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyNoBet1.marketValue.toString(), decimals));
-
       const other1PredictionContract = predictionWorld.connect(other1);
       await other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
       const other2PredictionContract = predictionWorld.connect(other2);
@@ -197,13 +190,9 @@ describe("PredictionWorld4", function () {
       const other1WinAmount = dummyYesBet1.marketValue.mul(totalLoseAmountWithCommission).div(totalWinAmount);
       const other2WinAmount = dummyYesBet2.marketValue.mul(totalLoseAmountWithCommission).div(totalWinAmount);
 
-      const a = await sureToken.balanceOf(other1.address);
-      const b = await sureToken.balanceOf(other2.address);
-      const c = await sureToken.balanceOf(other3.address);
-
-      expect(await sureToken.balanceOf(other1.address)).is.equal(earlyBirdTokenValue.add(other1WinAmount));
-      expect(await sureToken.balanceOf(other2.address)).is.equal(earlyBirdTokenValue.add(other2WinAmount));
-      expect(await sureToken.balanceOf(other3.address)).is.equal(earlyBirdTokenValue.sub(totalLoseAmount));
+      expect(await sureToken.balanceOf(other1.address)).is.equal(defaultAmount.add(other1WinAmount));
+      expect(await sureToken.balanceOf(other2.address)).is.equal(defaultAmount.add(other2WinAmount));
+      expect(await sureToken.balanceOf(other3.address)).is.equal(defaultAmount.sub(totalLoseAmount));
 
       const market = await predictionWorld.markets(0);
       expect(market.outcome).is.equal(true);
@@ -252,10 +241,10 @@ describe("PredictionWorld4", function () {
       distributeWinningAmount = await predictionWorld.distributeWinningAmount(0, false);
 
       expect(await sureToken.balanceOf(predictionWorld.address)).is.equal(0);
-      expect(await sureToken.balanceOf(other1.address)).is.equal(earlyBirdTokenValue.sub(dummyYesBet1.marketValue));
-      expect(await sureToken.balanceOf(other2.address)).is.equal(earlyBirdTokenValue.sub(dummyYesBet2.marketValue));
+      expect(await sureToken.balanceOf(other1.address)).is.equal(defaultAmount.sub(dummyYesBet1.marketValue));
+      expect(await sureToken.balanceOf(other2.address)).is.equal(defaultAmount.sub(dummyYesBet2.marketValue));
       const earn = dummyYesBet1.marketValue.add(dummyYesBet2.marketValue).mul(99).div(100);
-      expect(await sureToken.balanceOf(other3.address)).is.equal(earlyBirdTokenValue.add(earn));
+      expect(await sureToken.balanceOf(other3.address)).is.equal(defaultAmount.add(earn));
 
       const market = await predictionWorld.markets(0);
       expect(market.outcome).is.equal(false);
@@ -292,18 +281,15 @@ describe("PredictionWorld4", function () {
         dummyMarket1.endTimestamp
       );
 
-      // It should approve the allowance first.
-      // const other1TokenContract = sureToken.connect(other1);
-      // await other1TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
       const other1PredictionContract = predictionWorld.connect(other1);
 
       await expect(
-        other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue)
-      ).to.be.revertedWith("Not allowed to spend this amount.");
+        other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue.mul(1000))
+      ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
 
       await expect(
-        other1PredictionContract.addNoBet(dummyYesBet1.marketId, dummyYesBet1.marketValue)
-      ).to.be.revertedWith("Not allowed to spend this amount.");
+        other1PredictionContract.addNoBet(dummyYesBet1.marketId, dummyYesBet1.marketValue.mul(1000))
+      ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
     });
 
     it("Should revert if distributer is not owner", async function () {
@@ -324,71 +310,6 @@ describe("PredictionWorld4", function () {
       await expect(
         other1PredictionContract.distributeWinningAmount(0, true)
       ).to.be.revertedWith("Unauthorized");
-    });
-
-  });
-
-  describe("Early Bird", function () {
-    // TODO: should test for early bird count decrease after granting early bird
-    it("Should get SURE when first play", async function () {
-
-      const { predictionWorld, sureToken, other1, other2, other3, other4, decimals } = await loadFixture(deploySurePredictionWorldFixture);
-
-      // Create a market1
-      await predictionWorld.createMarket(
-        dummyMarket1.question,
-        dummyMarket1.creatorImageHash,
-        dummyMarket1.description,
-        dummyMarket1.resolverUrl,
-        dummyMarket1.endTimestamp
-      );
-
-      // It should approve the allowance first.
-      const other1TokenContract = sureToken.connect(other1);
-      await other1TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(earlyBirdTokenValue.toString(), decimals));
-      const other2TokenContract = sureToken.connect(other2);
-      await other2TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(earlyBirdTokenValue.toString(), decimals));
-      const other3TokenContract = sureToken.connect(other3);
-      await other3TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(earlyBirdTokenValue.toString(), decimals));
-      const other4TokenContract = sureToken.connect(other4);
-      await other4TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(earlyBirdTokenValue.toString(), decimals));
-
-      const other1PredictionContract = predictionWorld.connect(other1);
-      expect(await sureToken.balanceOf(other1.address)).is.equal(0);
-      const firstValue = ethers.BigNumber.from(300);
-
-      // First play, should get the early bird tokens.
-      await other1PredictionContract.addYesBet(0, firstValue);
-      expect(await sureToken.balanceOf(other1.address)).is.equal(earlyBirdTokenValue.sub(firstValue));
-
-      // Could not get the token again.
-      // And have the enough token to play again.
-      await other1PredictionContract.addYesBet(0, firstValue);
-      expect(await sureToken.balanceOf(other1.address)).is.equal(earlyBirdTokenValue.sub(firstValue.mul(2)));
-
-      // Should revert when play with too much.
-      await expect(other1PredictionContract.addYesBet(0, earlyBirdTokenValue)).to.be.revertedWith("ERC20: transfer amount exceeds balance");;
-
-      const other2PredictionContract = predictionWorld.connect(other2);
-      expect(await sureToken.balanceOf(other2.address)).is.equal(0);
-      await other2PredictionContract.addYesBet(0, firstValue);
-      expect(await sureToken.balanceOf(other2.address)).is.equal(earlyBirdTokenValue.sub(firstValue));
-
-      const contratTokens = earlyBirdTokenTotal
-        .sub(earlyBirdTokenValue)
-        .add(firstValue)
-        .add(firstValue)
-        .sub(earlyBirdTokenValue)
-        .add(firstValue);
-      expect(await sureToken.balanceOf(predictionWorld.address)).is.equal(contratTokens);
-
-      const other3PredictionContract = predictionWorld.connect(other3);
-      await other3PredictionContract.addNoBet(0, firstValue);
-      expect(await sureToken.balanceOf(other3.address)).is.equal(earlyBirdTokenValue.sub(firstValue));
-
-      const other4PredictionContract = predictionWorld.connect(other4);
-      await expect(other4PredictionContract.addNoBet(0, firstValue)).to.be.revertedWith("ERC20: transfer amount exceeds balance");
-
     });
 
   });
