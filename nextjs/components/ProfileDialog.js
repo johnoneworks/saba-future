@@ -76,5 +76,5 @@ ProfileDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     smartAccount: PropTypes.object.isRequired,
     email: PropTypes.string.isRequired,
-    balance: PropTypes.string.isRequired,
+    balance: PropTypes.number.isRequired,
 };

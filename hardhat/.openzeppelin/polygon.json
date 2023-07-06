@@ -1,0 +1,108 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x46CaE4d78945FB7132dB38252d01329e21A234eE",
+    "txHash": "0x749319024849065783d3e02b4fff8975bfb17c9d033b37fc0c671674d1967ff4"
+  },
+  "proxies": [
+    {
+      "address": "0x053956480291E63bA438Ac8cc4856cAf4Fb4D347",
+      "txHash": "0x8091e069011fd7483514fe38dc1c9a44e1f33aa88e1d5e745bb892e6bc759138",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "f5b268dcb8544d6706bb9c290cff30eacee5046f5b2210b47044073a8436b411": {
+      "address": "0x53A316Cac0d16eC4C253e02D89C034Fe36e889Db",
+      "txHash": "0x267cabce6a999df7a4d05751420cd18869f0a1d5eef9b1588c2ee992907d98c2",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "amountOfFreeTokenForEarlyBird",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "EarlyBirdV1",
+            "src": "contracts\\EarlyBirdV1.sol:9"
+          },
+          {
+            "label": "numOfEarlyBirdsAllowed",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint32",
+            "contract": "EarlyBirdV1",
+            "src": "contracts\\EarlyBirdV1.sol:11"
+          },
+          {
+            "label": "currentEarlyBirdCount",
+            "offset": 4,
+            "slot": "2",
+            "type": "t_uint32",
+            "contract": "EarlyBirdV1",
+            "src": "contracts\\EarlyBirdV1.sol:13"
+          },
+          {
+            "label": "earlyBirds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "EarlyBirdV1",
+            "src": "contracts\\EarlyBirdV1.sol:15"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "EarlyBirdV1",
+            "src": "contracts\\EarlyBirdV1.sol:17"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint32": {
+            "label": "uint32",
+            "numberOfBytes": "4"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}
