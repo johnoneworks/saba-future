@@ -48,17 +48,15 @@ export const NewbieDialog = () => {
     }
 
     const snapUpEarlyBird = async () => {
-        let transactions = [];
         const transactionData = earlyBirdInterface.encodeFunctionData("snapUp", [sureTokenAddress]);
 
-        transactions = [
-            {
-                to: earlyBirdAddress,
-                data: transactionData
-            }
-        ];
+        const transaction = {
+            to: earlyBirdAddress,
+            data: transactionData,
+            gasLimit: 500000
+        };
 
-        const txResponse = await smartAccount.sendTransactionBatch({ transactions });
+        const txResponse = await smartAccount.sendTransaction({ transaction: transaction });
         console.log("UserOp hash", txResponse.hash);
         const txReceipt = await txResponse.wait();
         console.log("Tx hash", txReceipt.transactionHash);
