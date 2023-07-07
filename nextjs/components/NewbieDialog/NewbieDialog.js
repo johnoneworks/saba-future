@@ -1,6 +1,8 @@
 import { earlyBirdAddress, sureTokenAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { LoadingContext } from "@/contexts/LoadingContext";
 import { UserInfoContext } from "@/contexts/UserInfoContext";
+import useGetUserBalance from "@/hooks/useGetUserBalance";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
@@ -15,14 +17,16 @@ import styles from "./NewbieDialog.module.scss";
 /**
  * TODO:
  * 1. 應為統一樣式，不只為新user時使用
- * 2. 新功能: 按鍵領取免費 sure
+ * 2. 新功能: 按鍵領取免費 sure √
  * 3. 樣式調整
+ * 4. refactor
  */
 
 export const NewbieDialog = () => {
+    const { isPageLoading, setIsPageLoading } = useContext(LoadingContext);
     const { balance, userStatements, hasGetFirstData } = useContext(UserInfoContext);
     const { account, smartAccount, earlyBirdValidState, earlyBirdInterface } = useContext(BiconomyAccountContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const { updateBalance } = useGetUserBalance();
     const [isNewbie, setIsNewbie] = useState(false);
     const [hasShow, setHasShow] = useState(false);
 
@@ -35,17 +39,19 @@ export const NewbieDialog = () => {
 
     const handleSnapUpEarlyBird = async () => {
         try {
-            setIsLoading(true);
+            setIsPageLoading(true);
+            setIsNewbie(false);
             await snapUpEarlyBird();
             alert("Success!");
         } catch (err) {
             console.error(err);
             alert("Error!!");
         } finally {
-            setIsLoading(false);
+            updateBalance();
+            setIsPageLoading(false);
             setIsNewbie(false);
         }
-    }
+    };
 
     const snapUpEarlyBird = async () => {
         const transactionData = earlyBirdInterface.encodeFunctionData("snapUp", [sureTokenAddress]);
@@ -60,7 +66,7 @@ export const NewbieDialog = () => {
         console.log("UserOp hash", txResponse.hash);
         const txReceipt = await txResponse.wait();
         console.log("Tx hash", txReceipt.transactionHash);
-    }
+    };
 
     return (
         <Dialog sx={{ textAlign: "center" }} onClose={() => setIsNewbie(false)} open={isNewbie}>
@@ -86,10 +92,10 @@ export const NewbieDialog = () => {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button onClick={handleSnapUpEarlyBird} className={styles.btn} disabled={isLoading}>
+                        <Button onClick={handleSnapUpEarlyBird} className={styles.btn} disabled={isPageLoading}>
                             Snap Up
                         </Button>
-                        <Button onClick={() => setIsNewbie(false)} className={styles.btn} disabled={isLoading}>
+                        <Button onClick={() => setIsNewbie(false)} className={styles.btn} disabled={isPageLoading}>
                             Give Up
                         </Button>
                     </CardActions>
