@@ -12,18 +12,10 @@ contract PredictionWorld4 is Initializable {
     address public owner;
     address public sureToken;
     uint256 public totalMarkets;
-    // Early Bird Limit (Get the SURE when first play)
-    uint32 public numOfEarlyBirdsAllowed;
-    // Early Bird Free Amount
-    uint256 public amountOfFreeTokenForEarlyBird;
-    // Early Bird Actually Count (Current count)
-    uint32 public currentEarlyBirdCount;
 
     mapping(uint256 => Market) public markets;
     mapping(address => uint256) winAmounts;
     address[] winAddresses;
-
-    mapping(address => bool) earlyBirds;
 
     mapping(address => bool) adminAddresses;
 
@@ -66,16 +58,8 @@ contract PredictionWorld4 is Initializable {
         uint256 totalNoAmount
     );
 
-    error Overflow(uint256 r, uint256 x, uint256 y);
-
-    function initialize(
-        address _sureToken,
-        uint32 _numOfEarlyBirdsAllowed,
-        uint256 _amountOfFreeTokenForEarlyBird
-    ) public initializer {
+    function initialize(address _sureToken) public initializer {
         sureToken = _sureToken;
-        numOfEarlyBirdsAllowed = _numOfEarlyBirdsAllowed;
-        amountOfFreeTokenForEarlyBird = _amountOfFreeTokenForEarlyBird;
         owner = msg.sender;
         commissionAddress = owner;
         adminAddresses[owner] = true;
@@ -88,7 +72,6 @@ contract PredictionWorld4 is Initializable {
         string memory _resolverUrl,
         uint256 _endTimestamp
     ) public onlyAdmin {
-
         uint256 timestamp = block.timestamp;
 
         Market storage market = markets[totalMarkets];
@@ -121,10 +104,6 @@ contract PredictionWorld4 is Initializable {
             _value <= ERC20(sureToken).allowance(msg.sender, address(this)),
             "Not allowed to spend this amount."
         );
-        if (checkEarlyBird()) {
-            address payable _address = payable(msg.sender);
-            ERC20(sureToken).transfer(_address, amountOfFreeTokenForEarlyBird);
-        }
         Market storage market = markets[_marketId];
         ERC20(sureToken).transferFrom(msg.sender, address(this), _value);
         Bet memory bet = Bet(msg.sender, _value, block.timestamp);
@@ -139,10 +118,6 @@ contract PredictionWorld4 is Initializable {
             _value <= ERC20(sureToken).allowance(msg.sender, address(this)),
             "Not allowed to spend this amount."
         );
-        if (checkEarlyBird()) {
-            address payable _address = payable(msg.sender);
-            ERC20(sureToken).transfer(_address, amountOfFreeTokenForEarlyBird);
-        }
         Market storage market = markets[_marketId];
         ERC20(sureToken).transferFrom(msg.sender, address(this), _value);
         Bet memory bet = Bet(msg.sender, _value, block.timestamp);
@@ -163,13 +138,12 @@ contract PredictionWorld4 is Initializable {
         uint256 _marketId,
         bool _eventOutcome
     ) public payable onlyAdmin {
-
         uint256 commissionRate = 99;
         uint256 hundred = 100;
 
         Market storage market = markets[_marketId];
         if (_eventOutcome) {
-            uint256 bounus = market.totalNoAmount * commissionRate / hundred;
+            uint256 bounus = (market.totalNoAmount * commissionRate) / hundred;
             uint256 totalWinAmount = 0;
             for (uint256 i = 0; i < market.yesBets.length; i++) {
                 // split all No bets with the Yessers
@@ -199,7 +173,7 @@ contract PredictionWorld4 is Initializable {
 
             delete winAddresses;
         } else {
-            uint256 bounus = market.totalYesAmount * commissionRate / hundred;
+            uint256 bounus = (market.totalYesAmount * commissionRate) / hundred;
             uint256 totalWinAmount = 0;
             for (uint256 i = 0; i < market.noBets.length; i++) {
                 uint256 winAmount = ((bounus * market.noBets[i].amount) /
@@ -225,20 +199,6 @@ contract PredictionWorld4 is Initializable {
         }
         market.outcome = _eventOutcome;
         market.marketClosed = true;
-    }
-
-    function checkEarlyBird() public returns (bool) {
-        if (currentEarlyBirdCount >= numOfEarlyBirdsAllowed) {
-            return false;
-        } else {
-            if (earlyBirds[msg.sender]) {
-                return false;
-            } else {
-                currentEarlyBirdCount += 1;
-                earlyBirds[msg.sender] = true;
-                return true;
-            }
-        }
     }
 
     function setNewOwner(address _newOwner) public onlyOwner {

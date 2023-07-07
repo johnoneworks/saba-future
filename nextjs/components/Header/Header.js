@@ -144,7 +144,10 @@ export const Header = () => {
                     </div>
                 )}
             </div>
-            <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
+            {
+                smartAccount &&
+                <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
+            }
             <NewbieDialog />
         </>
     );

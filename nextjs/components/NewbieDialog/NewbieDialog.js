@@ -1,3 +1,4 @@
+import { earlyBirdAddress, sureTokenAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { UserInfoContext } from "@/contexts/UserInfoContext";
 import Box from "@mui/material/Box";
@@ -20,16 +21,46 @@ import styles from "./NewbieDialog.module.scss";
 
 export const NewbieDialog = () => {
     const { balance, userStatements, hasGetFirstData } = useContext(UserInfoContext);
-    const { account } = useContext(BiconomyAccountContext);
+    const { account, smartAccount, earlyBirdValidState, earlyBirdInterface } = useContext(BiconomyAccountContext);
+    const [isLoading, setIsLoading] = useState(false);
     const [isNewbie, setIsNewbie] = useState(false);
     const [hasShow, setHasShow] = useState(false);
 
     useEffect(() => {
-        if (account && balance == 0 && hasGetFirstData && userStatements.length == 0 && !hasShow) {
+        if (account && balance == 0 && hasGetFirstData && userStatements.length == 0 && !hasShow && earlyBirdValidState === 1) {
             setIsNewbie(true);
             setHasShow(true);
         }
-    }, [account, balance, userStatements, hasGetFirstData]);
+    }, [account, balance, userStatements, hasGetFirstData, earlyBirdValidState]);
+
+    const handleSnapUpEarlyBird = async () => {
+        try {
+            setIsLoading(true);
+            await snapUpEarlyBird();
+            alert("Success!");
+        } catch (err) {
+            console.error(err);
+            alert("Error!!");
+        } finally {
+            setIsLoading(false);
+            setIsNewbie(false);
+        }
+    }
+
+    const snapUpEarlyBird = async () => {
+        const transactionData = earlyBirdInterface.encodeFunctionData("snapUp", [sureTokenAddress]);
+
+        const transaction = {
+            to: earlyBirdAddress,
+            data: transactionData,
+            gasLimit: 500000
+        };
+
+        const txResponse = await smartAccount.sendTransaction({ transaction: transaction });
+        console.log("UserOp hash", txResponse.hash);
+        const txReceipt = await txResponse.wait();
+        console.log("Tx hash", txReceipt.transactionHash);
+    }
 
     return (
         <Dialog sx={{ textAlign: "center" }} onClose={() => setIsNewbie(false)} open={isNewbie}>
@@ -51,12 +82,15 @@ export const NewbieDialog = () => {
                 >
                     <CardContent>
                         <Typography sx={{ fontSize: 20 }} gutterBottom>
-                            Make your first bet and get <div style={{ fontWeight: "bold", fontSize: 30 }}>1000</div> free SURE tokens!
+                            First 100 users can get <div style={{ fontWeight: "bold", fontSize: 30 }}>1000</div> free SURE tokens!
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button onClick={() => setIsNewbie(false)} className={styles.btn}>
-                            Claim Now
+                        <Button onClick={handleSnapUpEarlyBird} className={styles.btn} disabled={isLoading}>
+                            Snap Up
+                        </Button>
+                        <Button onClick={() => setIsNewbie(false)} className={styles.btn} disabled={isLoading}>
+                            Give Up
                         </Button>
                     </CardActions>
                 </Box>

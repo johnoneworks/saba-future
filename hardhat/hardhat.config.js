@@ -2,7 +2,11 @@ require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades');
 require("dotenv").config();
 
-const { API_URL, PRIVATE_KEY, SCAN_KEY } = process.env;
+const { 
+    API_URL, PRIVATE_KEY, SCAN_KEY,
+    MUMBAI_API_URL, MUMBAI_PRIVATE_KEY,
+} = process.env;
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.18",
@@ -12,8 +16,8 @@ module.exports = {
       accounts: [`0x${PRIVATE_KEY}`]
     },
     mumbai: {
-      url: API_URL,
-      accounts: [`0x${PRIVATE_KEY}`]
+      url: MUMBAI_API_URL,
+      accounts: [`0x${MUMBAI_PRIVATE_KEY}`]
     }
   },
   etherscan: {
