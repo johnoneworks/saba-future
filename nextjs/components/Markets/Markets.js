@@ -1,3 +1,4 @@
+import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
@@ -6,7 +7,7 @@ import { LoadingContext } from "@/contexts/LoadingContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import styles from "@/styles/Home.module.scss";
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { useContext } from "react";
 
 const ShowMarkets = (props) => {
@@ -42,7 +43,7 @@ export const Markets = () => {
             {account && currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
                 <>
                     {isMarketLoading && markets && <LoadingSkeleton amount={markets.length} />}
-                    {!isMarketLoading && markets && (
+                    {!isMarketLoading && markets && markets.length > 0 ? (
                         <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
                             <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} />
                             <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1, mt: 2 }}>
@@ -50,6 +51,10 @@ export const Markets = () => {
                             </Typography>
                             <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} />
                         </Grid>
+                    ) : (
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+                            <EmptyPage />
+                        </Box>
                     )}
                 </>
             )}

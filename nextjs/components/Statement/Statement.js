@@ -28,16 +28,18 @@ export const Statement = () => {
             {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
                 <>
                     {isMarketLoading && <LoadingSkeleton amount={3} />}
-                    {!isMarketLoading && (
-                        <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                            {userStatements.map((market, i) => (
-                                <StatementMarketCard market={market} />
-                            ))}
-                        </Grid>
-                    )}
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
-                        <EmptyPage />
-                    </Box>
+                    {!isMarketLoading &&
+                        (userStatements && userStatements.length > 0 ? (
+                            <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                                {userStatements.map((market, i) => (
+                                    <StatementMarketCard market={market} />
+                                ))}
+                            </Grid>
+                        ) : (
+                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+                                <EmptyPage />
+                            </Box>
+                        ))}
                 </>
             )}
         </>
