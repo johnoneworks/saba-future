@@ -65,7 +65,8 @@ export default function Markets() {
                     totalNoAmount: market.totalNoAmount,
                     hasResolved: market.marketClosed,
                     timestamp: market.info.timestamp,
-                    endTimestamp: market.info.endTimestamp
+                    endTimestamp: market.info.endTimestamp,
+                    isTest: market.info.isTest,
                 });
             }
             setMarkets(markets);

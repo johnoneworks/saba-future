@@ -80,7 +80,8 @@ const useGetMarkets = () => {
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,
                     marketClosed: market.marketClosed,
-                    outcome: market.outcome
+                    outcome: market.outcome,
+                    isTest: market.info.isTest,
                 };
 
                 if (market.marketClosed) {

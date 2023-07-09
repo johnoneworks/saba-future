@@ -70,7 +70,8 @@ const useGetUserStatement = () => {
                     hasResolved: market.marketClosed,
                     endTimestamp: market.info.endTimestamp,
                     timestamp: market.info.timestamp,
-                    outcome: market.outcome
+                    outcome: market.outcome,
+                    isTest: market.info.isTest,
                 });
             }
             console.log(`markets size: ${markets.length}`);
