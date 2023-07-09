@@ -2,7 +2,7 @@ import { AdminHeader } from "@/components/Header/AdminHeader";
 import { predictionWorldAddress } from "@/config";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useContext, useState } from "react";
 
@@ -20,6 +20,7 @@ export default function Admin() {
     const [imageUrl, setImageUrl] = useState("");
     const [resolverUrl, setResolverUrl] = useState("");
     const [timestamp, setTimestamp] = useState(Date());
+    const [isTest, setIsTest] = useState(false);
     const { provider, smartAccount, predictionWorldInterface } = useContext(BiconomyAccountContext);
 
     const handleSubmit = async () => {
@@ -39,17 +40,14 @@ export default function Admin() {
     };
 
     const createMarketWithGasless = async () => {
-        let transactions = [];
-        const transactionData = predictionWorldInterface.encodeFunctionData("createMarket", [title, imageUrl, description, resolverUrl, timestamp]);
+        const transactionData = predictionWorldInterface.encodeFunctionData("createMarket", [title, imageUrl, description, resolverUrl, timestamp, isTest]);
 
-        transactions = [
-            {
-                to: predictionWorldAddress,
-                data: transactionData
-            }
-        ];
+        const transaction = {
+            to: predictionWorldAddress,
+            data: transactionData
+        };
 
-        const txResponse = await smartAccount.sendTransactionBatch({ transactions });
+        const txResponse = await smartAccount.sendTransaction({ transaction });
         console.log("UserOp hash", txResponse.hash);
         const txReceipt = await txResponse.wait();
         console.log("Tx hash", txReceipt.transactionHash);
@@ -151,6 +149,11 @@ export default function Admin() {
                             InputLabelProps={{
                                 shrink: true
                             }}
+                        />
+                        <FormControlLabel
+                            label="Is this for testing?"
+                            sx={{ mt: 2, mb: 1 }}
+                            control={<Checkbox checked={isTest} onChange={(e) => setIsTest(!isTest)} />}
                         />
                         <Button
                             variant="contained"

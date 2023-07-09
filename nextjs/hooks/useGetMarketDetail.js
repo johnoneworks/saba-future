@@ -28,7 +28,8 @@ const useGetMarketDetail = () => {
                     totalNoAmount: market.totalNoAmount,
                     description: market.info.description,
                     resolverUrl: market.info.resolverUrl,
-                    isClose: market.marketClosed
+                    isClose: market.marketClosed,
+                    isTest: market.info.isTest,
                 });
                 setIsPageLoading(false);
             } catch (error) {

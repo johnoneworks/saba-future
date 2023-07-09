@@ -107,7 +107,8 @@ export default function Detail() {
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,
                     description: market.info.description,
-                    resolverUrl: market.info.resolverUrl
+                    resolverUrl: market.info.resolverUrl,
+                    isTest: market.info.isTest,
                 });
             } catch (error) {
                 console.error(`Error getting market detail, ${error}`);
