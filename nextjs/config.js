@@ -20,16 +20,17 @@ export const dappAPIKey = "2fu2Q9CXC.d4df3fa8-3a7e-46d5-be06-046a3610bd83"; // T
 export const providerUrl = "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvCxizWmyNG5yOeGoMqF1j-T" // TODO: should use .env
 
 export const sureTokenAddress = "0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c";
-export const predictionWorldAddress = "0x39a0D0715D61E6C553C9CE06ac026eEbDe5037bA";
+// export const predictionWorldAddress = "0x39a0D0715D61E6C553C9CE06ac026eEbDe5037bA";
+export const predictionWorldAddress = "0x804Ebbb04702237e480606Edaa5CEb4EeD8AcC3a";
 export const earlyBirdAddress = "0x053956480291E63bA438Ac8cc4856cAf4Fb4D347";
 
 // export const chainId = ChainId.POLYGON_MUMBAI;
-// export const dappAPIKey = "l39LDUDFK.0670dea5-65ea-4943-82b5-2404fad8436e";
+// export const dappAPIKey = "fghzzCiKY.f8a107b4-f57f-4ba0-8554-bcdb997cff67";
 // export const providerUrl = "https://polygon-mumbai.g.alchemy.com/v2/B_OwiBiK0aenS3ooAxCMR9w45G1-gQ6Q";
 
-// export const sureTokenAddress = "0x9e354dB70c919a8b088b4d5F1A619C853FB4Ce3f";
-// export const predictionWorldAddress = "0xE5862f92Ce6Ab10A7876eC34a28Af6F59e60fdb7";
-// export const earlyBirdAddress = "0x1Ca626a3CE3DC6E01BD1839DA142482dD39Deccc";
+// export const sureTokenAddress = "0x0f07Fb259f8e322f5662f83528658207a4b97202";
+// export const predictionWorldAddress = "0x1EB7cf5ba1e2F4E657fb18693bb3646F642A62Bb";
+// export const earlyBirdAddress = "0x0D93F21d294470B871929b4d5070e0dD1A540eA2";
 
 export const sureToken2Address = "0xd63E83580bBEc586665ABBD4e1B02f8bBD6F8bE0";
 export const predictionWorld2Address = "0xa33984BDD910d25C9d4ad11dD50E2ba18E0Ab7FD";
