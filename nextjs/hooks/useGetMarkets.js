@@ -63,34 +63,11 @@ const useGetMarkets = () => {
                 return;
             }
             setIsMarketLoading(true);
-            let marketCount = await predictionWorldContract.totalMarkets();
-            let tempMarkets = [];
-            setMarkets(new Array(marketCount.toNumber()));
-
-            for (let i = 0; i < marketCount; i++) {
-                let market = await predictionWorldContract.markets(i);
-                console.log(i);
-                console.log(`market.id: ${market.info.question}`);
-
-                let mt = {
-                    id: market.id,
-                    question: market.info.question,
-                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : BACKUP_IMAGE,
-                    totalAmount: market.totalAmount,
-                    totalYesAmount: market.totalYesAmount,
-                    totalNoAmount: market.totalNoAmount,
-                    marketClosed: market.marketClosed,
-                    outcome: market.outcome,
-                    isTest: market.info.isTest,
-                };
-
-                if (market.marketClosed) {
-                    const bets = await getBets(market.id);
-                    mt = { ...mt, ...bets };
-                }
-
-                tempMarkets.push(mt);
-            }
+            // starting index
+            const cursor = 0;
+            const size = 20;
+            const withTest = true;
+            const tempMarkets = await fetchMarkets(cursor, size, withTest);
             setMarkets(tempMarkets);
         } catch (error) {
             console.error(`Error getting market: ${error}`);
@@ -98,6 +75,33 @@ const useGetMarkets = () => {
             setIsMarketLoading(false);
         }
     };
+
+    const fetchMarkets = async (cursor, size, withTest) => {
+        const result = await predictionWorldContract.fetchMarkets(cursor, size, withTest);
+        const markets = result[0];
+        const netxtCursor = result[1];
+        let finalMarkets = [];
+        for (let i = 0; i < markets.length; i++) {
+            let market = markets[i];
+            let mt = {
+                id: market.id,
+                question: market.info.question,
+                imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : BACKUP_IMAGE,
+                totalAmount: market.totalAmount,
+                totalYesAmount: market.totalYesAmount,
+                totalNoAmount: market.totalNoAmount,
+                marketClosed: market.marketClosed,
+                outcome: market.outcome,
+                isTest: market.info.isTest,
+            };
+            if (market.marketClosed) {
+                const bets = await getBets(market.id);
+                mt = { ...mt, ...bets };
+            }
+            finalMarkets.push(mt);
+        }
+        return finalMarkets;
+    }
 
     useEffect(() => {
         updateMarkets();
