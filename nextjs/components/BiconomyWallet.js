@@ -93,6 +93,7 @@ export default function BiconomyWallet() {
 
             const predictionWorldContract = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, signer);
             const predictionWorldInterface = new ethers.utils.Interface(PredictionWorld.abi);
+            smartAccountSdk.isAdminUser = await predictionWorldContract.isAdminUser(smartAccountSdk.address);
 
             const earlyBirdContract = new ethers.Contract(earlyBirdAddress, EarlyBird.abi, signer);
             const earlyBirdInterface = new ethers.utils.Interface(EarlyBird.abi);

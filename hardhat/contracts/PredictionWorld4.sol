@@ -39,6 +39,7 @@ contract PredictionWorld4 is Initializable {
         string creatorImageHash;
         string description;
         string resolverUrl;
+        bool isTest;
     }
 
     struct Bet {
@@ -70,7 +71,8 @@ contract PredictionWorld4 is Initializable {
         string memory _creatorImageHash,
         string memory _description,
         string memory _resolverUrl,
-        uint256 _endTimestamp
+        uint256 _endTimestamp,
+        bool isTest
     ) public onlyAdmin {
         uint256 timestamp = block.timestamp;
 
@@ -80,6 +82,7 @@ contract PredictionWorld4 is Initializable {
         market.info.creatorImageHash = _creatorImageHash;
         market.info.timestamp = timestamp;
         market.info.createdBy = msg.sender;
+        market.info.isTest = isTest;
         market.totalAmount = 0;
         market.totalYesAmount = 0;
         market.totalNoAmount = 0;
@@ -199,6 +202,48 @@ contract PredictionWorld4 is Initializable {
         }
         market.outcome = _eventOutcome;
         market.marketClosed = true;
+    }
+
+    function fetchMarkets(
+        uint256 cursor,
+        uint256 size,
+        bool withTest
+    ) public view returns (Market[] memory values, uint256 nextCursor) {
+        uint256 totalCount = getCountWithoutTest(cursor, size, withTest);
+        values = new Market[](totalCount);
+
+        uint256 newIndex;
+        uint256 currentCount;
+        uint256 i = cursor;
+        for (; i < totalMarkets; i++) {
+            if (!withTest && markets[i].info.isTest) {
+                continue;
+            }
+            values[newIndex++] = markets[i];
+            currentCount++;
+            if (currentCount >= size) {
+                break;
+            }
+        }
+        return (values, i + 1);
+    }
+
+    function getCountWithoutTest(
+        uint256 cursor,
+        uint256 size,
+        bool withTest
+    ) internal view returns (uint256) {
+        uint256 count;
+        for (uint256 i = cursor; i < totalMarkets; i++) {
+            if (!withTest && markets[i].info.isTest) {
+                continue;
+            }
+            count++;
+            if (count >= size) {
+                return count;
+            }
+        }
+        return count;
     }
 
     function setNewOwner(address _newOwner) public onlyOwner {
