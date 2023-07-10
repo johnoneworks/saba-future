@@ -34,6 +34,12 @@ export default function Admin() {
             console.error(error);
             alert("Error!!");
         } finally {
+            setTitle("");
+            setDescription("");
+            setImageUrl("");
+            setResolverUrl("");
+            setTimestamp("");
+            setIsTest(false);
             setIsPageLoading(false);
             setSubmitButtonText("Create Market");
         }

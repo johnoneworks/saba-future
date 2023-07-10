@@ -1,33 +1,63 @@
 import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import MarketCard from "@/components/MarketCard/MarketCard";
-import { MARKET_STATUS, MENU_TYPE } from "@/constants/Constant";
+import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import styles from "@/styles/Home.module.scss";
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 const ShowMarkets = (props) => {
-    const { marketStatus, markets, account, showTest } = props;
-    const isClose = marketStatus !== MARKET_STATUS.OPEN;
+    const { markets, account, showTest } = props;
+
+    const [openMarkets, setOpenMarkets] = useState([]);
+    const [closedMarkets, setClosedMarkets] = useState([]);
+
+    const filterMarkets = () => {
+        const openMarkets = markets.filter((market) => !market.marketClosed && (!market.isTest || (showTest && market.isTest)));
+        const closedMarkets = markets.filter((market) => market.marketClosed && (!market.isTest || (showTest && market.isTest)));
+        setOpenMarkets(openMarkets);
+        setClosedMarkets(closedMarkets);
+    };
+
+    useEffect(() => {
+        filterMarkets();
+    }, [showTest, markets.length]);
 
     return (
         <>
-            {markets &&
-                markets.reduce((accumulator, market) => {
-                    const isAvailable = isClose ? market.marketClosed : !market.marketClosed;
-                    if (isAvailable && (!market.isTest || (showTest && market.isTest))) {
-                        accumulator.push(
-                            <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                                <MarketCard market={market} currentUser={account} isClosed={isClose} />
-                            </Grid>
-                        );
-                    }
+            {openMarkets &&
+                openMarkets.reduce((accumulator, market) => {
+                    accumulator.push(
+                        <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
+                            <MarketCard market={market} currentUser={account} isClosed={false} />
+                        </Grid>
+                    );
                     return accumulator;
                 }, [])}
+            {closedMarkets && closedMarkets.length > 0 && (
+                <>
+                    <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1, mt: 2 }}>
+                        Closed Markets
+                    </Typography>
+                    {closedMarkets.reduce((accumulator, market) => {
+                        accumulator.push(
+                            <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
+                                <MarketCard market={market} currentUser={account} isClosed={true} />
+                            </Grid>
+                        );
+                        return accumulator;
+                    }, [])}
+                </>
+            )}
+            {openMarkets.length == 0 && closedMarkets.length == 0 && (
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh", width: "100%" }}>
+                    <EmptyPage />
+                </Box>
+            )}
         </>
     );
 };
@@ -56,19 +86,9 @@ export const Markets = () => {
                                     />
                                 </div>
                             )}
-                            {markets.length > 0 ? (
-                                <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                    <ShowMarkets marketStatus={MARKET_STATUS.OPEN} markets={markets} account={account} showTest={showTest} />
-                                    <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1, mt: 2 }}>
-                                        Closed Markets
-                                    </Typography>
-                                    <ShowMarkets marketStatus={MARKET_STATUS.CLOSE} markets={markets} account={account} showTest={showTest} />
-                                </Grid>
-                            ) : (
-                                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
-                                    <EmptyPage />
-                                </Box>
-                            )}
+                            <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                                <ShowMarkets markets={markets} account={account} showTest={showTest} />
+                            </Grid>
                         </>
                     )}
                 </>

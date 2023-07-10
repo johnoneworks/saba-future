@@ -36,9 +36,11 @@ export const Statement = () => {
                                 ))}
                             </Grid>
                         ) : (
-                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
-                                <EmptyPage />
-                            </Box>
+                            <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
+                                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh", width: "100%" }}>
+                                    <EmptyPage />
+                                </Box>
+                            </Grid>
                         ))}
                 </>
             )}
