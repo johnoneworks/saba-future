@@ -71,7 +71,7 @@ export const AdminHeader = () => {
                     {/* TODO refresh logic */}
                     {/* <div onClick={refreshMarkets}>{<RefreshIcon />}</div> */}
                     <div> {account ? "Saba Future" : "Wallet Connecting..."} </div>
-                    <div onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
+                    <div className="cursor-pointer" onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
                 </div>
                 {account && (
                     <div className={styles.headerInfo}>

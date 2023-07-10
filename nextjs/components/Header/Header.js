@@ -11,6 +11,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { styled } from "@mui/system";
@@ -90,6 +91,12 @@ export const Header = () => {
         updateBalance();
     };
 
+    const handleRedirectToAdmin = () => {
+        router.push({
+            pathname: `/admin`,
+        });
+    };
+
     const handleLogout = () => {
         if (account) {
             disconnectWallet();
@@ -127,7 +134,13 @@ export const Header = () => {
                         <Image src="/logo.svg" alt="placeholder" width={20} height={20} margin={20} />
                         <span style={{ marginLeft: 10 }}>{account ? "Saba Future" : "Wallet Connecting..."} </span>
                     </div>
-                    <div onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</div>
+                    <div>
+                        {
+                            smartAccount && smartAccount.isAdminUser &&
+                            <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>{<ManageAccountsIcon />}</span>
+                        }
+                        <span className="cursor-pointer" onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</span>
+                    </div>
                 </div>
                 {account && (
                     <div className={styles.headerInfo}>
