@@ -16,7 +16,7 @@
 import { ChainId } from "@biconomy/core-types";
 
 export const chainId = ChainId.POLYGON_MAINNET;
-export const dappAPIKey = "2fu2Q9CXC.d4df3fa8-3a7e-46d5-be06-046a3610bd83"; // TODO: should use .env
+export const dappAPIKey = "pCbP-tMQV.b25fcd54-2590-4c4e-80a2-421fab61429b"; // TODO: should use .env
 export const providerUrl = "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvCxizWmyNG5yOeGoMqF1j-T" // TODO: should use .env
 
 export const sureTokenAddress = "0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c";
