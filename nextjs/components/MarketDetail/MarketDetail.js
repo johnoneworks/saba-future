@@ -1,5 +1,6 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
+import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { MarketContext } from "@/contexts/MarketContext";
@@ -34,12 +35,13 @@ const CustomAvatar = styled(Avatar)({
 });
 
 const MarketTitle = (props) => {
-    const { title, endTimestamp, totalAmount, imageHash } = props;
+    const { title, endTimestamp, totalAmount, imageHash, isTest } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
     const totalSureAmount = `${totalAmount}`;
 
     return (
         <Box className={styles.marketTitle}>
+            {isTest && <TestDataMark />}
             <Box sx={{ display: "flex", mb: "10px" }}>
                 <CustomAvatar>
                     <Box
@@ -115,6 +117,7 @@ export default function MarketDetail() {
                         endTimestamp={marketDetail?.endTimestamp}
                         totalAmount={marketDetail?.totalAmount}
                         imageHash={marketDetail?.imageHash}
+                        isTest={marketDetail?.isTest}
                     />
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && (
