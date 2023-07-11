@@ -150,3 +150,53 @@ This is the part with the smart contract related functions
         - CreateMarket((amount, odds))
         - ResolvePrediction(result)
         - TakeMarket(amount, odds)
+
+## Error Handling
+    
+### Failed to upgrade the contract.
+
+1. The file ".openzeppeline\<network>.json" is missing or the content is NOT inconsistent with remote.
+
+    - Error Message: 
+
+        ```
+        ~\saba-future\hardhat\node_modules\@openzeppelin\upgrades-core\src\manifest-storage-layout.ts:20
+            throw new UpgradesError(
+                ^
+        Error: Deployment at address 0xC2f54eD8... is not registered
+
+        To register a previously deployed proxy for upgrading, use the forceImport function.
+            at getStorageLayoutForAddress (D:\phil\saba-future\hardhat\node_modules\@openzeppelin\upgrades-core\src\manifest-storage-layout.ts:20:11)
+            at validateImpl (D:\phil\saba-future\hardhat\node_modules\@openzeppelin\hardhat-upgrades\src\utils\validate-impl.ts:46:27)
+            at deployProxyImpl (D:\phil\saba-future\hardhat\node_modules\@openzeppelin\hardhat-upgrades\src\utils\deploy-impl.ts:73:3)
+            at Proxy.upgradeProxy (D:\phil\saba-future\hardhat\node_modules\@openzeppelin\hardhat-upgrades\src\upgrade-proxy.ts:28:32)
+            at main (D:\phil\saba-future\hardhat\scripts\upgradeProxy.js:6:20)
+        ```
+
+    - resolution: 
+
+        1. Remove the network file, artifacts folder and cache folder.
+
+        ```
+            $ rm ~/hardhat/<network>.json
+            $ rm -rf ~/hardhat/artifacts
+            $ rm -rf ~/hardhat/cache
+        ```
+
+        2. Set [FORCE_IMPORT_CONTRACT] in .env to ORIGINAL implementation contract name.
+
+        ```
+           ex: FORCE_IMPORT_CONTRACT=PredictionWorld4
+        ```
+
+        3. Regenerate the network file by the forceImport script.
+
+        ```
+            $ npx hardhat run ~\hardhat\script\forceImport.js --network <network>
+        ```
+
+        4. Upgrade again.
+
+        ```
+            # npx hardhat run ~\hardhat\script\upgradeProxy.js --network <network>
+        ```
