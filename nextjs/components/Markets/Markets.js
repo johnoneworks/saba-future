@@ -33,7 +33,7 @@ const ShowMarkets = (props) => {
                 openMarkets.reduce((accumulator, market) => {
                     accumulator.push(
                         <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                            <MarketCard market={market} currentUser={account} isClosed={false} />
+                            <MarketCard market={market} currentUser={account} isClosed={false} isTest={market.isTest} />
                         </Grid>
                     );
                     return accumulator;
@@ -46,7 +46,7 @@ const ShowMarkets = (props) => {
                     {closedMarkets.reduce((accumulator, market) => {
                         accumulator.push(
                             <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                                <MarketCard market={market} currentUser={account} isClosed={true} />
+                                <MarketCard market={market} currentUser={account} isClosed={true} isTest={market.isTest} />
                             </Grid>
                         );
                         return accumulator;

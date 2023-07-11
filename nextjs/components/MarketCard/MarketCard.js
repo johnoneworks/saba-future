@@ -1,5 +1,5 @@
+import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, Typography } from "@mui/material";
@@ -8,6 +8,12 @@ import classnames from "classnames";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import styles from "./MarketCard.module.scss";
+
+/**
+ * TODO:
+ * 1. refactor
+ *
+ */
 
 const failIcon = (
     <svg className="h-8 w-8 text-red-500" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -35,12 +41,11 @@ const CustomTypography = styled(Typography)({
     transform: "scale(0.8)"
 });
 
-export default function MarketCard({ market, currentUser, isClosed }) {
+export default function MarketCard({ market, currentUser, isClosed, isTest }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { predictionWorldContract } = useContext(BiconomyAccountContext);
     const { updateMarketDetail } = useGetMarketDetail();
-    const { isMarketLoading } = useContext(LoadingContext);
 
     let titleWidth = "w-[calc(100%-72px)]";
     let win = false;
@@ -108,6 +113,7 @@ export default function MarketCard({ market, currentUser, isClosed }) {
     return (
         <Box onClick={handleSelectMarket}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
+                {isTest && <TestDataMark />}
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
                         <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
