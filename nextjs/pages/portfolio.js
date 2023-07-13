@@ -7,6 +7,10 @@ import StatementMarketCard from "@/components/StatementMarketCard";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import styles from "../styles/Home.module.scss";
 
+/**
+ * 此頁不再維護，改用Statement
+ */
+
 const BiconomyNavbar = dynamic(() => import("../components/BiconomyWallet").then((res) => res.default), {
     ssr: false
 });
@@ -34,7 +38,7 @@ export default function Portfolio() {
                     endTimestamp: market.info.endTimestamp,
                     timestamp: market.info.timestamp,
                     outcome: market.outcome,
-                    isTest: market.info.isTest,
+                    isTest: market.info.isTest
                 });
             }
             console.log(`markets size: ${markets.length}`);
