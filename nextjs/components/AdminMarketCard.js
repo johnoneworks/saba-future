@@ -1,5 +1,6 @@
+import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { predictionWorldAddress } from "@/config";
-import { BACKUP_IMAGE, BET_TYPE } from "@/constants/Constant";
+import { BET_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { convertBigNumberToDate } from "@/utils/ConvertDate";
@@ -27,6 +28,7 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
     const [selectedResolve, setSelectedResolve] = useState(null);
     const isResolved = market.hasResolved;
     const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
+    const isTest = market.isTest;
 
     const onCancelResolve = () => {
         setSelectedResolve(null);
@@ -69,18 +71,11 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
         <>
             <div className="w-full overflow-hidden my-2" style={{ backgroundColor: isResolved ? "#E4E9F0" : "#fff" }}>
                 <div className="flex flex-col border border-gray-300 rounded-lg p-5 hover:border-blue-700 cursor-pointer">
+                    {isTest && <TestDataMark />}
                     <div className="flex flex-row space-x-5 pb-4">
                         <div className="h-w-15">
                             <CustomAvatar>
-                                <Box
-                                    component="img"
-                                    src={market.imageHash}
-                                    onError={(e) => {
-                                        e.target.src = { BACKUP_IMAGE }; // 設置備用圖片的 URL
-                                    }}
-                                    alt="marketImage"
-                                    sx={{ width: 55, height: 55 }}
-                                />
+                                <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: 55, height: 55 }} />
                             </CustomAvatar>
                         </div>
                         <span className="text-lg font-semibold">{market.question}</span>
