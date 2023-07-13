@@ -79,28 +79,24 @@ const useGetUserStatement = () => {
             let userBetList = [];
             let totalBetAmount = 0;
             for (let i = 0; i < markets.length; i++) {
-                let marketBets = await predictionWorldContract.getBets(i);
-                //Yes Bet
-                marketBets["0"].forEach((bet) => {
-                    if (bet.user.toLowerCase() == smartAccount.address.toLowerCase()) {
-                        userBetList.push({
-                            id: i.toString(),
-                            yesAmount: bet.amount.toString(),
-                            timestamp: bet.timestamp.toString()
-                        });
-                        totalBetAmount += parseInt(bet.amount);
-                    }
+                const marketBets = await predictionWorldContract.getUserBets(smartAccount.address, i);
+                const yesBets = marketBets.yesBets;
+                yesBets.forEach((bet) => {
+                    userBetList.push({
+                        id: i.toString(),
+                        yesAmount: bet.amount.toString(),
+                        timestamp: bet.timestamp.toString()
+                    });
+                    totalBetAmount += parseInt(bet.amount);
                 });
-                //No Bet
-                marketBets["1"].forEach((bet) => {
-                    if (bet.user.toLowerCase() == smartAccount.address.toLowerCase()) {
-                        userBetList.push({
-                            id: i.toString(),
-                            noAmount: bet.amount.toString(),
-                            timestamp: bet.timestamp.toString()
-                        });
-                        totalBetAmount += parseInt(bet.amount);
-                    }
+                const noBets = marketBets.noBets;
+                noBets.forEach((bet) => {
+                    userBetList.push({
+                        id: i.toString(),
+                        noAmount: bet.amount.toString(),
+                        timestamp: bet.timestamp.toString()
+                    });
+                    totalBetAmount += parseInt(bet.amount);
                 });
             }
 

@@ -33,7 +33,8 @@ const useGetMarketDetail = () => {
                 });
                 setIsPageLoading(false);
             } catch (error) {
-                console.error(`Error getting market detail, ${error}`);
+                console.error(`Error getting market detail`);
+                console.error(error);
             }
         },
         [currentMarketID, predictionWorldContract]
