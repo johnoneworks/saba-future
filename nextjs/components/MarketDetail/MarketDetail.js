@@ -1,9 +1,9 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { BACKUP_IMAGE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { MarketContext } from "@/contexts/MarketContext";
+import { OpenNewWindow } from "@/utils/OpenNewWindow";
 import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useContext } from "react";
@@ -44,15 +44,7 @@ const MarketTitle = (props) => {
             {isTest && <TestDataMark />}
             <Box sx={{ display: "flex", mb: "10px" }}>
                 <CustomAvatar>
-                    <Box
-                        component="img"
-                        src={imageHash}
-                        onError={(e) => {
-                            e.target.src = { BACKUP_IMAGE }; // 設置備用圖片的 URL
-                        }}
-                        alt="titleImage"
-                        sx={{ width: "100%", height: "100%" }}
-                    />
+                    <Box component="img" src={imageHash} alt="titleImage" sx={{ width: "100%", height: "100%" }} />
                 </CustomAvatar>
                 <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "8px" }}>
                     {title}
@@ -84,7 +76,8 @@ const MarketTitle = (props) => {
 };
 
 const MarketDescription = (props) => {
-    const { description, resolverUrl } = props;
+    const { title, description, resolverUrl } = props;
+
     return (
         <Box sx={{ width: "100%" }}>
             <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
@@ -94,7 +87,7 @@ const MarketDescription = (props) => {
             <Box className={styles.descriptionBox} sx={{ my: 2, py: 2, bgcolor: "grey.200", borderRadius: 1 }}>
                 <Typography variant="subtitle2" component="" sx={{ px: 1 }}>
                     Resolution Source :{" "}
-                    <Link href={resolverUrl} color="primary" sx={{ display: "block", wordBreak: "break-all" }}>
+                    <Link color="primary" sx={{ display: "block", wordBreak: "break-all" }} onClick={() => OpenNewWindow(resolverUrl, title)}>
                         {resolverUrl}
                     </Link>
                 </Typography>
@@ -129,7 +122,7 @@ export default function MarketDetail() {
                             <ChartContainer />
                         </Grid>
                     </Grid>
-                    <MarketDescription description={marketDetail?.description} resolverUrl={marketDetail?.resolverUrl} />
+                    <MarketDescription title={marketDetail?.title} description={marketDetail?.description} resolverUrl={marketDetail?.resolverUrl} />
                 </>
             )}
         </>

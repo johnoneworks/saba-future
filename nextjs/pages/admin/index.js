@@ -28,18 +28,18 @@ export default function Admin() {
             setIsPageLoading(true);
             setSubmitButtonText("Creating");
             await createMarketWithGasless();
-            alert("Success!");
-        } catch (error) {
-            console.error(`Error creating market`);
-            console.error(error);
-            alert("Error!!");
-        } finally {
             setTitle("");
             setDescription("");
             setImageUrl("");
             setResolverUrl("");
             setTimestamp("");
             setIsTest(false);
+            alert("Success!");
+        } catch (error) {
+            console.error(`Error creating market`);
+            console.error(error);
+            alert("Error!!");
+        } finally {
             setIsPageLoading(false);
             setSubmitButtonText("Create Market");
         }
