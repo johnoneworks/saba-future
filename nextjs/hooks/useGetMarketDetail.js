@@ -17,12 +17,14 @@ const useGetMarketDetail = () => {
             try {
                 setIsPageLoading(true);
                 const market = await predictionWorldContract.markets(currentMarketID);
-                const date = moment.unix(market.info.endTimestamp / 1000).format("MMMM D, YYYY");
+                const date = moment.unix(market.info.endTimestamp / 1000);
+                const dateString = date.format("MMMM D, YYYY");
                 setMarketDetail({
                     id: currentMarketID,
                     title: market.info.question,
                     imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : BACKUP_IMAGE,
-                    endTimestamp: date,
+                    endTimestamp: dateString,
+                    endDate: date,
                     totalAmount: market.totalAmount,
                     totalYesAmount: market.totalYesAmount,
                     totalNoAmount: market.totalNoAmount,

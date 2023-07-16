@@ -11,7 +11,7 @@ import { Box, Checkbox, FormControlLabel, Grid, Typography } from "@mui/material
 import { useContext, useEffect, useState } from "react";
 
 const ShowMarkets = (props) => {
-    const { markets, account, showTest } = props;
+    const { markets, account, showTest, isEditable } = props;
 
     const [openMarkets, setOpenMarkets] = useState([]);
     const [closedMarkets, setClosedMarkets] = useState([]);
@@ -33,7 +33,7 @@ const ShowMarkets = (props) => {
                 openMarkets.reduce((accumulator, market) => {
                     accumulator.push(
                         <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                            <MarketCard market={market} currentUser={account} isClosed={false} isTest={market.isTest} />
+                            <MarketCard market={market} currentUser={account} isClosed={false} isTest={market.isTest} isEditable={isEditable} />
                         </Grid>
                     );
                     return accumulator;
@@ -87,7 +87,7 @@ export const Markets = () => {
                                 </div>
                             )}
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                <ShowMarkets markets={markets} account={account} showTest={showTest} />
+                                <ShowMarkets markets={markets} account={account} showTest={showTest} isEditable={smartAccount.isAdminUser} />
                             </Grid>
                         </>
                     )}

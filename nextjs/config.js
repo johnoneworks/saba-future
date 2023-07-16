@@ -16,8 +16,9 @@
 import { ChainId } from "@biconomy/core-types";
 
 export const chainId = ChainId.POLYGON_MAINNET;
-export const dappAPIKey = "pCbP-tMQV.b25fcd54-2590-4c4e-80a2-421fab61429b"; // TODO: should use .env
-export const providerUrl = "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvCxizWmyNG5yOeGoMqF1j-T" // TODO: should use .env
+// export const dappAPIKey = "pCbP-tMQV.b25fcd54-2590-4c4e-80a2-421fab61429b";
+export const dappAPIKey = "2fu2Q9CXC.d4df3fa8-3a7e-46d5-be06-046a3610bd83";
+export const providerUrl = "https://polygon-mainnet.g.alchemy.com/v2/nhiSvMpopvCxizWmyNG5yOeGoMqF1j-T";
 
 export const sureTokenAddress = "0xE2F9F99c8651B86D8D96437710FfaE3c9688dB3c";
 // export const predictionWorldAddress = "0x39a0D0715D61E6C553C9CE06ac026eEbDe5037bA";
@@ -25,7 +26,7 @@ export const predictionWorldAddress = "0x804Ebbb04702237e480606Edaa5CEb4EeD8AcC3
 export const earlyBirdAddress = "0x053956480291E63bA438Ac8cc4856cAf4Fb4D347";
 
 // export const chainId = ChainId.POLYGON_MUMBAI;
-// export const dappAPIKey = "esd34SaNJ.a28cf4df-6ee8-4c33-a016-85af6363651c";
+// export const dappAPIKey = "Ir4yxq_ay.ea92d93a-957b-499e-a185-4a4a5478a421";
 // export const providerUrl = "https://polygon-mumbai.g.alchemy.com/v2/B_OwiBiK0aenS3ooAxCMR9w45G1-gQ6Q";
 
 // export const sureTokenAddress = "0x0f07Fb259f8e322f5662f83528658207a4b97202";
