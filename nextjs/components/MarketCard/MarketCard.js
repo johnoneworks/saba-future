@@ -2,6 +2,7 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import { Avatar, Box, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import classnames from "classnames";
@@ -41,7 +42,7 @@ const CustomTypography = styled(Typography)({
     transform: "scale(0.8)"
 });
 
-export default function MarketCard({ market, currentUser, isClosed, isTest }) {
+export default function MarketCard({ market, currentUser, isClosed, isTest, isEditable }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { predictionWorldContract } = useContext(BiconomyAccountContext);
@@ -110,10 +111,23 @@ export default function MarketCard({ market, currentUser, isClosed, isTest }) {
         updateMarketDetail(marketID, predictionWorldContract);
     };
 
+    const handleEdit = (e) => {
+        e.stopPropagation();
+        const marketID = `${market.id}`;
+        router.push({
+            pathname: `/admin/${marketID}`,
+        });
+        return false;
+    }
+
     return (
         <Box onClick={handleSelectMarket}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
+                {
+                    isEditable &&
+                    <BorderColorOutlinedIcon onClick={handleEdit} className="float-right" fontSize="small" color="error" />
+                }
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
                         <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
