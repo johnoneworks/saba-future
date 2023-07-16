@@ -4,7 +4,7 @@ import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
-import SaveIcon from '@mui/icons-material/Save';
+import SaveIcon from "@mui/icons-material/Save";
 import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
@@ -22,27 +22,25 @@ export default function EditMarket() {
     const router = useRouter();
     const { id } = router.query;
     const { setIsPageLoading } = useContext(LoadingContext);
-    const [title, setTitle] = useState();
-    const [description, setDescription] = useState();
-    const [imageUrl, setImageUrl] = useState();
-    const [resolverUrl, setResolverUrl] = useState();
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
+    const [resolverUrl, setResolverUrl] = useState("");
     const [timestamp, setTimestamp] = useState();
-    const [date, setDate] = useState();
-    const [isTest, setIsTest] = useState();
-    const { provider, smartAccount, predictionWorldContract, predictionWorldInterface } = useContext(BiconomyAccountContext);
+    const [date, setDate] = useState("");
+    const [isTest, setIsTest] = useState(false);
+    const { provider, account, smartAccount, predictionWorldContract, predictionWorldInterface } = useContext(BiconomyAccountContext);
     const { marketDetail } = useContext(MarketContext);
     const { updateMarketDetail } = useGetMarketDetail();
 
     useEffect(() => {
-        console.log('ENTER EFFECT...')
-        if (id && predictionWorldContract && smartAccount && smartAccount.isAdminUser) {
+        if (id && account && smartAccount?.isAdminUser) {
             updateMarketDetail(id, predictionWorldContract);
         }
-    }, [router.isReady, smartAccount]);
-
+    }, [id, account]);
 
     useEffect(() => {
-        if (id && predictionWorldContract && smartAccount && smartAccount.isAdminUser) {
+        if (marketDetail) {
             setTitle(marketDetail.title);
             setDescription(marketDetail.description);
             setImageUrl(marketDetail.imageHash);
@@ -55,29 +53,29 @@ export default function EditMarket() {
         }
     }, [marketDetail]);
 
-    const handleSaveTitle = async (e) => {
+    const handleSaveTitle = async () => {
         await updateMarketInfoWithGasless("setMarketInfoQuestion", title);
-    }
+    };
 
-    const handleSaveDescription = async (e) => {
+    const handleSaveDescription = async () => {
         await updateMarketInfoWithGasless("setMarketInfoDescription", description);
-    }
+    };
 
-    const handleSaveImageUrl = async (e) => {
+    const handleSaveImageUrl = async () => {
         await updateMarketInfoWithGasless("setMarketInfoImage", imageUrl);
-    }
+    };
 
-    const handleSaveResolverUrl = async (e) => {
+    const handleSaveResolverUrl = async () => {
         await updateMarketInfoWithGasless("setMarketInfoResolverUrl", resolverUrl);
-    }
+    };
 
-    const handleSaveEndTimestamp = async (e) => {
+    const handleSaveEndTimestamp = async () => {
         await updateMarketInfoWithGasless("setMarketInfoEndTimestamp", timestamp);
-    }
+    };
 
-    const handleSaveIsTest = async (e) => {
+    const handleSaveIsTest = async () => {
         await updateMarketInfoWithGasless("setMarketInfoIsTest", isTest);
-    }
+    };
 
     const updateMarketInfoWithGasless = async (functionName, value) => {
         setIsPageLoading(true);
@@ -91,9 +89,9 @@ export default function EditMarket() {
             };
 
             const txResponse = await smartAccount.sendTransaction({ transaction });
-            console.log(`[UserOp hash] [${functionName}]`, txResponse.hash);
+            console.log(`[UserOp hash] [${functionName}]: ${txResponse.hash}`);
             const txReceipt = await txResponse.wait();
-            console.log(`[Tx hash] [${functionName}]`, txReceipt.transactionHash);
+            console.log(`[Tx hash] [${functionName}] ${txReceipt.transactionHash}`);
             await provider.getTransactionReceipt(txReceipt.transactionHash);
 
             await updateMarketDetail(id, predictionWorldContract);
@@ -146,10 +144,9 @@ export default function EditMarket() {
                         placeholder="Title"
                         autoComplete="off"
                         InputProps={{
-                            endAdornment:
-                                title &&
-                                title !== marketDetail.title &&
+                            endAdornment: title && title !== marketDetail.title && (
                                 <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveTitle} />
+                            )
                         }}
                     />
                     <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
@@ -164,10 +161,9 @@ export default function EditMarket() {
                         autoComplete="off"
                         multiline
                         InputProps={{
-                            endAdornment:
-                                description &&
-                                description !== marketDetail.description &&
+                            endAdornment: description && description !== marketDetail.description && (
                                 <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveDescription} />
+                            )
                         }}
                     />
                     <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
@@ -182,10 +178,9 @@ export default function EditMarket() {
                         placeholder="URL"
                         autoComplete="off"
                         InputProps={{
-                            endAdornment:
-                                imageUrl &&
-                                imageUrl !== marketDetail.imageHash &&
+                            endAdornment: imageUrl && imageUrl !== marketDetail.imageHash && (
                                 <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveImageUrl} />
+                            )
                         }}
                     />
                     <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
@@ -200,10 +195,9 @@ export default function EditMarket() {
                         placeholder="URL"
                         autoComplete="off"
                         InputProps={{
-                            endAdornment:
-                                resolverUrl &&
-                                resolverUrl !== marketDetail.resolverUrl &&
+                            endAdornment: resolverUrl && resolverUrl !== marketDetail.resolverUrl && (
                                 <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveResolverUrl} />
+                            )
                         }}
                     />
                     <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
@@ -222,25 +216,21 @@ export default function EditMarket() {
                             shrink: true
                         }}
                         InputProps={{
-                            endAdornment:
-                                timestamp &&
-                                timestamp !== marketDetail.endDate.valueOf() &&
+                            endAdornment: timestamp && timestamp !== marketDetail.endDate.valueOf() && (
                                 <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveEndTimestamp} />
+                            )
                         }}
                     />
-                    <div sx={{ mt: 2, mb: 1 }}>
+                    <div>
                         <FormControlLabel
                             label="Is this for testing?"
                             sx={{ mt: 2, mb: 1 }}
-                            control={<Checkbox checked={isTest} onChange={(e) => setIsTest(!isTest)} />}
+                            control={<Checkbox checked={isTest} onChange={() => setIsTest(!isTest)} />}
                         />
-                        {
-                            isTest !== marketDetail.isTest &&
-                            <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveIsTest} />
-                        }
+                        {isTest !== marketDetail.isTest && <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveIsTest} />}
                     </div>
                 </Box>
             </Container>
-        </Box >
+        </Box>
     );
 }
