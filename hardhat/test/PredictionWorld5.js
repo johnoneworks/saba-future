@@ -623,4 +623,114 @@ describe("PredictionWorld5", function () {
 
     });
 
+    describe("Update Market Info", function () {
+
+        it("Should update all of the values in info object", async function () {
+            const { predictionWorld, owner, other1, other2, other3 } = await loadFixture(deploySurePredictionWorldFixture);
+
+            // Create a market
+            await predictionWorld.createMarket(
+                dummyMarket1.question,
+                dummyMarket1.creatorImageHash,
+                dummyMarket1.description,
+                dummyMarket1.resolverUrl,
+                dummyMarket1.endTimestamp,
+                false
+            );
+
+            // Check original values.
+            let market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket1.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket1.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+            expect(market.info.isTest).to.equal(false);
+
+            // Update the market info
+            await predictionWorld.setMarketInfo(
+                0,
+                dummyMarket2.question,
+                dummyMarket2.creatorImageHash,
+                dummyMarket2.description,
+                dummyMarket2.resolverUrl,
+                dummyMarket2.endTimestamp,
+                true
+            );
+
+            // Check updated values.
+            market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket2.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket2.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket2.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+            expect(market.info.isTest).to.equal(true);
+
+            // Update each field.
+
+            await predictionWorld.setMarketQuestion(0, dummyMarket1.question);
+
+            market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket1.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket2.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket2.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+            expect(market.info.isTest).to.equal(true);
+
+            await predictionWorld.setMarketInfoImage(0, dummyMarket1.creatorImageHash);
+
+            market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket1.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket2.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+            expect(market.info.isTest).to.equal(true);
+
+            await predictionWorld.setMarketInfoDescription(0, dummyMarket1.description);
+
+            market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket1.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket1.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+            expect(market.info.isTest).to.equal(true);
+
+            await predictionWorld.setMarketInfoResolverUrl(0, dummyMarket1.resolverUrl);
+
+            market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket1.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket1.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+            expect(market.info.isTest).to.equal(true);
+
+            await predictionWorld.setMarketInfoEndTimestamp(0, dummyMarket1.endTimestamp);
+
+            market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket1.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket1.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+            expect(market.info.isTest).to.equal(true);
+
+            await predictionWorld.setMarketInfoIsTest(0, false);
+
+            market = await predictionWorld.markets(0);
+            expect(market.info.question).to.equal(dummyMarket1.question);
+            expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+            expect(market.info.description).to.equal(dummyMarket1.description);
+            expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+            expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+            expect(market.info.isTest).to.equal(false);
+
+        });
+
+    });
+
 });

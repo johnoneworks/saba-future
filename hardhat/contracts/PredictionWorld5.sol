@@ -75,12 +75,12 @@ contract PredictionWorld5 is Initializable {
     }
 
     function createMarket(
-        string memory _question,
-        string memory _creatorImageHash,
-        string memory _description,
-        string memory _resolverUrl,
+        string calldata _question,
+        string calldata _creatorImageHash,
+        string calldata _description,
+        string calldata _resolverUrl,
         uint256 _endTimestamp,
-        bool isTest
+        bool _isTest
     ) public onlyAdmin {
         uint256 timestamp = block.timestamp;
 
@@ -90,7 +90,7 @@ contract PredictionWorld5 is Initializable {
         market.info.creatorImageHash = _creatorImageHash;
         market.info.timestamp = timestamp;
         market.info.createdBy = msg.sender;
-        market.info.isTest = isTest;
+        market.info.isTest = _isTest;
         market.totalAmount = 0;
         market.totalYesAmount = 0;
         market.totalNoAmount = 0;
@@ -110,8 +110,65 @@ contract PredictionWorld5 is Initializable {
         );
     }
 
-    function setMarketInfo(uint256 _marketId, bool isTest) public onlyAdmin {
-        markets[_marketId].info.isTest = isTest;
+    // NOTICE: It'll update all of fields even if the value is empty.
+    function setMarketInfo(
+        uint256 _marketId,
+        string calldata _question,
+        string calldata _creatorImageHash,
+        string calldata _description,
+        string calldata _resolverUrl,
+        uint256 _endTimestamp,
+        bool _isTest
+    ) public onlyAdmin {
+        Market storage market = markets[_marketId];
+        market.info.question = _question;
+        market.info.creatorImageHash = _creatorImageHash;
+        market.info.description = _description;
+        market.info.resolverUrl = _resolverUrl;
+        market.info.endTimestamp = _endTimestamp;
+        market.info.isTest = _isTest;
+    }
+
+    function setMarketInfoQuestion(
+        uint256 _marketId,
+        string calldata _question
+    ) public onlyAdmin {
+        markets[_marketId].info.question = _question;
+    }
+
+    function setMarketInfoDescription(
+        uint256 _marketId,
+        string calldata _description
+    ) public onlyAdmin {
+        markets[_marketId].info.description = _description;
+    }
+
+    function setMarketInfoImage(
+        uint256 _marketId,
+        string calldata _Image
+    ) public onlyAdmin {
+        markets[_marketId].info.creatorImageHash = _Image;
+    }
+
+    function setMarketInfoResolverUrl(
+        uint256 _marketId,
+        string calldata _resolverUrl
+    ) public onlyAdmin {
+        markets[_marketId].info.resolverUrl = _resolverUrl;
+    }
+
+    function setMarketInfoEndTimestamp(
+        uint256 _marketId,
+        uint256 _endTimestamp
+    ) public onlyAdmin {
+        markets[_marketId].info.endTimestamp = _endTimestamp;
+    }
+
+    function setMarketInfoIsTest(
+        uint256 _marketId,
+        bool _isTest
+    ) public onlyAdmin {
+        markets[_marketId].info.isTest = _isTest;
     }
 
     function addYesBet(uint256 _marketId, uint256 _value) public payable {
@@ -150,8 +207,8 @@ contract PredictionWorld5 is Initializable {
 
     function getBets(
         uint256 _marketId
-    ) public view returns (Bet[] memory, Bet[] memory) {
-        Market storage market = markets[_marketId];
+    ) public view returns (Bet[] memory yesBets, Bet[] memory noBets) {
+        Market memory market = markets[_marketId];
         return (market.yesBets, market.noBets);
     }
 
@@ -169,7 +226,7 @@ contract PredictionWorld5 is Initializable {
         address _userAddress,
         uint256 _marketId
     ) public onlyAdmin {
-        Market storage market = markets[_marketId];
+        Market memory market = markets[_marketId];
         delete userYesBets[_userAddress][_marketId];
         for (uint i = 0; i < market.yesBets.length; i++) {
             if (market.yesBets[i].user == _userAddress) {
