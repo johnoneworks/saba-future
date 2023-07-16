@@ -4,6 +4,7 @@ import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import { Avatar, Box, Typography } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import { useRouter } from "next/router";
@@ -126,7 +127,9 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                 {isTest && <TestDataMark />}
                 {
                     isEditable &&
-                    <BorderColorOutlinedIcon onClick={handleEdit} className="float-right" fontSize="small" color="error" />
+                    <IconButton className="float-right" color="primary" aria-label="add to shopping cart" onClick={handleEdit} fontSize="small">
+                        <BorderColorOutlinedIcon />
+                    </IconButton>
                 }
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
