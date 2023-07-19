@@ -35,7 +35,7 @@ export default function BiconomyWallet() {
         setEmail,
         isSendAccountReady,
         setisSendAccountReady,
-        setEarlyBirdValidState,
+        setEarlyBirdValidState
     } = useContext(BiconomyAccountContext);
     const { setIsPageLoading } = useContext(LoadingContext);
 
@@ -53,11 +53,12 @@ export default function BiconomyWallet() {
         }
 
         if (!sdk.isInit) {
-            const signature = await sdk.whitelistUrl("https://saba-future.vercel.app");
+            const currentUrl = window.location.origin;
+            const signature = await sdk.whitelistUrl(currentUrl);
             await sdk.init({
                 chainId: ethers.utils.hexValue(chainId),
                 whitelistUrls: {
-                    "https://saba-future.vercel.app": signature
+                    [currentUrl]: signature
                 }
             });
         }
