@@ -8,6 +8,7 @@ import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
 import useLogout from "@/hooks/useLogout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -97,6 +98,12 @@ export const Header = () => {
         });
     };
 
+    const handleRedirectToAdminMarkets = () => {
+        router.push({
+            pathname: `/admin/markets`,
+        });
+    };
+
     const handleLogout = () => {
         if (account) {
             disconnectWallet();
@@ -137,7 +144,10 @@ export const Header = () => {
                     <div>
                         {
                             smartAccount && smartAccount.isAdminUser &&
-                            <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>{<ManageAccountsIcon />}</span>
+                            <>
+                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>{<AddIcon />}</span>
+                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>{<ManageAccountsIcon />}</span>
+                            </>
                         }
                         <span className="cursor-pointer" onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</span>
                     </div>

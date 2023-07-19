@@ -67,6 +67,7 @@ export default function Markets() {
                     timestamp: market.info.timestamp,
                     endTimestamp: market.info.endTimestamp,
                     isTest: market.info.isTest,
+                    isSuspended: market.isSuspended,
                 });
             }
             setMarkets(markets);

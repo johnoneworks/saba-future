@@ -669,7 +669,7 @@ describe("PredictionWorld5", function () {
 
             // Update each field.
 
-            await predictionWorld.setMarketQuestion(0, dummyMarket1.question);
+            await predictionWorld.setMarketInfoQuestion(0, dummyMarket1.question);
 
             market = await predictionWorld.markets(0);
             expect(market.info.question).to.equal(dummyMarket1.question);
