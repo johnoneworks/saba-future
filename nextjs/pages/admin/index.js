@@ -145,11 +145,11 @@ export default function Admin() {
                             End Date
                         </Typography>
                         <TextField
-                            type="date"
+                            type="datetime-local"
                             name="timestamp"
                             // value={timestamp}
                             onChange={(e) => {
-                                setTimestamp(e.target.valueAsDate?.getTime());
+                                setTimestamp(Date.parse(e.target.value));
                             }}
                             fullWidth
                             InputLabelProps={{

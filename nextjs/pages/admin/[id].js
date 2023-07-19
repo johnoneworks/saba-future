@@ -16,7 +16,7 @@ import { useContext, useEffect, useState } from "react";
  * 1. 暫時使用之編輯畫面，UI 團隊可以重新調整，目前感覺應該是 Dialog 更為適合
  */
 
-const dateFormat = "YYYY-MM-DD";
+const dateFormat = "YYYY-MM-DDTHH:mm";
 
 export default function EditMarket() {
     const router = useRouter();
@@ -204,12 +204,12 @@ export default function EditMarket() {
                         End Date
                     </Typography>
                     <TextField
-                        type="date"
+                        type="datetime-local"
                         name="timestamp"
                         value={date}
                         onChange={(e) => {
-                            setTimestamp(e.target.valueAsDate?.getTime());
-                            setDate(moment(e.target.valueAsDate).format(dateFormat));
+                            setTimestamp(Date.parse(e.target.value));
+                            setDate(moment(Date.parse(e.target.value)).format(dateFormat));
                         }}
                         fullWidth
                         InputLabelProps={{
