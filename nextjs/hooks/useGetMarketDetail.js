@@ -18,7 +18,7 @@ const useGetMarketDetail = () => {
                 setIsPageLoading(true);
                 const market = await predictionWorldContract.markets(currentMarketID);
                 const date = moment.unix(market.info.endTimestamp / 1000);
-                const dateString = date.format("MMMM D, YYYY");
+                const dateString = date.format("MMMM D, YYYY HH:mm");
                 setMarketDetail({
                     id: currentMarketID,
                     title: market.info.question,
