@@ -2,8 +2,10 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import BlockIcon from "@mui/icons-material/Block";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import { useRouter } from "next/router";
@@ -125,8 +127,14 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
                 {
+                    market.isSuspended &&
+                    <Tooltip title="Suspended">
+                        <BlockIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
+                    </Tooltip>
+                }
+                {
                     isEditable &&
-                    <IconButton className="float-right" color="primary" aria-label="add to shopping cart" onClick={handleEdit} fontSize="small">
+                    <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
                         <BorderColorOutlinedIcon />
                     </IconButton>
                 }

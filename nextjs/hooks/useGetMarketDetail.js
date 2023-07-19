@@ -32,6 +32,7 @@ const useGetMarketDetail = () => {
                     resolverUrl: market.info.resolverUrl,
                     isClose: market.marketClosed,
                     isTest: market.info.isTest,
+                    isSuspended: market.isSuspended,
                 });
                 setIsPageLoading(false);
             } catch (error) {
