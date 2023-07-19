@@ -37,21 +37,24 @@ const CustomAvatar = styled(Avatar)({
 });
 
 const MarketTitle = (props) => {
-    const { title, endTimestamp, totalAmount, imageHash, isTest } = props;
+    const { title, endTimestamp, totalAmount, imageHash, isTest, isMarketSuspended } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
     const totalSureAmount = `${totalAmount}`;
 
     return (
         <Box className={styles.marketTitle}>
             {isTest && <TestDataMark />}
-            <Chip
-                icon={<BlockIcon fontSize="small" />}
-                label="Suspended"
-                variant="outlined"
-                size="small"
-                color="error"
-                sx={{ display: "flex", justifyContent: "center", width: "110px", alignItems: "center", margin: "0 0 10px 0" }}
-            />
+            {
+                isMarketSuspended &&
+                <Chip
+                    icon={<BlockIcon fontSize="small" />}
+                    label="Suspended"
+                    variant="outlined"
+                    size="small"
+                    color="error"
+                    sx={{ display: "flex", justifyContent: "center", width: "110px", alignItems: "center", margin: "0 0 10px 0" }}
+                />
+            }
             <Box sx={{ display: "flex", mb: "10px" }}>
                 <CustomAvatar>
                     <Box component="img" src={imageHash} alt="titleImage" sx={{ width: "100%", height: "100%" }} />
@@ -122,6 +125,7 @@ export default function MarketDetail() {
                         totalAmount={marketDetail?.totalAmount}
                         imageHash={marketDetail?.imageHash}
                         isTest={marketDetail?.isTest}
+                        isMarketSuspended={isMarketSuspended}
                     />
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && !isMarketSuspended && (
