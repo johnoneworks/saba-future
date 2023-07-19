@@ -82,6 +82,7 @@ const useGetMarkets = () => {
                     marketClosed: market.marketClosed,
                     outcome: market.outcome,
                     isTest: market.info.isTest,
+                    isSuspended: market.isSuspended,
                 };
 
                 if (market.marketClosed) {

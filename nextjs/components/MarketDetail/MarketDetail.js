@@ -4,7 +4,9 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
+import BlockIcon from "@mui/icons-material/Block";
 import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
+import Chip from "@mui/material/Chip";
 import { styled } from "@mui/system";
 import { useContext } from "react";
 import styles from "./MarketDetail.module.scss";
@@ -42,6 +44,14 @@ const MarketTitle = (props) => {
     return (
         <Box className={styles.marketTitle}>
             {isTest && <TestDataMark />}
+            <Chip
+                icon={<BlockIcon fontSize="small" />}
+                label="Suspended"
+                variant="outlined"
+                size="small"
+                color="error"
+                sx={{ display: "flex", justifyContent: "center", width: "110px", alignItems: "center", margin: "0 0 10px 0" }}
+            />
             <Box sx={{ display: "flex", mb: "10px" }}>
                 <CustomAvatar>
                     <Box component="img" src={imageHash} alt="titleImage" sx={{ width: "100%", height: "100%" }} />
@@ -100,6 +110,7 @@ export default function MarketDetail() {
     const { account } = useContext(BiconomyAccountContext);
     const { marketDetail } = useContext(MarketContext);
     const isMarketClose = marketDetail?.isClose === true;
+    const isMarketSuspended = marketDetail?.isSuspended === true;
 
     return (
         <>
@@ -113,12 +124,12 @@ export default function MarketDetail() {
                         isTest={marketDetail?.isTest}
                     />
                     <Grid container spacing={2} className={styles.marketContainer}>
-                        {!isMarketClose && (
+                        {!isMarketClose && !isMarketSuspended && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
                                 <BetArea id={marketDetail?.id} market={marketDetail} />
                             </Grid>
                         )}
-                        <Grid item xs={12} md={isMarketClose ? 12 : 6} className={styles.chartContainer}>
+                        <Grid item xs={12} md={(isMarketClose || isMarketSuspended) ? 12 : 6} className={styles.chartContainer}>
                             <ChartContainer />
                         </Grid>
                     </Grid>
