@@ -67,7 +67,7 @@ export default function Markets() {
                     timestamp: market.info.timestamp,
                     endTimestamp: market.info.endTimestamp,
                     isTest: market.info.isTest,
-                    isSuspended: market.isSuspended,
+                    isSuspended: market.isSuspended
                 });
             }
             setMarkets(markets);
@@ -87,7 +87,7 @@ export default function Markets() {
                 <Box className={styles.adminMarketContent}>
                     <Link href="/admin">
                         <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
-                            Back
+                            Create Market
                         </Button>
                     </Link>
                     <Grid columns={{ xs: 12, sm: 12, md: 12 }}>
