@@ -12,10 +12,16 @@
     width: 100%;
     background-color: #1A84F2;
     color: #fff;
+    align-items: center;
 }
 
 .logo {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .headerInfo {

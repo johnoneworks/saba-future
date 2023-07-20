@@ -8,11 +8,11 @@ import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
 import useLogout from "@/hooks/useLogout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { styled } from "@mui/system";
@@ -94,13 +94,13 @@ export const Header = () => {
 
     const handleRedirectToAdmin = () => {
         router.push({
-            pathname: `/admin`,
+            pathname: `/admin`
         });
     };
 
     const handleRedirectToAdminMarkets = () => {
         router.push({
-            pathname: `/admin/markets`,
+            pathname: `/admin/markets`
         });
     };
 
@@ -142,14 +142,19 @@ export const Header = () => {
                         <span style={{ marginLeft: 10 }}>{account ? "Saba Future" : "Wallet Connecting..."} </span>
                     </div>
                     <div>
-                        {
-                            smartAccount && smartAccount.isAdminUser &&
+                        {smartAccount && smartAccount.isAdminUser && (
                             <>
-                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>{<AddIcon />}</span>
-                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>{<ManageAccountsIcon />}</span>
+                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>
+                                    {<AddIcon />}
+                                </span>
+                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>
+                                    {<ManageAccountsIcon />}
+                                </span>
                             </>
-                        }
-                        <span className="cursor-pointer" onClick={handleLogout}>{account ? <LogoutIcon /> : <LoginIcon />}</span>
+                        )}
+                        <span className="cursor-pointer" onClick={handleLogout}>
+                            {account ? <LogoutIcon /> : <LoginIcon />}
+                        </span>
                     </div>
                 </div>
                 {account && (
@@ -167,10 +172,9 @@ export const Header = () => {
                     </div>
                 )}
             </div>
-            {
-                smartAccount &&
+            {smartAccount && (
                 <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
-            }
+            )}
             <NewbieDialog />
         </>
     );
