@@ -6,7 +6,7 @@
     padding: 16px;
     width: 100%;
     background-color: #fff;
-    border: 1px solid #D1D5DB;
+    border: 1px solid #d1d5db;
     border-radius: 8px;
     text-align: center;
 
@@ -14,18 +14,23 @@
         border-radius: 4px;
         padding: 10px;
         width: 100%;
-        background-color: #1A84F2;
+        background-color: #1a84f2;
         color: #fff;
         text-align: center;
 
         &:hover {
             background-color: #4fa4ff;
         }
+
+        &:disabled {
+            background-color: #c6dcfc;
+            color: #fff;
+        }
     }
 
     .title {
         padding-bottom: 10px;
-        color: #1A84F2;
+        color: #1a84f2;
         font-weight: bold;
         width: 100%;
     }
@@ -34,19 +39,19 @@
 .volumeButton {
     padding: 6px;
     width: 100%;
-    background-color: #F2F5FA;
+    background-color: #f2f5fa;
     border-radius: 4px;
 
-    +.volumeButton {
+    + .volumeButton {
         margin-top: 8px;
     }
 
     &.isYES {
-        color: #3FB06B;
+        color: #3fb06b;
     }
 
     &.isNO {
-        color: #E84D4D;
+        color: #e84d4d;
     }
 
     &.selected {

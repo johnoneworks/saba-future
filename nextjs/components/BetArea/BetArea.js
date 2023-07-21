@@ -50,7 +50,7 @@ export const BetArea = (props) => {
     const { updateBetsInfo } = useGetBetsInfo();
     const { updateStatements } = useGetUserStatement();
 
-    const [selected, setSelected] = useState(BET_TYPE.YES);
+    const [selected, setSelected] = useState();
     const [input, setInput] = useState("");
 
     const handleTrade = async () => {
@@ -136,7 +136,7 @@ export const BetArea = (props) => {
                     }}
                 />
             </Box>
-            <Button className={styles.betButton} onClick={handleTrade}>
+            <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !input}>
                 Trade
             </Button>
         </Box>
