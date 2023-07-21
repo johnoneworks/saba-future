@@ -16,7 +16,7 @@ export default function PageLoading() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    zIndex: 10,
+                    zIndex: 9999,
                     bgcolor: "rgba(32, 32, 32, 0.5)"
                 }}
             >

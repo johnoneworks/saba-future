@@ -40,7 +40,6 @@ export default function BiconomyWallet() {
     const { setIsPageLoading } = useContext(LoadingContext);
 
     const connectWallet = useCallback(async () => {
-        setIsPageLoading(true);
         console.log("connectWallet()");
         if (typeof window === "undefined") return;
         console.log(`socialLoginSDK: ${socialLoginSDK}`);
@@ -68,6 +67,7 @@ export default function BiconomyWallet() {
         } else {
             const web3Provider = new ethers.providers.Web3Provider(sdk.provider);
             const accounts = await web3Provider.listAccounts();
+            setIsPageLoading(true);
             console.log(`account:${accounts[0]}`);
 
             const smartAccountOptions = {
