@@ -14,7 +14,7 @@ import { useContext, useEffect } from "react";
  */
 
 const useGetMarkets = () => {
-    const { markets, setMarkets } = useContext(MarketContext);
+    const { setMarketCount, markets, setMarkets } = useContext(MarketContext);
     const { account, smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
     const { setIsMarketLoading } = useContext(LoadingContext);
 
@@ -65,7 +65,7 @@ const useGetMarkets = () => {
             setIsMarketLoading(true);
             let marketCount = await predictionWorldContract.totalMarkets();
             let tempMarkets = [];
-            setMarkets(new Array(marketCount.toNumber()));
+            setMarketCount(marketCount.toNumber());
 
             for (let i = 0; i < marketCount; i++) {
                 let market = await predictionWorldContract.markets(i);
@@ -82,7 +82,7 @@ const useGetMarkets = () => {
                     marketClosed: market.marketClosed,
                     outcome: market.outcome,
                     isTest: market.info.isTest,
-                    isSuspended: market.isSuspended,
+                    isSuspended: market.isSuspended
                 };
 
                 if (market.marketClosed) {

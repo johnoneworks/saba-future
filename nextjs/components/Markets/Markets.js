@@ -8,10 +8,13 @@ import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import styles from "@/styles/Home.module.scss";
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 
 const ShowMarkets = (props) => {
-    const { markets, account, showTest, isEditable } = props;
+    const router = useRouter();
+    const { markets } = useContext(MarketContext);
+    const { account, showTest, isEditable } = props;
 
     const [openMarkets, setOpenMarkets] = useState([]);
     const [closedMarkets, setClosedMarkets] = useState([]);
@@ -25,7 +28,7 @@ const ShowMarkets = (props) => {
 
     useEffect(() => {
         filterMarkets();
-    }, [showTest, markets.length]);
+    }, [showTest, router.pathname, markets.length]);
 
     return (
         <>
@@ -66,14 +69,14 @@ export const Markets = () => {
     const { account, smartAccount } = useContext(BiconomyAccountContext);
     const { currentMenu, currentMarketID } = useContext(PageContext);
     const { isMarketLoading } = useContext(LoadingContext);
-    const { markets } = useContext(MarketContext);
+    const { marketCount, markets } = useContext(MarketContext);
     const [showTest, setShowTest] = useState(false);
 
     return (
         <>
             {account && currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
                 <>
-                    {isMarketLoading && markets && <LoadingSkeleton amount={markets.length} />}
+                    {isMarketLoading && marketCount != 0 && <LoadingSkeleton amount={marketCount} />}
 
                     {!isMarketLoading && markets && (
                         <>
@@ -87,7 +90,7 @@ export const Markets = () => {
                                 </div>
                             )}
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                <ShowMarkets markets={markets} account={account} showTest={showTest} isEditable={smartAccount.isAdminUser} />
+                                <ShowMarkets account={account} showTest={showTest} isEditable={smartAccount.isAdminUser} />
                             </Grid>
                         </>
                     )}

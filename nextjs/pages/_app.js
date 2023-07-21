@@ -43,6 +43,7 @@ export default function App({ Component, pageProps }) {
     const [currentMarketID, setCurrentMarketID] = useState(defaultMarketID);
 
     //Markets Context
+    const [marketCount, setMarketCount] = useState(0);
     const [markets, setMarkets] = useState();
     const [yesInfo, setYesInfo] = useState([]);
     const [noInfo, setNoInfo] = useState([]);
@@ -106,12 +107,14 @@ export default function App({ Component, pageProps }) {
                     earlyBirdInterface,
                     setEarlyBirdInterface,
                     earlyBirdValidState,
-                    setEarlyBirdValidState,
+                    setEarlyBirdValidState
                 }}
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
                     <PageContext.Provider value={{ currentMenu, setCurrentMenu, currentMarketID, setCurrentMarketID }}>
-                        <MarketContext.Provider value={{ markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo, marketDetail, setMarketDetail }}>
+                        <MarketContext.Provider
+                            value={{ marketCount, setMarketCount, markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo, marketDetail, setMarketDetail }}
+                        >
                             <UserInfoContext.Provider
                                 value={{
                                     balance,
