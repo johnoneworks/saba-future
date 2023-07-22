@@ -15,6 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import dynamic from "next/dynamic";
@@ -145,10 +146,18 @@ export const Header = () => {
                         {smartAccount && smartAccount.isAdminUser && (
                             <>
                                 <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>
-                                    {<AddIcon />}
+                                    {
+                                        <Tooltip title="Create a market">
+                                            <AddIcon />
+                                        </Tooltip>
+                                    }
                                 </span>
                                 <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>
-                                    {<ManageAccountsIcon />}
+                                    {
+                                        <Tooltip title="Manage markets">
+                                            <ManageAccountsIcon />
+                                        </Tooltip>
+                                    }
                                 </span>
                             </>
                         )}
