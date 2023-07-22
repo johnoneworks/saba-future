@@ -130,13 +130,13 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
                 {
-                    market.isSuspended &&
+                    !isClosed && market.isSuspended &&
                     <Tooltip title="Suspended">
                         <BlockIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
                     </Tooltip>
                 }
                 {
-                    (market.endTimestamp < Date.now()) &&
+                    !isClosed && (market.endTimestamp < Date.now()) &&
                     <Tooltip title="Time Over">
                         <AccessAlarmIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
                     </Tooltip>
