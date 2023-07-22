@@ -4,10 +4,12 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import BlockIcon from "@mui/icons-material/Block";
 import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/system";
+import moment from "moment";
 import { useContext } from "react";
 import styles from "./MarketDetail.module.scss";
 
@@ -37,7 +39,7 @@ const CustomAvatar = styled(Avatar)({
 });
 
 const MarketTitle = (props) => {
-    const { title, endTimestamp, totalAmount, imageHash, isTest, isMarketSuspended } = props;
+    const { title, endTimestamp, totalAmount, imageHash, isTest, isMarketSuspended, isTimeOver } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
     const totalSureAmount = `${totalAmount}`;
 
@@ -49,6 +51,17 @@ const MarketTitle = (props) => {
                 <Chip
                     icon={<BlockIcon fontSize="small" />}
                     label="Suspended"
+                    variant="outlined"
+                    size="small"
+                    color="error"
+                    sx={{ display: "flex", justifyContent: "center", width: "110px", alignItems: "center", margin: "0 0 10px 0" }}
+                />
+            }
+            {
+                isTimeOver &&
+                <Chip
+                    icon={<AccessAlarmIcon fontSize="small" />}
+                    label="Time Over"
                     variant="outlined"
                     size="small"
                     color="error"
@@ -114,6 +127,7 @@ export default function MarketDetail() {
     const { marketDetail } = useContext(MarketContext);
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
+    const isTimeOver = marketDetail?.endDate < moment();
 
     return (
         <>
@@ -125,15 +139,16 @@ export default function MarketDetail() {
                         totalAmount={marketDetail?.totalAmount}
                         imageHash={marketDetail?.imageHash}
                         isTest={marketDetail?.isTest}
-                        isMarketSuspended={isMarketSuspended}
+                        isMarketSuspended={!isMarketClose && isMarketSuspended}
+                        isTimeOver={!isMarketClose && isTimeOver}
                     />
                     <Grid container spacing={2} className={styles.marketContainer}>
-                        {!isMarketClose && !isMarketSuspended && (
+                        {!isMarketClose && !isMarketSuspended && !isTimeOver && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
                                 <BetArea id={marketDetail?.id} market={marketDetail} />
                             </Grid>
                         )}
-                        <Grid item xs={12} md={(isMarketClose || isMarketSuspended) ? 12 : 6} className={styles.chartContainer}>
+                        <Grid item xs={12} md={(isMarketClose || isMarketSuspended || isTimeOver) ? 12 : 6} className={styles.chartContainer}>
                             <ChartContainer />
                         </Grid>
                     </Grid>

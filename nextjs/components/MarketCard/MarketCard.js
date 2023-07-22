@@ -2,6 +2,7 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import BlockIcon from "@mui/icons-material/Block";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
@@ -132,6 +133,12 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                     market.isSuspended &&
                     <Tooltip title="Suspended">
                         <BlockIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
+                    </Tooltip>
+                }
+                {
+                    (market.endTimestamp < Date.now()) &&
+                    <Tooltip title="Time Over">
+                        <AccessAlarmIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
                     </Tooltip>
                 }
                 {
