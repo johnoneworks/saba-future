@@ -74,8 +74,10 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     }
     const outcomeValue = market.outcome ? "Yes" : "No";
     const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
-    const bonus = market.outcome ? market.totalYesAmount : market.totalNoAmount;
-    const cardValueTitle = isClosed ? ["Outcome", "Winners Count", "Bonus"] : ["Volume", "Yes", "No"];
+    const bonus = market.outcome
+        ? market.totalYesAmount > 0 ? `${Math.floor((market.totalNoAmount * 100) / market.totalYesAmount) - 1} %` : "-"
+        : market.totalNoAmount > 0 ? `${Math.floor((market.totalYesAmount * 100) / market.totalNoAmount) - 1} %` : "-";
+    const cardValueTitle = isClosed ? ["Outcome", "Winners Count", "Profit"] : ["Volume", "Yes", "No"];
     const cardValues = [
         {
             title: cardValueTitle[0],
@@ -179,15 +181,18 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                             );
                         } else {
                             displayElement = (
-                                <Box className={styles.info}>
-                                    <Typography variant="body2" sx={{ fontWeight: "bold", mr: "6px" }}>
-                                        {cardValueTitle[2]}
-                                    </Typography>
-                                    <Box className={styles.sureGroup}>
-                                        <Typography variant="filled">{bonus.toString()}</Typography>
-                                        <CustomTypography variant="body2">SURE</CustomTypography>
+                                <Box className={styles.sureGroup}>
+                                    <Box className={styles.info}>
+                                        <Typography variant="body2" sx={{ fontWeight: "bold", mr: "6px" }}>
+                                            {cardValueTitle[2]}
+                                        </Typography>
+                                        <Box className={styles.sureGroup}>
+                                            <Typography variant="filled">{bonus.toString()}</Typography>
+                                        </Box>
                                     </Box>
+                                    <CustomTypography variant="body2">possible fee included</CustomTypography>
                                 </Box>
+
                             );
                         }
 
