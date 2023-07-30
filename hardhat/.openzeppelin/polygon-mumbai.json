@@ -1,20 +1,17 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0x8adcEa9FD9bFdc60283bae0f7db88be3d5e07C58",
-    "txHash": "0x0dc73d7445c512bd9ad8bb0d56f9c099c1ce34ef240a25bcc141ec5e3c07dbf7"
+    "address": "0xC63B3305C5816eeEcC9566e72b674CE62132F89c"
   },
   "proxies": [
     {
-      "address": "0x92eE4757F0f83f0Ab7290434f75cA9512b17e892",
-      "txHash": "0x07d2379fe9e5d1ffc90cc6c4a92896ec25ae5320d6b3bb27b6c87f1e1b7f200b",
+      "address": "0x1EB7cf5ba1e2F4E657fb18693bb3646F642A62Bb",
       "kind": "transparent"
     }
   ],
   "impls": {
-    "0ac8fa588106db6ee9bf936631fc973788d71ffb5d5a2dc95a2299e3b22be6c4": {
-      "address": "0xB177993a2ACFf972540B0f3Aeb9E402a29ad17E6",
-      "txHash": "0xfa52b771e2555db932db21a57c631e0aabd7ce7b838ca55328a51847c4ec9e7f",
+    "55cb9e1ff3b0ada26bfdf02631ebd00dea437a8c499e7e25ebd0cc85dba3f686": {
+      "address": "0x1515F2c554273694B0CEcFD5908360873a60729a",
       "layout": {
         "solcVersion": "0.8.18",
         "storage": [
@@ -24,7 +21,7 @@
             "slot": "0",
             "type": "t_uint8",
             "contract": "Initializable",
-            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
             "retypedFrom": "bool"
           },
           {
@@ -33,10 +30,10 @@
             "slot": "0",
             "type": "t_bool",
             "contract": "Initializable",
-            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
           },
           {
-            "label": "owner",
+            "label": "commissionAddress",
             "offset": 2,
             "slot": "0",
             "type": "t_address",
@@ -44,7 +41,7 @@
             "src": "contracts\\PredictionWorld4.sol:11"
           },
           {
-            "label": "sureToken",
+            "label": "owner",
             "offset": 0,
             "slot": "1",
             "type": "t_address",
@@ -52,68 +49,52 @@
             "src": "contracts\\PredictionWorld4.sol:12"
           },
           {
-            "label": "totalMarkets",
+            "label": "sureToken",
             "offset": 0,
             "slot": "2",
-            "type": "t_uint256",
+            "type": "t_address",
             "contract": "PredictionWorld4",
             "src": "contracts\\PredictionWorld4.sol:13"
           },
           {
-            "label": "numOfEarlyBirdsAllowed",
+            "label": "totalMarkets",
             "offset": 0,
             "slot": "3",
-            "type": "t_uint32",
-            "contract": "PredictionWorld4",
-            "src": "contracts\\PredictionWorld4.sol:15"
-          },
-          {
-            "label": "amountOfFreeTokenForEarlyBird",
-            "offset": 0,
-            "slot": "4",
             "type": "t_uint256",
             "contract": "PredictionWorld4",
-            "src": "contracts\\PredictionWorld4.sol:17"
-          },
-          {
-            "label": "currentEarlyBirdCount",
-            "offset": 0,
-            "slot": "5",
-            "type": "t_uint32",
-            "contract": "PredictionWorld4",
-            "src": "contracts\\PredictionWorld4.sol:19"
+            "src": "contracts\\PredictionWorld4.sol:14"
           },
           {
             "label": "markets",
             "offset": 0,
-            "slot": "6",
-            "type": "t_mapping(t_uint256,t_struct(Market)1970_storage)",
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)2181_storage)",
             "contract": "PredictionWorld4",
-            "src": "contracts\\PredictionWorld4.sol:21"
+            "src": "contracts\\PredictionWorld4.sol:16"
           },
           {
             "label": "winAmounts",
             "offset": 0,
-            "slot": "7",
+            "slot": "5",
             "type": "t_mapping(t_address,t_uint256)",
             "contract": "PredictionWorld4",
-            "src": "contracts\\PredictionWorld4.sol:22"
+            "src": "contracts\\PredictionWorld4.sol:17"
           },
           {
             "label": "winAddresses",
             "offset": 0,
-            "slot": "8",
+            "slot": "6",
             "type": "t_array(t_address)dyn_storage",
             "contract": "PredictionWorld4",
-            "src": "contracts\\PredictionWorld4.sol:23"
+            "src": "contracts\\PredictionWorld4.sol:18"
           },
           {
-            "label": "earlyBirds",
+            "label": "adminAddresses",
             "offset": 0,
-            "slot": "9",
+            "slot": "7",
             "type": "t_mapping(t_address,t_bool)",
             "contract": "PredictionWorld4",
-            "src": "contracts\\PredictionWorld4.sol:200"
+            "src": "contracts\\PredictionWorld4.sol:20"
           }
         ],
         "types": {
@@ -125,7 +106,7 @@
             "label": "address[]",
             "numberOfBytes": "32"
           },
-          "t_array(t_struct(Bet)1992_storage)dyn_storage": {
+          "t_array(t_struct(Bet)2205_storage)dyn_storage": {
             "label": "struct PredictionWorld4.Bet[]",
             "numberOfBytes": "32"
           },
@@ -141,7 +122,7 @@
             "label": "mapping(address => uint256)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(Market)1970_storage)": {
+          "t_mapping(t_uint256,t_struct(Market)2181_storage)": {
             "label": "mapping(uint256 => struct PredictionWorld4.Market)",
             "numberOfBytes": "32"
           },
@@ -149,7 +130,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Bet)1992_storage": {
+          "t_struct(Bet)2205_storage": {
             "label": "struct PredictionWorld4.Bet",
             "members": [
               {
@@ -173,7 +154,7 @@
             ],
             "numberOfBytes": "96"
           },
-          "t_struct(Info)1985_storage": {
+          "t_struct(Info)2198_storage": {
             "label": "struct PredictionWorld4.Info",
             "members": [
               {
@@ -217,11 +198,17 @@
                 "type": "t_string_storage",
                 "offset": 0,
                 "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
               }
             ],
-            "numberOfBytes": "224"
+            "numberOfBytes": "256"
           },
-          "t_struct(Market)1970_storage": {
+          "t_struct(Market)2181_storage": {
             "label": "struct PredictionWorld4.Market",
             "members": [
               {
@@ -232,62 +219,3598 @@
               },
               {
                 "label": "info",
-                "type": "t_struct(Info)1985_storage",
+                "type": "t_struct(Info)2198_storage",
                 "offset": 0,
                 "slot": "1"
               },
               {
                 "label": "yesBets",
-                "type": "t_array(t_struct(Bet)1992_storage)dyn_storage",
+                "type": "t_array(t_struct(Bet)2205_storage)dyn_storage",
                 "offset": 0,
-                "slot": "8"
+                "slot": "9"
               },
               {
                 "label": "noBets",
-                "type": "t_array(t_struct(Bet)1992_storage)dyn_storage",
+                "type": "t_array(t_struct(Bet)2205_storage)dyn_storage",
                 "offset": 0,
-                "slot": "9"
+                "slot": "10"
               },
               {
                 "label": "totalAmount",
                 "type": "t_uint256",
                 "offset": 0,
-                "slot": "10"
+                "slot": "11"
               },
               {
                 "label": "totalYesAmount",
                 "type": "t_uint256",
                 "offset": 0,
-                "slot": "11"
+                "slot": "12"
               },
               {
                 "label": "totalNoAmount",
                 "type": "t_uint256",
                 "offset": 0,
-                "slot": "12"
+                "slot": "13"
               },
               {
                 "label": "marketClosed",
                 "type": "t_bool",
                 "offset": 0,
-                "slot": "13"
+                "slot": "14"
               },
               {
                 "label": "outcome",
                 "type": "t_bool",
                 "offset": 1,
-                "slot": "13"
+                "slot": "14"
               }
             ],
-            "numberOfBytes": "448"
+            "numberOfBytes": "480"
           },
           "t_uint256": {
             "label": "uint256",
             "numberOfBytes": "32"
           },
-          "t_uint32": {
-            "label": "uint32",
-            "numberOfBytes": "4"
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "16e4b0f83c2b27595c2fcdc24be51f8af8e3d751c931bf3100b21276bd681aea": {
+      "address": "0x44fc3227DA028cA23874A005eafC28510C92d5D0",
+      "txHash": "0xdbf772750bc9f68de857fc14d90e68a197b8802e4928d4ac2136ae6edafd7ddc",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "54f5acb9a7011123b2425b27fdfd133b51aa39b13575898ff73b3192e17c5917": {
+      "address": "0xd5f620884228BFb88A6cbD9fCdfB397F1527bA69",
+      "txHash": "0x20cb0d92f935230dd9bf27ca9003f0738b3d90f469b1ff32b291bb6e9e95b5c6",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "8073c07f6ee55e8fd6a9dbd652563c27d0c9e8ca030a864d939f944f7c716082": {
+      "address": "0xcEE6fF0Ae0d4408f2CADa4314bc4E76b9cc12B8E",
+      "txHash": "0x7eecdb18b19787299467620a7f2e6a7aa8c0047313d5df2f407b92c4e8fbb055",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "51dd14964ddaa42d554efc6c5ed4a7317e7017c82ab660991fe044cd97529dea": {
+      "address": "0x66cc3b0B062d0fF3Fd871bE26691d900107Ae6bE",
+      "txHash": "0xb46a31ac83427e7358c971b79f2e1f819d4c82e393e6d8f99f03a2a594ea1f7c",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "72e69ea8e36f368fb3d74820584847bd004de59081b2e0169eb1782a7010f58e": {
+      "address": "0xcf0877620f3006B34CEf59e84d494617Baa91dD6",
+      "txHash": "0x681c263c1ef5c3efc78362c1bc4e8d83f28180f0b5daa1ae0f6a3561d348c188",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "30e4306ffd4c10b7d8ab5acbc76302afc0eea31d3235a02af01549fe21f4af15": {
+      "address": "0x1Cc77944Aae893780Ac78B40740c5a8432060C4f",
+      "txHash": "0x543d9a23755cdfba11bad9fd8d53b2b0f267527b5763fc8a9b3dfc1b9e5ab016",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "49dae6b871b1a3b539b48cea9ca3e38a33ed8a8f5fa69f426eba728bdf5a2285": {
+      "address": "0xAee4EE5117aF5f6e9De9a8b22320dD09519A7802",
+      "txHash": "0x3aec05c3ac4f177f69e0b47a60935b733fa2345fdd856b7fe52602b7cb910aa4",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "c35256a081b62ba5b652073c12dd6e64991c186914f6f8851545bdb710bdaeb9": {
+      "address": "0x2Dc79aB5F0B9B508F9DD5cCf46A70936cE612af1",
+      "txHash": "0x97809856a7b8551177e725de1006d40311fadea2f2be8c690f24f58de0faced5",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "873e16f1f96f6790bd6c4cc8758d2d55e6eb6e28774148b774b9355837a71aa8": {
+      "address": "0x39E40A8f20f5671a7E9CEf00Dc1370041897f571",
+      "txHash": "0x0ef2803d1e5f9ca6e7b3f1150fc97042b9eb7b3846c48ef08ca9fc3c870a64d3",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "c135de23164554eb5e2b1da001ba240e99e94fb350fbcf8d74e955480aa9d056": {
+      "address": "0x1A6E33BAd25F3Bdb40f569D492FF08Af8915B3AE",
+      "txHash": "0xa527803f5dee98080bd8415cf12a6fecc49df18c0acf409cef29f164ada54699",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1280_storage)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))",
+            "contract": "PredictionWorld5",
+            "src": "contracts\\PredictionWorld5.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1304_storage)dyn_storage": {
+            "label": "struct PredictionWorld5.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld5.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1304_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1280_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld5.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1304_storage": {
+            "label": "struct PredictionWorld5.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1297_storage": {
+            "label": "struct PredictionWorld5.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1280_storage": {
+            "label": "struct PredictionWorld5.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1297_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1304_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "db1a57ecfd61b811e8e54b39c899515789b334829659780420a099d5c049cec0": {
+      "address": "0x0A23047e425c718aDf198A3b8A8C9CAEF79d158f",
+      "txHash": "0x386444189aa03dd2ac67a200c7da1070951b46d29d496783f47603b88eadaf54",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1282_storage)",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1306_storage)dyn_storage))",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1306_storage)dyn_storage))",
+            "contract": "PredictionWorld6",
+            "src": "contracts\\PredictionWorld6.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1306_storage)dyn_storage": {
+            "label": "struct PredictionWorld6.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1306_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld6.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1306_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld6.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1282_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld6.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1306_storage": {
+            "label": "struct PredictionWorld6.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1299_storage": {
+            "label": "struct PredictionWorld6.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1282_storage": {
+            "label": "struct PredictionWorld6.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1299_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1306_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1306_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              },
+              {
+                "label": "isSuspended",
+                "type": "t_bool",
+                "offset": 2,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "51c03be4b72f92102b120fbd720c76f77ab9ffd836d270973b38eceab7526dc8": {
+      "address": "0x0a3595d8f5FB0Ee1b03f3706eE48b5690AAC375C",
+      "txHash": "0xbd982b3a1fe7095c0cb3ab640768fa65d2e2166ac7acca99a5d242c5ab73892c",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "commissionAddress",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:11"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:12"
+          },
+          {
+            "label": "sureToken",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:13"
+          },
+          {
+            "label": "totalMarkets",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:14"
+          },
+          {
+            "label": "markets",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint256,t_struct(Market)1283_storage)",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:16"
+          },
+          {
+            "label": "winAmounts",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:17"
+          },
+          {
+            "label": "winAddresses",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:18"
+          },
+          {
+            "label": "adminAddresses",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:20"
+          },
+          {
+            "label": "userYesBets",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1307_storage)dyn_storage))",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:27"
+          },
+          {
+            "label": "userNoBets",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1307_storage)dyn_storage))",
+            "contract": "PredictionWorld7",
+            "src": "contracts\\PredictionWorld7.sol:28"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Bet)1307_storage)dyn_storage": {
+            "label": "struct PredictionWorld7.Bet[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_struct(Bet)1307_storage)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => struct PredictionWorld7.Bet[]))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(Bet)1307_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld7.Bet[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Market)1283_storage)": {
+            "label": "mapping(uint256 => struct PredictionWorld7.Market)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bet)1307_storage": {
+            "label": "struct PredictionWorld7.Bet",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Info)1300_storage": {
+            "label": "struct PredictionWorld7.Info",
+            "members": [
+              {
+                "label": "question",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "endTimestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "createdBy",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "creatorImageHash",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "resolverUrl",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "isTest",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Market)1283_storage": {
+            "label": "struct PredictionWorld7.Market",
+            "members": [
+              {
+                "label": "id",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "info",
+                "type": "t_struct(Info)1300_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "yesBets",
+                "type": "t_array(t_struct(Bet)1307_storage)dyn_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "noBets",
+                "type": "t_array(t_struct(Bet)1307_storage)dyn_storage",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "11"
+              },
+              {
+                "label": "totalYesAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "totalNoAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "13"
+              },
+              {
+                "label": "marketClosed",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "14"
+              },
+              {
+                "label": "outcome",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "14"
+              },
+              {
+                "label": "isSuspended",
+                "type": "t_bool",
+                "offset": 2,
+                "slot": "14"
+              }
+            ],
+            "numberOfBytes": "480"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
           },
           "t_uint8": {
             "label": "uint8",

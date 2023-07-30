@@ -1,0 +1,1099 @@
+const { upgrades } = require('hardhat');
+const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
+
+const { expect } = require("chai");
+
+const MARKET_FILTERING_STATUS = {
+    ALL: 0,
+    NOT_CLOSED: 1,
+    CLOSED: 2,
+}
+
+const MARKET_FILTERING_WITH_TEST = {
+    YES: true,
+    NO: false,
+}
+
+const MARKET_ORDER_TYPE = {
+    ASC: false,
+    DESC: true,
+}
+
+describe("PredictionWorld7", function () {
+
+    const defaultAmount = ethers.BigNumber.from(1000);
+
+    async function deploySurePredictionWorldFixture() {
+        const [owner, other1, other2, other3, other4] = await ethers.getSigners();
+        const SureToken = await ethers.getContractFactory("SureToken3");
+        const sureToken = await SureToken.deploy();
+        const decimals = await sureToken.decimals()
+
+        const PredictionWorld = await ethers.getContractFactory("PredictionWorld7");
+        const proxy = await upgrades.deployProxy(PredictionWorld, [sureToken.address]);
+        await proxy.deployed();
+
+        const implementationAddress = await upgrades.erc1967.getImplementationAddress(
+            proxy.address
+        );
+
+        // It should approve the allowance first.
+        const ownerContract = sureToken.connect(owner);
+        await ownerContract.approve(proxy.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
+        const other1TokenContract = sureToken.connect(other1);
+        await other1TokenContract.approve(proxy.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
+        const other2TokenContract = sureToken.connect(other2);
+        await other2TokenContract.approve(proxy.address, ethers.utils.parseUnits(dummyYesBet2.marketValue.toString(), decimals));
+        const other3TokenContract = sureToken.connect(other3);
+        await other3TokenContract.approve(proxy.address, ethers.utils.parseUnits(dummyNoBet1.marketValue.toString(), decimals));
+
+        // Transfer the default Sure tokens.
+        await sureToken.transfer(other1.address, defaultAmount);
+        await sureToken.transfer(other2.address, defaultAmount);
+        await sureToken.transfer(other3.address, defaultAmount);
+        await sureToken.transfer(other4.address, defaultAmount);
+
+        return { predictionWorld: proxy, sureToken, owner, other1, other2, other3, other4, decimals };
+    }
+
+    const dummyMarket1 = {
+        question: "Can I win the lottery?",
+        creatorImageHash: "data:image/jpeg;base64,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",
+        description: "Strong Luck",
+        resolverUrl: "https://resolverUrl",
+        endTimestamp: Date.now() + 1000000,
+    };
+
+    const dummyMarket2 = {
+        question: "Can I achieve financial freedom?",
+        creatorImageHash: "data:image/png;base64,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",
+        description: "$$$",
+        resolverUrl: "https://financial.freedom",
+        endTimestamp: Date.now() + 1000000,
+    };
+
+    const dummyMarket3 = {
+        question: "Can I retire before 45?",
+        creatorImageHash: "data:image/png;base64,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",
+        description: "$$$",
+        resolverUrl: "https://retire.45",
+        endTimestamp: Date.now() + 1000000,
+    };
+
+    const dummyYesBet1 = {
+        marketId: 0,
+        marketValue: ethers.BigNumber.from(100),
+    }
+
+    const dummyYesBet2 = {
+        marketId: 0,
+        marketValue: ethers.BigNumber.from(50),
+    }
+
+    const dummyNoBet1 = {
+        marketId: 0,
+        marketValue: ethers.BigNumber.from(30),
+    }
+
+    const REVERT_MARKET_CLOSED = "MarketClosed";
+    const REVERT_MARKET_SUSPENDED = "MarketSuspended";
+    const REVERT_MARKET_ENDED = "MarketEnded";
+
+    // describe("Main Flow", function () {
+
+    //     it("Should set the right sure address", async function () {
+    //         const { predictionWorld, sureToken } = await loadFixture(deploySurePredictionWorldFixture);
+    //         expect(await predictionWorld.sureToken()).to.equal(sureToken.address);
+    //     });
+
+    //     it("Should create a prediction when provided with valid params", async function () {
+    //         const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Check the # markets
+    //         expect(await predictionWorld.totalMarkets()).is.equal(0)
+
+    //         // Create a market
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // Check if the market is created.
+    //         expect(await predictionWorld.totalMarkets()).is.equal(1)
+
+    //         // Check the content of the market.
+    //         const market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket1.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+    //     });
+
+    //     it("Should create bets with valid params", async function () {
+    //         const { predictionWorld, sureToken, owner, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // Save the original balance
+    //         const ownerBalance = await sureToken.balanceOf(owner.address);
+
+    //         // Add yes bets with dummyYesBet1 and dummyYesBet2
+    //         // Add a no bet with dummyNoBet1
+    //         await predictionWorld.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
+    //         await predictionWorld.addYesBet(dummyYesBet2.marketId, dummyYesBet2.marketValue);
+    //         await predictionWorld.addNoBet(dummyNoBet1.marketId, dummyNoBet1.marketValue);
+
+    //         const totalYesValue = dummyYesBet1.marketValue.add(dummyYesBet2.marketValue);
+    //         const totalNoValue = dummyNoBet1.marketValue;
+    //         const totalMarketValue = totalYesValue.add(totalNoValue);
+
+    //         // Check the owner's balance
+    //         // Original tokens + Early bird tokens - all bets tokens
+    //         expect(await sureToken.balanceOf(owner.address)).to.equal(ownerBalance.sub(totalMarketValue));
+
+    //         // Check the amount in the market
+    //         const updatedMarket = await predictionWorld.markets(0);
+    //         expect(updatedMarket.totalYesAmount).to.equal(totalYesValue);
+    //         expect(updatedMarket.totalAmount).to.equal(totalMarketValue);
+    //         expect(updatedMarket.totalNoAmount).to.equal(totalNoValue);
+
+    //         // Check the bets
+    //         const [yesBets, noBets] = await predictionWorld.getBets(0);
+    //         expect(yesBets[0].amount).to.equal(dummyYesBet1.marketValue);
+    //         expect(yesBets[1].amount).to.equal(dummyYesBet2.marketValue);
+    //         expect(yesBets[0].amount).to.equal(dummyYesBet1.marketValue);
+    //         expect(noBets[0].amount).to.equal(dummyNoBet1.marketValue);
+    //     });
+
+    //     it("Should distribute YES winning amount", async function () {
+
+    //         // There are 3 persons => other1, other2, other3
+    //         // All of them have 1000 tokens.
+    //         // 
+    //         // other1 add yes bet with 100.
+    //         // other2 add yes bet with 50.
+    //         // other3 add no bet with 30.
+    //         //
+    //         // The result is "Yes", so
+    //         // other1 win 20 and final balance is 1020.
+    //         // other2 win 10 and final balance is 1010.
+    //         // other3 lose 30 and final balance is 970.
+
+    //         const { predictionWorld, sureToken, other1, other2, other3, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market1
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         await other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
+    //         const other2PredictionContract = predictionWorld.connect(other2);
+    //         await other2PredictionContract.addYesBet(dummyYesBet2.marketId, dummyYesBet2.marketValue);
+    //         const other3PredictionContract = predictionWorld.connect(other3);
+    //         await other3PredictionContract.addNoBet(dummyNoBet1.marketId, dummyNoBet1.marketValue);
+
+    //         distributeWinningAmount = await predictionWorld.distributeWinningAmount(0, true);
+
+    //         expect(await sureToken.balanceOf(predictionWorld.address)).is.equal(0);
+
+    //         const totalWinAmount = dummyYesBet1.marketValue.add(dummyYesBet2.marketValue);
+    //         const totalLoseAmount = dummyNoBet1.marketValue;
+    //         const totalLoseAmountWithCommission = dummyNoBet1.marketValue.mul(99).div(100);
+    //         const other1WinAmount = dummyYesBet1.marketValue.mul(totalLoseAmountWithCommission).div(totalWinAmount);
+    //         const other2WinAmount = dummyYesBet2.marketValue.mul(totalLoseAmountWithCommission).div(totalWinAmount);
+
+    //         expect(await sureToken.balanceOf(other1.address)).is.equal(defaultAmount.add(other1WinAmount));
+    //         expect(await sureToken.balanceOf(other2.address)).is.equal(defaultAmount.add(other2WinAmount));
+    //         expect(await sureToken.balanceOf(other3.address)).is.equal(defaultAmount.sub(totalLoseAmount));
+
+    //         const market = await predictionWorld.markets(0);
+    //         expect(market.outcome).is.equal(true);
+    //     });
+
+    //     it("Should distribute NO winning amount", async function () {
+
+    //         // There are 3 persons => other1, other2, other3
+    //         // All of them are early birds. Will get 1000 tokens.
+    //         // 
+    //         // other1 add yes bet with 100.
+    //         // other2 add yes bet with 50.
+    //         // other3 add no bet with 30.
+    //         //
+    //         // The result is "Yes", so
+    //         // other1 lose 100 and final balance is 900.
+    //         // other2 lose 50 and final balance is 950.
+    //         // other3 win 150 and final balance is 1150.
+
+    //         const { predictionWorld, sureToken, other1, other2, other3, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market1
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // It should approve the allowance first.
+    //         const other1TokenContract = sureToken.connect(other1);
+    //         await other1TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet1.marketValue.toString(), decimals));
+    //         const other2TokenContract = sureToken.connect(other2);
+    //         await other2TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyYesBet2.marketValue.toString(), decimals));
+    //         const other3TokenContract = sureToken.connect(other3);
+    //         await other3TokenContract.approve(predictionWorld.address, ethers.utils.parseUnits(dummyNoBet1.marketValue.toString(), decimals));
+
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         await other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
+    //         const other2PredictionContract = predictionWorld.connect(other2);
+    //         await other2PredictionContract.addYesBet(dummyYesBet2.marketId, dummyYesBet2.marketValue);
+    //         const other3PredictionContract = predictionWorld.connect(other3);
+    //         await other3PredictionContract.addNoBet(dummyNoBet1.marketId, dummyNoBet1.marketValue);
+
+    //         distributeWinningAmount = await predictionWorld.distributeWinningAmount(0, false);
+
+    //         expect(await sureToken.balanceOf(predictionWorld.address)).is.equal(0);
+    //         expect(await sureToken.balanceOf(other1.address)).is.equal(defaultAmount.sub(dummyYesBet1.marketValue));
+    //         expect(await sureToken.balanceOf(other2.address)).is.equal(defaultAmount.sub(dummyYesBet2.marketValue));
+    //         const earn = dummyYesBet1.marketValue.add(dummyYesBet2.marketValue).mul(99).div(100);
+    //         expect(await sureToken.balanceOf(other3.address)).is.equal(defaultAmount.add(earn));
+
+    //         const market = await predictionWorld.markets(0);
+    //         expect(market.outcome).is.equal(false);
+    //     });
+
+    // });
+
+    // describe("Check Parameters", function () {
+
+    //     it("Should revert if market creator is not owner", async function () {
+    //         const { predictionWorld, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         await expect(other1PredictionContract.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         )).to.be.revertedWith("Unauthorized");
+    //     });
+
+    //     it("Should revert if without amount", async function () {
+    //         const { predictionWorld, sureToken, other1, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         const defaultTokenValue = ethers.BigNumber.from(1);
+    //         await sureToken.transfer(other1.address, defaultTokenValue);
+
+    //         // Create a market1
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+
+    //         await expect(
+    //             other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue.mul(1000))
+    //         ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
+
+    //         await expect(
+    //             other1PredictionContract.addNoBet(dummyYesBet1.marketId, dummyYesBet1.marketValue.mul(1000))
+    //         ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
+    //     });
+
+    //     it("Should revert if distributer is not owner", async function () {
+    //         const { predictionWorld, sureToken, other1, decimals } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market1
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // It should approve the allowance first.
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+
+    //         await expect(
+    //             other1PredictionContract.distributeWinningAmount(0, true)
+    //         ).to.be.revertedWith("Unauthorized");
+    //     });
+
+    // });
+
+    // describe("Multiple Admin Users", function () {
+
+    //     it("Owner should be the default admin", async function () {
+    //         const { predictionWorld, owner } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const ownerPredictionContract = predictionWorld.connect(owner);
+    //         expect(await ownerPredictionContract.isAdminUser(owner.address)).is.equal(true);
+    //     });
+
+    //     it("Should be rejected to update the admin user if user is NOT owner", async function () {
+    //         const { predictionWorld, other1, other2 } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         await expect(other1PredictionContract.addAdminUser(other1.address)).to.be.revertedWith("Unauthorized");
+    //         await expect(other1PredictionContract.addAdminUser(other2.address)).to.be.revertedWith("Unauthorized");
+    //         await expect(other1PredictionContract.removeAdminUser(other2.address)).to.be.revertedWith("Unauthorized");
+    //     });
+
+    //     it("Should update the admin users if the user is owner", async function () {
+    //         const { predictionWorld, owner, other1, other2, other3 } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const ownerPredictionContract = predictionWorld.connect(owner);
+    //         await ownerPredictionContract.addAdminUser(other1.address);
+    //         await ownerPredictionContract.addAdminUser(other2.address);
+
+    //         expect(await ownerPredictionContract.isAdminUser(other1.address)).is.equal(true);
+    //         expect(await ownerPredictionContract.isAdminUser(other2.address)).is.equal(true);
+    //         expect(await ownerPredictionContract.isAdminUser(other3.address)).is.equal(false);
+
+    //         await ownerPredictionContract.removeAdminUser(other2.address);
+
+    //         expect(await ownerPredictionContract.isAdminUser(other1.address)).is.equal(true);
+    //         expect(await ownerPredictionContract.isAdminUser(other2.address)).is.equal(false);
+    //         expect(await ownerPredictionContract.isAdminUser(other3.address)).is.equal(false);
+    //     });
+
+    //     it("Should be rejected to create a market if the user is NOT admin user", async function () {
+    //         const { predictionWorld, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(false);
+    //         await expect(other1PredictionContract.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         )).to.be.revertedWith("Unauthorized");
+    //     });
+
+    //     it("Should create the market when the user is admin user", async function () {
+    //         const { predictionWorld, owner, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const ownerPredictionContract = predictionWorld.connect(owner);
+    //         await ownerPredictionContract.addAdminUser(other1.address);
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(true);
+    //         await other1PredictionContract.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+    //     });
+
+    //     it("Should be rejected to distribute if the user is NOT admin user", async function () {
+    //         const { predictionWorld, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(false);
+    //         await expect(other1PredictionContract.distributeWinningAmount(0, true)).to.be.revertedWith("Unauthorized");
+    //     });
+
+    //     it("Should distribute when the user is admin user", async function () {
+    //         const { predictionWorld, owner, other1 } = await loadFixture(deploySurePredictionWorldFixture);
+    //         const ownerPredictionContract = predictionWorld.connect(owner);
+    //         await ownerPredictionContract.addAdminUser(other1.address);
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         expect(await other1PredictionContract.isAdminUser(other1.address)).is.equal(true);
+    //         await other1PredictionContract.distributeWinningAmount(0, true);
+    //     });
+
+    // });
+
+    describe("Test Markets", function () {
+
+        it("Should create/get markets with/without test items", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            // Create a formal market
+            await predictionWorld.createMarket(
+                dummyMarket1.question,
+                dummyMarket1.creatorImageHash,
+                dummyMarket1.description,
+                dummyMarket1.resolverUrl,
+                dummyMarket1.endTimestamp,
+                false
+            );
+
+            // Check if the market is created.
+            expect(await predictionWorld.totalMarkets()).is.equal(1);
+
+            // Create a test market
+            await predictionWorld.createMarket(
+                dummyMarket2.question,
+                dummyMarket2.creatorImageHash,
+                dummyMarket2.description,
+                dummyMarket2.resolverUrl,
+                dummyMarket2.endTimestamp,
+                true
+            );
+
+            // Check if the market is created.
+            expect(await predictionWorld.totalMarkets()).is.equal(2);
+
+            // Get 2 markets when [withTest==true]
+            const fetchResult = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(2);
+
+            // Get 1 markets when [withTest==false]
+            const fetchResult2 = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.ASC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(1);
+        });
+
+    });
+
+    describe("Fetch Markets with parameters", function () {
+
+        it("Should fetch markets with different status", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            // Create a formal market
+            await predictionWorld.createMarket(
+                dummyMarket1.question,
+                dummyMarket1.creatorImageHash,
+                dummyMarket1.description,
+                dummyMarket1.resolverUrl,
+                dummyMarket1.endTimestamp,
+                false
+            );
+
+            // Create a test market
+            await predictionWorld.createMarket(
+                dummyMarket2.question,
+                dummyMarket2.creatorImageHash,
+                dummyMarket2.description,
+                dummyMarket2.resolverUrl,
+                dummyMarket2.endTimestamp,
+                true
+            );
+
+            // Create a formal market again
+            await predictionWorld.createMarket(
+                dummyMarket3.question,
+                dummyMarket3.creatorImageHash,
+                dummyMarket3.description,
+                dummyMarket3.resolverUrl,
+                dummyMarket3.endTimestamp,
+                false
+            );
+
+            // Check if the market is created.
+            expect(await predictionWorld.totalMarkets()).is.equal(3);
+
+            // Close the first market.
+            await predictionWorld.distributeWinningAmount(dummyYesBet1.marketId, true);
+
+            // Get the markets when [status==0] => all
+            const fetchResult = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(3);
+
+            // Get the markets when [status==1] => NOT Closed
+            const fetchResult2 = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.NOT_CLOSED, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(2);
+            expect(markets2[0].marketClosed).is.equal(false);
+            expect(markets2[1].marketClosed).is.equal(false);
+
+            // Get the markets when [status==2] => Closed
+            const fetchResult3 = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.CLOSED, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets3 = fetchResult3[0];
+            expect(markets3.length).is.equal(1);
+            expect(markets3[0].marketClosed).is.equal(true);
+        });
+
+        it("Should fetch markets with asc/desc order", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            // Create a formal market
+            await predictionWorld.createMarket(
+                dummyMarket1.question,
+                dummyMarket1.creatorImageHash,
+                dummyMarket1.description,
+                dummyMarket1.resolverUrl,
+                dummyMarket1.endTimestamp,
+                false
+            );
+
+            // Create a test market
+            await predictionWorld.createMarket(
+                dummyMarket2.question,
+                dummyMarket2.creatorImageHash,
+                dummyMarket2.description,
+                dummyMarket2.resolverUrl,
+                dummyMarket2.endTimestamp,
+                true
+            );
+
+            // Create a formal market again
+            await predictionWorld.createMarket(
+                dummyMarket3.question,
+                dummyMarket3.creatorImageHash,
+                dummyMarket3.description,
+                dummyMarket3.resolverUrl,
+                dummyMarket3.endTimestamp,
+                false
+            );
+
+            // Check if the market is created.
+            expect(await predictionWorld.totalMarkets()).is.equal(3);
+
+            // Close the first market.
+            await predictionWorld.distributeWinningAmount(dummyYesBet1.marketId, true);
+
+            // Get the markets by asc order
+            const fetchResult = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(3);
+            expect(markets[0].info.question).is.equal(dummyMarket1.question);
+            expect(markets[1].info.question).is.equal(dummyMarket2.question);
+            expect(markets[2].info.question).is.equal(dummyMarket3.question);
+
+            // Get the markets by desc order
+            const count = await predictionWorld.totalMarkets();
+            const fetchResult2 = await predictionWorld.fetchMarkets(count, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(3);
+            expect(markets2[0].info.question).is.equal(dummyMarket3.question);
+            expect(markets2[1].info.question).is.equal(dummyMarket2.question);
+            expect(markets2[2].info.question).is.equal(dummyMarket1.question);
+        });
+    });
+
+    describe("Fetch Markets with pagination", function () {
+
+        it("Should return 0 when there is no market", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            // Get 0 markets when [withTest==true]
+            const fetchResult = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(0);
+
+            // Get 0 markets when [withTest==true]
+            const fetchResult2 = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(0);
+
+            // Create a test market
+            await predictionWorld.createMarket(
+                dummyMarket1.question,
+                dummyMarket1.creatorImageHash,
+                dummyMarket1.description,
+                dummyMarket1.resolverUrl,
+                dummyMarket1.endTimestamp,
+                true
+            );
+
+            // Get 0 markets when [withTest==false]
+            const fetchResult3 = await predictionWorld.fetchMarkets(0, 10, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.ASC);
+            const markets3 = fetchResult3[0];
+            expect(markets3.length).is.equal(0);
+
+        });
+
+        it("Should return correct data with divisible size & asc order", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            const count = 20;
+            for (let i = 0; i < count; i++) {
+                await predictionWorld.createMarket(
+                    dummyMarket1.question,
+                    dummyMarket1.creatorImageHash,
+                    dummyMarket1.description,
+                    dummyMarket1.resolverUrl,
+                    dummyMarket1.endTimestamp,
+                    i % 2 == 0
+                );
+            }
+
+            // Check if these markets are created.
+            expect(await predictionWorld.totalMarkets()).is.equal(count)
+
+            // Get 20 markets when [withTest==true] & Order by desc
+            //  => Get first page.
+            const pageSize = 10;
+            const fetchResult = await predictionWorld.fetchMarkets(0, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor = fetchResult[1];
+            const fetchResult2 = await predictionWorld.fetchMarkets(nextCursor, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(10);
+            // => Get overflow page.
+            const nextCursor_over = fetchResult2[1];
+            const fetchResult2_over = await predictionWorld.fetchMarkets(nextCursor_over, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets2_over = fetchResult2_over[0];
+            expect(markets2_over.length).is.equal(0);
+
+            // Get 10 markets when [withTest==false]
+            //  => Get first page.
+            const fetchResult3 = await predictionWorld.fetchMarkets(0, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.ASC);
+            const markets3 = fetchResult3[0];
+            expect(markets3.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor4 = fetchResult3[1];
+            const fetchResult4 = await predictionWorld.fetchMarkets(nextCursor4, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.ASC);
+            const markets4 = fetchResult4[0];
+            expect(markets4.length).is.equal(0);
+        });
+
+        it("Should return correct data with NOT divisible size & asc order", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            const count = 26;
+            for (let i = 0; i < count; i++) {
+                await predictionWorld.createMarket(
+                    dummyMarket1.question,
+                    dummyMarket1.creatorImageHash,
+                    dummyMarket1.description,
+                    dummyMarket1.resolverUrl,
+                    dummyMarket1.endTimestamp,
+                    i % 2 == 0
+                );
+            }
+
+            // Check if these markets are created.
+            expect(await predictionWorld.totalMarkets()).is.equal(count)
+
+            // Get 20 markets when [withTest==true]
+            //  => Get first page.
+            const pageSize = 10;
+            const fetchResult = await predictionWorld.fetchMarkets(0, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor = fetchResult[1];
+            const fetchResult2 = await predictionWorld.fetchMarkets(nextCursor, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(10);
+            //  => Get third page.
+            const nextCursor2 = fetchResult2[1];
+            const fetchResult3 = await predictionWorld.fetchMarkets(nextCursor2, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets3 = fetchResult3[0];
+            expect(markets3.length).is.equal(6);
+            //  => Get overflow page.
+            const nextCursor2_over = fetchResult3[1];
+            const fetchResult3_over = await predictionWorld.fetchMarkets(nextCursor2_over, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.ASC);
+            const markets3_over = fetchResult3_over[0];
+            expect(markets3_over.length).is.equal(0);
+
+            // Get 10 markets when [withTest==false]
+            //  => Get first page.
+            const fetchResult4 = await predictionWorld.fetchMarkets(0, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.ASC);
+            const markets4 = fetchResult4[0];
+            expect(markets4.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor4 = fetchResult4[1];
+            const fetchResult5 = await predictionWorld.fetchMarkets(nextCursor4, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.ASC);
+            const markets5 = fetchResult5[0];
+            expect(markets5.length).is.equal(3);
+            //  => Get overflow page.
+            const nextCursor4_over = fetchResult5[1];
+            const fetchResult5_over = await predictionWorld.fetchMarkets(nextCursor4_over, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.ASC);
+            const markets5_over = fetchResult5_over[0];
+            expect(markets5_over.length).is.equal(0);
+        });
+
+        it("Should return correct data with divisible size & desc order", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            const count = 20;
+            for (let i = 0; i < count; i++) {
+                await predictionWorld.createMarket(
+                    dummyMarket1.question,
+                    dummyMarket1.creatorImageHash,
+                    dummyMarket1.description,
+                    dummyMarket1.resolverUrl,
+                    dummyMarket1.endTimestamp,
+                    i % 2 == 0
+                );
+            }
+
+            // Check if these markets are created.
+            expect(await predictionWorld.totalMarkets()).is.equal(count)
+
+            // Get 20 markets when [withTest==true] & Order by desc
+            //  => Get first page.
+            const pageSize = 10;
+            const fetchResult = await predictionWorld.fetchMarkets(count, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor = fetchResult[1];
+            const fetchResult2 = await predictionWorld.fetchMarkets(nextCursor, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(10);
+            // => Get overflow page.
+            const nextCursor_over = fetchResult2[1];
+            const fetchResult2_over = await predictionWorld.fetchMarkets(nextCursor_over, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets2_over = fetchResult2_over[0];
+            expect(markets2_over.length).is.equal(0);
+
+            // Get 10 markets when [withTest==false]
+            //  => Get first page.
+            const fetchResult3 = await predictionWorld.fetchMarkets(count, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.DESC);
+            const markets3 = fetchResult3[0];
+            expect(markets3.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor4 = fetchResult3[1];
+            const fetchResult4 = await predictionWorld.fetchMarkets(nextCursor4, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.DESC);
+            const markets4 = fetchResult4[0];
+            expect(markets4.length).is.equal(0);
+        });
+
+        it("Should return correct data with NOT divisible size & desc order", async function () {
+            const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+            const count = 26;
+            for (let i = 0; i < count; i++) {
+                await predictionWorld.createMarket(
+                    dummyMarket1.question,
+                    dummyMarket1.creatorImageHash,
+                    dummyMarket1.description,
+                    dummyMarket1.resolverUrl,
+                    dummyMarket1.endTimestamp,
+                    i % 2 == 0
+                );
+            }
+
+            // Check if these markets are created.
+            expect(await predictionWorld.totalMarkets()).is.equal(count)
+
+            // Get 20 markets when [withTest==true]
+            //  => Get first page.
+            const pageSize = 10;
+            const fetchResult = await predictionWorld.fetchMarkets(count, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets = fetchResult[0];
+            expect(markets.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor = fetchResult[1];
+            const fetchResult2 = await predictionWorld.fetchMarkets(nextCursor, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets2 = fetchResult2[0];
+            expect(markets2.length).is.equal(10);
+            //  => Get third page.
+            const nextCursor2 = fetchResult2[1];
+            const fetchResult3 = await predictionWorld.fetchMarkets(nextCursor2, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets3 = fetchResult3[0];
+            expect(markets3.length).is.equal(6);
+            //  => Get overflow page.
+            const nextCursor2_over = fetchResult3[1];
+            const fetchResult3_over = await predictionWorld.fetchMarkets(nextCursor2_over, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.YES, MARKET_ORDER_TYPE.DESC);
+            const markets3_over = fetchResult3_over[0];
+            expect(markets3_over.length).is.equal(0);
+
+            // Get 10 markets when [withTest==false]
+            //  => Get first page.
+            const fetchResult4 = await predictionWorld.fetchMarkets(count, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.DESC);
+            const markets4 = fetchResult4[0];
+            expect(markets4.length).is.equal(10);
+            //  => Get second page.
+            const nextCursor4 = fetchResult4[1];
+            const fetchResult5 = await predictionWorld.fetchMarkets(nextCursor4, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.DESC);
+            const markets5 = fetchResult5[0];
+            expect(markets5.length).is.equal(3);
+            //  => Get overflow page.
+            const nextCursor4_over = fetchResult5[1];
+            const fetchResult5_over = await predictionWorld.fetchMarkets(nextCursor4_over, pageSize, MARKET_FILTERING_STATUS.ALL, MARKET_FILTERING_WITH_TEST.NO, MARKET_ORDER_TYPE.DESC);
+            const markets5_over = fetchResult5_over[0];
+            expect(markets5_over.length).is.equal(0);
+        });
+
+    });
+
+    // describe("Get Uer Bets", function () {
+
+    //     it("Should get empty array when the user or market doesn't exist", async function () {
+    //         const { predictionWorld, owner, other1, other2, other3 } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Check there is no market.
+    //         expect((await predictionWorld.getUserBets(owner.address, 2)).yesBets.length).to.equal(0);
+
+    //         // Create a market
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // Check correct user, correct market and empty bet.
+    //         expect((await predictionWorld.getUserBets(owner.address, 0)).yesBets.length).to.equal(0);
+    //         // Check correct user, wrong market.
+    //         expect((await predictionWorld.getUserBets(owner.address, 1)).yesBets.length).to.equal(0);
+
+    //         // Add bets
+    //         await predictionWorld.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
+    //         await predictionWorld.addYesBet(dummyYesBet2.marketId, dummyYesBet2.marketValue);
+    //         await predictionWorld.addNoBet(dummyNoBet1.marketId, dummyNoBet1.marketValue);
+    //         // Check correct user, correct market and a yes bet.
+    //         const userBets = await predictionWorld.getUserBets(owner.address, 0);
+    //         // Yes Bets
+    //         expect(userBets.yesBets.length).to.equal(2);
+    //         expect(userBets.yesBets[0].amount).to.equal(dummyYesBet1.marketValue);
+    //         expect(userBets.yesBets[1].amount).to.equal(dummyYesBet2.marketValue);
+    //         // No Bets
+    //         expect(userBets.noBets.length).to.equal(1);
+    //         expect(userBets.noBets[0].amount).to.equal(dummyNoBet1.marketValue);
+
+    //         // Check correct user, wrong market.
+    //         expect((await predictionWorld.getUserBets(owner.address, 1)).yesBets.length).to.equal(0);
+    //         // Check wrong user, correct market.
+    //         expect((await predictionWorld.getUserBets(other1.address, 0)).yesBets.length).to.equal(0);
+
+    //         // Add others bets
+    //         const other1PredictionContract = predictionWorld.connect(other1);
+    //         await other1PredictionContract.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
+    //         const other2PredictionContract = predictionWorld.connect(other2);
+    //         await other2PredictionContract.addYesBet(dummyYesBet2.marketId, dummyYesBet2.marketValue);
+    //         const other3PredictionContract = predictionWorld.connect(other3);
+    //         await other3PredictionContract.addNoBet(dummyNoBet1.marketId, dummyNoBet1.marketValue);
+
+    //         // Check other1 bets
+    //         const other1Bets = await predictionWorld.getUserBets(other1.address, 0);
+    //         expect(other1Bets.yesBets.length).to.equal(1);
+    //         expect(other1Bets.yesBets[0].amount).to.equal(dummyYesBet1.marketValue);
+
+    //     });
+
+    // });
+
+    // describe("Update Market Info", function () {
+
+    //     it("Should update all of the values in info object", async function () {
+    //         const { predictionWorld, owner, other1, other2, other3 } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // Check original values.
+    //         let market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket1.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+    //         expect(market.info.isTest).to.equal(false);
+
+    //         // Update the market info
+    //         await predictionWorld.setMarketInfo(
+    //             0,
+    //             dummyMarket2.question,
+    //             dummyMarket2.creatorImageHash,
+    //             dummyMarket2.description,
+    //             dummyMarket2.resolverUrl,
+    //             dummyMarket2.endTimestamp,
+    //             true
+    //         );
+
+    //         // Check updated values.
+    //         market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket2.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket2.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket2.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+    //         expect(market.info.isTest).to.equal(true);
+
+    //         // Update each field.
+
+    //         await predictionWorld.setMarketInfoQuestion(0, dummyMarket1.question);
+
+    //         market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket2.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket2.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+    //         expect(market.info.isTest).to.equal(true);
+
+    //         await predictionWorld.setMarketInfoImage(0, dummyMarket1.creatorImageHash);
+
+    //         market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket2.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+    //         expect(market.info.isTest).to.equal(true);
+
+    //         await predictionWorld.setMarketInfoDescription(0, dummyMarket1.description);
+
+    //         market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket1.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket2.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+    //         expect(market.info.isTest).to.equal(true);
+
+    //         await predictionWorld.setMarketInfoResolverUrl(0, dummyMarket1.resolverUrl);
+
+    //         market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket1.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket2.endTimestamp);
+    //         expect(market.info.isTest).to.equal(true);
+
+    //         await predictionWorld.setMarketInfoEndTimestamp(0, dummyMarket1.endTimestamp);
+
+    //         market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket1.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+    //         expect(market.info.isTest).to.equal(true);
+
+    //         await predictionWorld.setMarketInfoIsTest(0, false);
+
+    //         market = await predictionWorld.markets(0);
+    //         expect(market.info.question).to.equal(dummyMarket1.question);
+    //         expect(market.info.creatorImageHash).to.equal(dummyMarket1.creatorImageHash);
+    //         expect(market.info.description).to.equal(dummyMarket1.description);
+    //         expect(market.info.resolverUrl).to.equal(dummyMarket1.resolverUrl);
+    //         expect(market.info.endTimestamp).to.equal(dummyMarket1.endTimestamp);
+    //         expect(market.info.isTest).to.equal(false);
+
+    //     });
+
+    // });
+
+    // describe("Check Market Limitation", function () {
+
+    //     it("Cloud not add a bet to a closed market", async function () {
+
+    //         const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // Close the market
+    //         distributeWinningAmount = await predictionWorld.distributeWinningAmount(dummyYesBet1.marketId, true);
+
+    //         // Check the market is closed
+    //         expect((await predictionWorld.markets(dummyYesBet1.marketId)).marketClosed).to.equal(true);
+
+    //         // Add the bet => Should be reverted
+    //         await expect(
+    //             predictionWorld.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue)
+    //         ).to.be.revertedWithCustomError(predictionWorld, REVERT_MARKET_CLOSED);
+
+    //         // Distribute the market => Should be reverted
+    //         await expect(
+    //             predictionWorld.distributeWinningAmount(dummyYesBet1.marketId, true)
+    //         ).to.be.revertedWithCustomError(predictionWorld, REVERT_MARKET_CLOSED);
+    //     });
+
+    //     it("Cloud not add a bet to a suspened market", async function () {
+
+    //         const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp,
+    //             false
+    //         );
+
+    //         // Suspend the market
+    //         distributeWinningAmount = await predictionWorld.setMarketIsSuspended(dummyYesBet1.marketId, true);
+
+    //         // Check the market is suspended
+    //         expect((await predictionWorld.markets(dummyYesBet1.marketId)).isSuspended).to.equal(true);
+
+    //         // Add the bet => Should be reverted
+    //         await expect(
+    //             predictionWorld.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue)
+    //         ).to.be.revertedWithCustomError(predictionWorld, REVERT_MARKET_SUSPENDED);
+
+
+    //         // Resume the market
+    //         distributeWinningAmount = await predictionWorld.setMarketIsSuspended(dummyYesBet1.marketId, false);
+
+    //         // Check the market is suspended
+    //         expect((await predictionWorld.markets(dummyYesBet1.marketId)).isSuspended).to.equal(false);
+
+    //         // Add the bet => Should be acepted
+    //         await predictionWorld.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue);
+
+    //     });
+
+    //     it("Cloud not add a bet to a time-over market", async function () {
+
+    //         const { predictionWorld } = await loadFixture(deploySurePredictionWorldFixture);
+
+    //         // Create a market
+    //         await predictionWorld.createMarket(
+    //             dummyMarket1.question,
+    //             dummyMarket1.creatorImageHash,
+    //             dummyMarket1.description,
+    //             dummyMarket1.resolverUrl,
+    //             dummyMarket1.endTimestamp - 2000000,
+    //             false
+    //         );
+
+    //         // Add the bet => Should be revert
+    //         await expect(
+    //             predictionWorld.addYesBet(dummyYesBet1.marketId, dummyYesBet1.marketValue)
+    //         ).to.be.revertedWithCustomError(predictionWorld, REVERT_MARKET_ENDED);
+
+    //     });
+
+    // });
+
+});
