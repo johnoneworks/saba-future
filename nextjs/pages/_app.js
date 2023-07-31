@@ -19,34 +19,14 @@ export default function App({ Component, pageProps }) {
     const defaultMenu = menu ? menu : MENU_TYPE.MARKET;
     const defaultMarketID = marketid ? marketid : null;
 
-    // testing
-    const [account2, setAccount2] = useState("no one yet");
-    const [socialLoginSDK, setSocialLoginSDK] = useState(null);
-    const [provider, setProvider] = useState(null);
-    const [smartAccount, setSmartAccount] = useState(null);
-    const [sureTokenContract, setSureTokenContract] = useState(null);
-    const [sureTokenInterface, setSureTokenInterface] = useState(null);
-    const [predictionWorldContract, setPredictionWorldContract] = useState(null);
-    const [predictionWorldInterface, setPredictionWorldInterface] = useState(null);
+    //user info
     const [email, setEmail] = useState("");
-    const [earlyBirdContract, setEarlyBirdContract] = useState(null);
-    const [earlyBirdInterface, setEarlyBirdInterface] = useState(null);
-    const [earlyBirdValidState, setEarlyBirdValidState] = useState(0);
+    const [balance, setBalance] = useState(0);
+    const [userTotalBetValue, setUserTotalBetValue] = useState(0);
+    const [userStatements, setUserStatements] = useState(null);
+    const [hasGetFirstData, setHasGetFirstData] = useState(false);
 
-    //Loading Context
-    const [isPageLoading, setIsPageLoading] = useState(false);
-    const [isMarketLoading, setIsMarketLoading] = useState(false);
-    const [isSendAccountReady, setisSendAccountReady] = useState(false);
-
-    //Page Context
-    const [currentMenu, setCurrentMenu] = useState(defaultMenu);
-    const [currentMarketID, setCurrentMarketID] = useState(defaultMarketID);
-
-    //Markets Context
-    const [marketCount, setMarketCount] = useState(0);
-    const [markets, setMarkets] = useState();
-    const [yesInfo, setYesInfo] = useState([]);
-    const [noInfo, setNoInfo] = useState([]);
+    //Market Detail
     const [marketDetail, setMarketDetail] = useState({
         id: null,
         title: "title of market",
@@ -60,15 +40,34 @@ export default function App({ Component, pageProps }) {
         isClose: undefined
     });
 
-    //UserInfo Context
-    const [balance, setBalance] = useState(0);
-    const [userTotalBetValue, setUserTotalBetValue] = useState(0);
-    const [userStatements, setUserStatements] = useState(null);
-    const [hasGetFirstData, setHasGetFirstData] = useState(false);
+    //All Markets
+    const [marketCount, setMarketCount] = useState(0);
+    const [markets, setMarkets] = useState();
+    const [yesInfo, setYesInfo] = useState([]);
+    const [noInfo, setNoInfo] = useState([]);
+
+    //web3與合約 相關
+    const [socialLoginSDK, setSocialLoginSDK] = useState(null);
+    const [provider, setProvider] = useState(null);
+    const [smartAccount, setSmartAccount] = useState(null);
+    const [sureTokenContract, setSureTokenContract] = useState(null);
+    const [sureTokenInterface, setSureTokenInterface] = useState(null);
+    const [predictionWorldContract, setPredictionWorldContract] = useState(null);
+    const [predictionWorldInterface, setPredictionWorldInterface] = useState(null);
+    const [earlyBirdContract, setEarlyBirdContract] = useState(null);
+    const [earlyBirdInterface, setEarlyBirdInterface] = useState(null);
+    const [earlyBirdValidState, setEarlyBirdValidState] = useState(0);
+
+    //Loading Context
+    const [isPageLoading, setIsPageLoading] = useState(false);
+    const [isMarketLoading, setIsMarketLoading] = useState(false);
+    const [isSendAccountReady, setisSendAccountReady] = useState(false);
+
+    //Page Context
+    const [currentMenu, setCurrentMenu] = useState(defaultMenu);
+    const [currentMarketID, setCurrentMarketID] = useState(defaultMarketID);
 
     const contextValue = {
-        account2,
-        setAccount2,
         socialLoginSDK,
         setSocialLoginSDK
     };
