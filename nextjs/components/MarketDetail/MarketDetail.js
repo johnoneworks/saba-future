@@ -2,9 +2,9 @@ import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { MarketContext } from "@/contexts/MarketContext";
+import { MarketDetailContext } from "@/contexts/MarketDetailProvider";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
-import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import BlockIcon from "@mui/icons-material/Block";
 import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
@@ -46,8 +46,7 @@ const MarketTitle = (props) => {
     return (
         <Box className={styles.marketTitle}>
             {isTest && <TestDataMark />}
-            {
-                isMarketSuspended &&
+            {isMarketSuspended && (
                 <Chip
                     icon={<BlockIcon fontSize="small" />}
                     label="Suspended"
@@ -56,9 +55,8 @@ const MarketTitle = (props) => {
                     color="error"
                     sx={{ display: "flex", justifyContent: "center", width: "110px", alignItems: "center", margin: "0 0 10px 0" }}
                 />
-            }
-            {
-                isTimeOver &&
+            )}
+            {isTimeOver && (
                 <Chip
                     icon={<AccessAlarmIcon fontSize="small" />}
                     label="Time Over"
@@ -67,7 +65,7 @@ const MarketTitle = (props) => {
                     color="error"
                     sx={{ display: "flex", justifyContent: "center", width: "110px", alignItems: "center", margin: "0 0 10px 0" }}
                 />
-            }
+            )}
             <Box sx={{ display: "flex", mb: "10px" }}>
                 <CustomAvatar>
                     <Box component="img" src={imageHash} alt="titleImage" sx={{ width: "100%", height: "100%" }} />
@@ -124,7 +122,7 @@ const MarketDescription = (props) => {
 
 export default function MarketDetail() {
     const { account } = useContext(BiconomyAccountContext);
-    const { marketDetail } = useContext(MarketContext);
+    const { marketDetail } = useContext(MarketDetailContext);
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
@@ -148,7 +146,7 @@ export default function MarketDetail() {
                                 <BetArea id={marketDetail?.id} market={marketDetail} />
                             </Grid>
                         )}
-                        <Grid item xs={12} md={(isMarketClose || isMarketSuspended || isTimeOver) ? 12 : 6} className={styles.chartContainer}>
+                        <Grid item xs={12} md={isMarketClose || isMarketSuspended || isTimeOver ? 12 : 6} className={styles.chartContainer}>
                             <ChartContainer />
                         </Grid>
                     </Grid>

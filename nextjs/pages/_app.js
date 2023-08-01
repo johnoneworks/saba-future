@@ -26,20 +26,6 @@ export default function App({ Component, pageProps }) {
     const [userStatements, setUserStatements] = useState(null);
     const [hasGetFirstData, setHasGetFirstData] = useState(false);
 
-    //Market Detail
-    const [marketDetail, setMarketDetail] = useState({
-        id: null,
-        title: "title of market",
-        imageHash: "",
-        endTimestamp: "1681681545",
-        totalAmount: 0,
-        totalYesAmount: 0,
-        totalNoAmount: 0,
-        description: "",
-        resolverUrl: null,
-        isClose: undefined
-    });
-
     //All Markets
     const [marketCount, setMarketCount] = useState(0);
     const [markets, setMarkets] = useState();
@@ -111,9 +97,7 @@ export default function App({ Component, pageProps }) {
             >
                 <LoadingContext.Provider value={{ isPageLoading, setIsPageLoading, isMarketLoading, setIsMarketLoading }}>
                     <PageContext.Provider value={{ currentMenu, setCurrentMenu, currentMarketID, setCurrentMarketID }}>
-                        <MarketContext.Provider
-                            value={{ marketCount, setMarketCount, markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo, marketDetail, setMarketDetail }}
-                        >
+                        <MarketContext.Provider value={{ marketCount, setMarketCount, markets, setMarkets, yesInfo, setYesInfo, noInfo, setNoInfo }}>
                             <UserInfoContext.Provider
                                 value={{
                                     balance,
