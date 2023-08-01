@@ -1,5 +1,4 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -119,7 +118,6 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             query: { menu: currentMenu, marketid: marketID }
         });
         setCurrentMarketID(marketID);
-        updateMarketDetail(marketID, predictionWorldContract);
     };
 
     const handleEdit = (e) => {

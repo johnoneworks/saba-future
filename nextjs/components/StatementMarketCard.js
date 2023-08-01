@@ -1,7 +1,5 @@
 import { BET_TYPE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
-import useGetMarketDetail from "@/hooks/useGetMarketDetail";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
@@ -16,8 +14,6 @@ import { convertBigNumberToDate } from "../utils/ConvertDate";
 export default function StatementMarketCard({ market }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
-    const { predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { updateMarketDetail } = useGetMarketDetail();
     const userBetType = !!market.yesAmount ? BET_TYPE.YES : BET_TYPE.NO;
     const amount = userBetType === BET_TYPE.YES ? market.yesAmount : market.noAmount;
     const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
@@ -29,7 +25,6 @@ export default function StatementMarketCard({ market }) {
             query: { menu: currentMenu, marketid: marketID }
         });
         setCurrentMarketID(marketID);
-        updateMarketDetail(marketID, predictionWorldContract);
     };
 
     const CustomAvatar = styled(Avatar)({

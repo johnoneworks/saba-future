@@ -1,14 +1,28 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketContext } from "@/contexts/MarketContext";
 import { PageContext } from "@/contexts/PageContext";
 import moment from "moment";
-import { useCallback, useContext, useEffect } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-const useGetMarketDetail = () => {
+export const MarketDetailContext = createContext(null);
+
+const initialState = {
+    id: null,
+    title: "title of market",
+    imageHash: "",
+    endTimestamp: "1681681545",
+    totalAmount: 0,
+    totalYesAmount: 0,
+    totalNoAmount: 0,
+    description: "",
+    resolverUrl: null,
+    isClose: undefined
+};
+
+export const MarketDetailProvider = ({ children }) => {
     const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { setMarketDetail } = useContext(MarketContext);
+    const [marketDetail, setMarketDetail] = useState(initialState);
     const { currentMarketID } = useContext(PageContext);
     const { setIsPageLoading } = useContext(LoadingContext);
 
@@ -32,7 +46,7 @@ const useGetMarketDetail = () => {
                     resolverUrl: market.info.resolverUrl,
                     isClose: market.marketClosed,
                     isTest: market.info.isTest,
-                    isSuspended: market.isSuspended,
+                    isSuspended: market.isSuspended
                 });
                 setIsPageLoading(false);
             } catch (error) {
@@ -49,7 +63,5 @@ const useGetMarketDetail = () => {
         }
     }, [currentMarketID, account, updateMarketDetail]);
 
-    return { updateMarketDetail };
+    return <MarketDetailContext.Provider value={{ marketDetail, updateMarketDetail }}>{children}</MarketDetailContext.Provider>;
 };
-
-export default useGetMarketDetail;
