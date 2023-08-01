@@ -115,6 +115,7 @@ const useGetMarkets = () => {
         updateMarkets();
     }, [account, predictionWorldContract]);
 
+    //如未登入，使用預設合約
     useEffect(() => {
         if (!account) {
             setPredictionWorldContract(PREDICTION_WORLD_CONTRACT);
