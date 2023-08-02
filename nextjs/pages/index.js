@@ -25,7 +25,7 @@ export default function Home() {
     const { currentMenu, currentMarketID } = useContext(PageContext);
 
     useEffect(() => {
-        if (account && !menu) {
+        if (!menu) {
             router.push({
                 pathname: `/`,
                 query: { menu: currentMenu }
@@ -38,7 +38,7 @@ export default function Home() {
             <Header />
             <Box className={styles.homeContent}>
                 <Markets />
-                <Statement />
+                {account && <Statement />}
                 {account && currentMarketID && <MarketDetail />}
             </Box>
         </Box>

@@ -1,5 +1,5 @@
 import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
-import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { Loading } from "@/components/Loading/Loading";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
@@ -71,16 +71,16 @@ export const Markets = () => {
     const { isMarketLoading } = useContext(LoadingContext);
     const { marketCount, markets } = useContext(MarketContext);
     const [showTest, setShowTest] = useState(false);
+    const hasLogin = !!account;
 
     return (
         <>
-            {account && currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
+            {currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
                 <>
-                    {isMarketLoading && marketCount != 0 && <LoadingSkeleton amount={marketCount} />}
-
+                    {isMarketLoading && marketCount != 0 && <Loading />}
                     {!isMarketLoading && markets && (
                         <>
-                            {smartAccount.isAdminUser && (
+                            {account && smartAccount && smartAccount.isAdminUser && (
                                 <div>
                                     <FormControlLabel
                                         label="Show Test Markets"
@@ -90,7 +90,7 @@ export const Markets = () => {
                                 </div>
                             )}
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                <ShowMarkets account={account} showTest={showTest} isEditable={smartAccount.isAdminUser} />
+                                <ShowMarkets account={account} showTest={showTest} isEditable={hasLogin ? smartAccount.isAdminUser : false} />
                             </Grid>
                         </>
                     )}

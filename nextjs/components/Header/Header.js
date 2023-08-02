@@ -78,7 +78,7 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, email, smartAccount } = useContext(BiconomyAccountContext);
+    const { account, email, smartAccount, socialLoginSDK } = useContext(BiconomyAccountContext);
     const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
     const { balance } = useContext(UserInfoContext);
     const { updateMarkets } = useGetMarkets();
@@ -111,6 +111,12 @@ export const Header = () => {
         }
     };
 
+    const handleLogin = async () => {
+        if (!account && socialLoginSDK.web3auth.status !== "connected") {
+            await socialLoginSDK.showWallet();
+        }
+    };
+
     const handleReturnBack = () => {
         if (currentMarketID) {
             router.push({
@@ -140,10 +146,10 @@ export const Header = () => {
                     <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>{currentMarketID ? <ArrowBackIcon /> : <RefreshIcon />}</div>
                     <div className={styles.logo}>
                         <Image src="/logo.svg" alt="placeholder" width={20} height={20} margin={20} />
-                        <span style={{ marginLeft: 10 }}>{account ? "Saba Future" : "Wallet Connecting..."} </span>
+                        <span style={{ marginLeft: 10 }}>{"Saba Future"} </span>
                     </div>
                     <div>
-                        {smartAccount && smartAccount.isAdminUser && (
+                        {account && smartAccount && smartAccount.isAdminUser && (
                             <>
                                 <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>
                                     {
@@ -161,7 +167,7 @@ export const Header = () => {
                                 </span>
                             </>
                         )}
-                        <span className="cursor-pointer" onClick={handleLogout}>
+                        <span className="cursor-pointer" onClick={account ? handleLogout : handleLogin}>
                             {account ? <LogoutIcon /> : <LoginIcon />}
                         </span>
                     </div>

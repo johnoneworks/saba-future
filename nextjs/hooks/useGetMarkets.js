@@ -1,21 +1,28 @@
+import { predictionWorldAddress } from "@/config";
 import { BACKUP_IMAGE } from "@/constants/Constant";
+import { MARKET_ORDER, MARKET_STATUS, MARKET_WITH_TEST } from "@/constants/MarketCondition";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { MarketContext } from "@/contexts/MarketContext";
 import { testMarketsData } from "@/testData/testMarketsData";
 import { IsLocal } from "@/utils/IsLocal";
+import PredictionWorld from "@/utils/abis/PredictionWorld.json";
+import { ethers } from "ethers";
 import { useContext, useEffect } from "react";
 
 /**
  * TODO:
- * 1. 把getBets()的功能拆分出来，放到useGetBets.js中
- * 2. update market 的速度太慢，需要優化
+ * 1. 改作到 provider
  *
  */
 
+// 未登入玩家替代合約提供者
+const PROVIDER = new ethers.providers.JsonRpcProvider("https://polygon-mainnet.g.alchemy.com/v2/B8ncZIIjNn8eul-QPcOcgBac3pFdOH6_");
+const PREDICTION_WORLD_CONTRACT = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, PROVIDER);
+
 const useGetMarkets = () => {
     const { setMarketCount, markets, setMarkets } = useContext(MarketContext);
-    const { account, smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { account, predictionWorldContract, setPredictionWorldContract } = useContext(BiconomyAccountContext);
     const { setIsMarketLoading } = useContext(LoadingContext);
 
     const useTestData = () => {
@@ -59,21 +66,24 @@ const useGetMarkets = () => {
         }
 
         try {
-            if (!smartAccount.address) {
-                return;
-            }
             setIsMarketLoading(true);
             let marketCount = await predictionWorldContract.totalMarkets();
             let tempMarkets = [];
             setMarketCount(marketCount.toNumber());
 
-            for (let i = 0; i < marketCount; i++) {
-                let market = await predictionWorldContract.markets(i);
-                console.log(i);
-                console.log(`market.id: ${market.info.question}`);
+            const marketContract = await predictionWorldContract.fetchMarkets(
+                0,
+                marketCount.toNumber(),
+                MARKET_STATUS.ALL,
+                MARKET_WITH_TEST.YES,
+                MARKET_ORDER.ASC
+            );
 
-                let mt = {
-                    id: market.id,
+            const markets = marketContract[0];
+            for (let i = 0; i < markets.length; i++) {
+                let market = markets[i];
+                let currentMarket = {
+                    id: market.id.toNumber(),
                     question: market.info.question,
                     imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : BACKUP_IMAGE,
                     totalAmount: market.totalAmount,
@@ -86,12 +96,12 @@ const useGetMarkets = () => {
                     endTimestamp: market.info.endTimestamp
                 };
 
-                if (market.marketClosed) {
-                    const bets = await getBets(market.id);
-                    mt = { ...mt, ...bets };
+                if (currentMarket.marketClosed) {
+                    const bets = await getBets(currentMarket.id);
+                    currentMarket = { ...currentMarket, ...bets };
                 }
 
-                tempMarkets.push(mt);
+                tempMarkets.push(currentMarket);
             }
             setMarkets(tempMarkets);
         } catch (error) {
@@ -103,7 +113,14 @@ const useGetMarkets = () => {
 
     useEffect(() => {
         updateMarkets();
-    }, [account]);
+    }, [account, predictionWorldContract]);
+
+    //如未登入，使用預設合約
+    useEffect(() => {
+        if (!account) {
+            setPredictionWorldContract(PREDICTION_WORLD_CONTRACT);
+        }
+    }, []);
 
     return { markets, updateMarkets };
 };

@@ -15,7 +15,7 @@ import { AccountContext } from "../contexts/AccountContext";
 export default function App({ Component, pageProps }) {
     const router = useRouter();
     const { menu, marketid } = router.query;
-    const [account, setAccount] = useState();
+    const [account, setAccount] = useState(null);
     const defaultMenu = menu ? menu : MENU_TYPE.MARKET;
     const defaultMarketID = marketid ? marketid : null;
 
