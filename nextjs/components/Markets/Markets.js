@@ -1,5 +1,5 @@
 import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
-import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { Loading } from "@/components/Loading/Loading";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
@@ -77,8 +77,7 @@ export const Markets = () => {
         <>
             {currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
                 <>
-                    {isMarketLoading && marketCount != 0 && <LoadingSkeleton amount={marketCount} />}
-
+                    {isMarketLoading && marketCount != 0 && <Loading />}
                     {!isMarketLoading && markets && (
                         <>
                             {account && smartAccount && smartAccount.isAdminUser && (
