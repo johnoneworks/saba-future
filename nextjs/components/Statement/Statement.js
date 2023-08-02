@@ -1,5 +1,5 @@
 import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
-import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { Loading } from "@/components/Loading/Loading";
 import StatementMarketCard from "@/components/StatementMarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
@@ -27,7 +27,7 @@ export const Statement = () => {
         <>
             {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
                 <>
-                    {isMarketLoading && <LoadingSkeleton amount={3} />}
+                    {isMarketLoading && <Loading />}
                     {!isMarketLoading &&
                         (userStatements && userStatements.length > 0 ? (
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
