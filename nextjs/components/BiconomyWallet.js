@@ -62,9 +62,7 @@ export default function BiconomyWallet() {
             });
         }
 
-        if (sdk.web3auth.status !== "connected") {
-            await sdk.showWallet();
-        } else {
+        if (sdk.web3auth.status === "connected") {
             const web3Provider = new ethers.providers.Web3Provider(sdk.provider);
             const accounts = await web3Provider.listAccounts();
             setIsPageLoading(true);
@@ -104,6 +102,12 @@ export default function BiconomyWallet() {
             // 3: Already Exists
             const earlyBirdValidState = await earlyBirdContract.validate(smartAccountSdk.address);
 
+            //get user email
+            const user = await sdk.getUserInfo();
+            if (!!user && !!user.email) {
+                setEmail(user.email);
+            }
+
             setAccount(accounts[0]);
             setProvider(web3Provider);
             setSmartAccount(smartAccountSdk);
@@ -115,13 +119,7 @@ export default function BiconomyWallet() {
             setEarlyBirdInterface(earlyBirdInterface);
             setIsPageLoading(false);
             setEarlyBirdValidState(earlyBirdValidState);
-        }
-
-        if (sdk.web3auth.status === "connected") {
-            const user = await sdk.getUserInfo();
-            if (!!user && !!user.email) {
-                setEmail(user.email);
-            }
+        } else {
         }
 
         setSocialLoginSDK(sdk);
@@ -176,24 +174,6 @@ export default function BiconomyWallet() {
             };
         }, 1000);
     }, [account, connectWallet, socialLoginSDK]);
-
-    //持續檢查玩家未登入，如未登入就show wallet
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            if (window?.socialLoginSDK?.provider) {
-                clearInterval(interval);
-            }
-            if (!provider && !account) {
-                if (socialLoginSDK && socialLoginSDK.status !== "connected") {
-                    await socialLoginSDK.showWallet();
-                }
-            }
-
-            return () => {
-                clearInterval(interval);
-            };
-        }, 2000);
-    }, [account, socialLoginSDK, provider]);
 
     useEffect(() => {
         connectWallet();

@@ -2,7 +2,7 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { PageContext } from "@/contexts/PageContext";
 import useGetMarketDetail from "@/hooks/useGetMarketDetail";
-import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import BlockIcon from "@mui/icons-material/Block";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
@@ -48,7 +48,7 @@ const CustomTypography = styled(Typography)({
 export default function MarketCard({ market, currentUser, isClosed, isTest, isEditable }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useContext(PageContext);
-    const { predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { account, predictionWorldContract, socialLoginSDK } = useContext(BiconomyAccountContext);
     const { updateMarketDetail } = useGetMarketDetail();
 
     let titleWidth = "w-[calc(100%-72px)]";
@@ -76,8 +76,12 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const outcomeValue = market.outcome ? "Yes" : "No";
     const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
     const bonus = market.outcome
-        ? market.totalYesAmount > 0 ? `${Math.floor((market.totalNoAmount * 100) / market.totalYesAmount) - 1} %` : "-"
-        : market.totalNoAmount > 0 ? `${Math.floor((market.totalYesAmount * 100) / market.totalNoAmount) - 1} %` : "-";
+        ? market.totalYesAmount > 0
+            ? `${Math.floor((market.totalNoAmount * 100) / market.totalYesAmount) - 1} %`
+            : "-"
+        : market.totalNoAmount > 0
+        ? `${Math.floor((market.totalYesAmount * 100) / market.totalNoAmount) - 1} %`
+        : "-";
     const cardValueTitle = isClosed ? ["Outcome", "Winners Count", "Profit"] : ["Volume", "Yes", "No"];
     const cardValues = [
         {
@@ -106,6 +110,12 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
         }
     ];
 
+    const handleLogin = async () => {
+        if (!account && socialLoginSDK.web3auth.status !== "connected") {
+            await socialLoginSDK.showWallet();
+        }
+    };
+
     const handleSelectMarket = () => {
         const marketID = `${market.id}`;
         router.push({
@@ -120,33 +130,30 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
         e.stopPropagation();
         const marketID = `${market.id}`;
         router.push({
-            pathname: `/admin/${marketID}`,
+            pathname: `/admin/${marketID}`
         });
         return false;
-    }
+    };
 
     return (
-        <Box onClick={handleSelectMarket}>
+        <Box onClick={account ? handleSelectMarket : handleLogin}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
-                {
-                    !isClosed && market.isSuspended &&
+                {!isClosed && market.isSuspended && (
                     <Tooltip title="Suspended">
                         <BlockIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
                     </Tooltip>
-                }
-                {
-                    !isClosed && (market.endTimestamp < Date.now()) &&
+                )}
+                {!isClosed && market.endTimestamp < Date.now() && (
                     <Tooltip title="Time Over">
                         <AccessAlarmIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
                     </Tooltip>
-                }
-                {
-                    isEditable &&
+                )}
+                {isEditable && (
                     <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
                         <BorderColorOutlinedIcon />
                     </IconButton>
-                }
+                )}
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
                         <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
@@ -199,7 +206,6 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                                     </Box>
                                     <CustomTypography variant="body2">possible fee included</CustomTypography>
                                 </Box>
-
                             );
                         }
 
