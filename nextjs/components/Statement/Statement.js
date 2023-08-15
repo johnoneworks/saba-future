@@ -2,12 +2,11 @@ import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { Loading } from "@/components/Loading/Loading";
 import StatementMarketCard from "@/components/StatementMarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useAccountStore } from "@/store/useAccountStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { useStatementStore } from "@/store/useStatementStore";
 import { Box, Grid } from "@mui/material";
-import { useContext } from "react";
 
 /**
  * TODO:
@@ -21,7 +20,7 @@ export const Statement = () => {
     const { userStatements } = useStatementStore();
     const { account } = useAccountStore();
     const { currentMenu, currentMarketID } = useMenuStore();
-    const { isMarketLoading } = useContext(LoadingContext);
+    const { isMarketLoading } = useLoadingStore();
 
     return (
         <>

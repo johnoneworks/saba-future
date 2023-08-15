@@ -1,15 +1,15 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { predictionWorldAddress } from "@/config";
 import { BET_TYPE } from "@/constants/Constant";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { convertBigNumberToDate } from "@/utils/ConvertDate";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { AdminConfirmPage } from "./ConfirmPage/AdminConfirmPage";
 
 /**
@@ -26,7 +26,7 @@ const CustomAvatar = styled(Avatar)({
 });
 
 export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
-    const { setIsPageLoading } = useContext(LoadingContext);
+    const { setIsPageLoading } = useLoadingStore();
     const { smartAccount } = useAccountStore();
     const { predictionWorldInterface } = useContractStore();
     const [selectedResolve, setSelectedResolve] = useState(null);

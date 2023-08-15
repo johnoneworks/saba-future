@@ -1,15 +1,15 @@
 import { predictionWorldAddress } from "@/config";
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { MARKET_ORDER, MARKET_STATUS, MARKET_WITH_TEST } from "@/constants/MarketCondition";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMarketsStore } from "@/store/useMarketsStore";
 import { testMarketsData } from "@/testData/testMarketsData";
 import { IsLocal } from "@/utils/IsLocal";
 import PredictionWorld from "@/utils/abis/PredictionWorld.json";
 import { ethers } from "ethers";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 
 // 未登入玩家替代合約提供者
 const PROVIDER = new ethers.providers.JsonRpcProvider("https://polygon-mainnet.g.alchemy.com/v2/B8ncZIIjNn8eul-QPcOcgBac3pFdOH6_");
@@ -19,7 +19,7 @@ const useGetMarkets = () => {
     const { markets, setMarkets, setMarketCount } = useMarketsStore();
     const { account } = useAccountStore();
     const { predictionWorldContract, setPredictionWorldContract } = useContractStore();
-    const { setIsMarketLoading } = useContext(LoadingContext);
+    const { setIsMarketLoading } = useLoadingStore();
 
     const useTestData = () => {
         let tempMarkets = testMarketsData;

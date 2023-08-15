@@ -1,20 +1,20 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { useStatementStore } from "@/store/useStatementStore";
 import { testMarketsData } from "@/testData/testMarketsData";
 import { testUserBetList } from "@/testData/testStatementsData";
 import { IsLocal } from "@/utils/IsLocal";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 const useGetUserStatement = () => {
     const { smartAccount } = useAccountStore();
     const { predictionWorldContract } = useContractStore();
     const { setHasGetFirstInformation } = usePlayerInfoStore();
     const { setUserStatements } = useStatementStore();
-    const { setIsMarketLoading } = useContext(LoadingContext);
+    const { setIsMarketLoading } = useLoadingStore();
 
     const useTestData = () => {
         let tempMarkets = testMarketsData;

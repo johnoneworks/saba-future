@@ -1,8 +1,8 @@
 import { earlyBirdAddress, sureTokenAddress } from "@/config";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { useStatementStore } from "@/store/useStatementStore";
 import Box from "@mui/material/Box";
@@ -13,7 +13,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./NewbieDialog.module.scss";
 
 /**
@@ -25,7 +25,7 @@ import styles from "./NewbieDialog.module.scss";
  */
 
 export const NewbieDialog = () => {
-    const { isPageLoading, setIsPageLoading } = useContext(LoadingContext);
+    const { isPageLoading, setIsPageLoading } = useLoadingStore();
     const { account, smartAccount } = useAccountStore();
     const { balance, hasGetFirstInformation } = usePlayerInfoStore();
     const { earlyBirdValidState, earlyBirdInterface } = useContractStore();

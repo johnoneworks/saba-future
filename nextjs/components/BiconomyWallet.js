@@ -1,19 +1,19 @@
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import useLogin from "@/hooks/useLogin";
 import { useAccountStore } from "@/store/useAccountStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
 import "@biconomy/web3-auth/dist/src/style.css";
 import axios from "axios";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import PageLoading from "./LoadingPage/PageLoading";
 
 export default function BiconomyWallet() {
     const { account, socialLoginSDK, provider, smartAccount } = useAccountStore();
     const { email, isSendAccountReady, setisSendAccountReady } = usePlayerInfoStore();
-    const { setIsPageLoading } = useContext(LoadingContext);
+    const { setIsPageLoading } = useLoadingStore();
     const { connectSDK } = useLogin();
 
     const connectWallet = async () => {
