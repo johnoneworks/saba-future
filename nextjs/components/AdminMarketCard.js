@@ -1,11 +1,12 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { predictionWorldAddress } from "@/config";
 import { BET_TYPE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
 import { convertBigNumberToDate } from "@/utils/ConvertDate";
-import PauseCircleIcon from '@mui/icons-material/PauseCircle';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useContext, useState } from "react";
@@ -26,7 +27,8 @@ const CustomAvatar = styled(Avatar)({
 
 export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
     const { setIsPageLoading } = useContext(LoadingContext);
-    const { smartAccount, predictionWorldInterface } = useContext(BiconomyAccountContext);
+    const { smartAccount } = useAccountStore();
+    const { predictionWorldInterface } = useContractStore();
     const [selectedResolve, setSelectedResolve] = useState(null);
     const isResolved = market.hasResolved;
     const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
@@ -82,7 +84,7 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
             setIsPageLoading(false);
             setSelectedResolve(null);
         }
-    }
+    };
 
     const setIsSuspended = async (isSuspended) => {
         let transactions = [];
@@ -99,7 +101,7 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
         console.log("UserOp hash", txResponse.hash);
         const txReceipt = await txResponse.wait();
         console.log("Tx hash", txReceipt.transactionHash);
-    }
+    };
 
     return (
         <>
@@ -113,18 +115,21 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
                             </CustomAvatar>
                         </div>
                         <span className="text-lg font-semibold w-full">{market.question}</span>
-                        {
-                            !market.hasResolved && (
-                                market.isSuspended ?
-                                    <IconButton className="h-w-15 text-right" color="primary" aria-label="add to shopping cart" onClick={() => handleSuspend(false)}>
-                                        <PlayCircleIcon />
-                                    </IconButton>
-                                    :
-                                    <IconButton className="h-w-15 text-right" color="primary" aria-label="add to shopping cart" onClick={() => handleSuspend(true)}>
-                                        <PauseCircleIcon />
-                                    </IconButton>
-                            )
-                        }
+                        {!market.hasResolved &&
+                            (market.isSuspended ? (
+                                <IconButton
+                                    className="h-w-15 text-right"
+                                    color="primary"
+                                    aria-label="add to shopping cart"
+                                    onClick={() => handleSuspend(false)}
+                                >
+                                    <PlayCircleIcon />
+                                </IconButton>
+                            ) : (
+                                <IconButton className="h-w-15 text-right" color="primary" aria-label="add to shopping cart" onClick={() => handleSuspend(true)}>
+                                    <PauseCircleIcon />
+                                </IconButton>
+                            ))}
                     </div>
                     <div className="flex flex-row flex-nowrap justify-between items-center">
                         <div className="flex flex-col space-y-1">

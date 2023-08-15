@@ -1,6 +1,6 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { PageContext } from "@/contexts/PageContext";
-import useGetMarketDetail from "@/hooks/useGetMarketDetail";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useMenuStore } from "@/store/useMenuStore";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import BlockIcon from "@mui/icons-material/Block";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
@@ -9,7 +9,6 @@ import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import { useRouter } from "next/router";
-import { useContext } from "react";
 import styles from "./MarketCard.module.scss";
 
 /**
@@ -46,9 +45,8 @@ const CustomTypography = styled(Typography)({
 
 export default function MarketCard({ market, currentUser, isClosed, isTest, isEditable }) {
     const router = useRouter();
-    const { currentMenu, setCurrentMarketID } = useContext(PageContext);
-    const { account, predictionWorldContract, socialLoginSDK } = useContext(BiconomyAccountContext);
-    const { updateMarketDetail } = useGetMarketDetail();
+    const { currentMenu, setCurrentMarketID } = useMenuStore();
+    const { account, socialLoginSDK } = useAccountStore();
 
     let titleWidth = "w-[calc(100%-72px)]";
     let win = false;

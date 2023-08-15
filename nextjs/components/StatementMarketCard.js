@@ -1,9 +1,8 @@
 import { BET_TYPE } from "@/constants/Constant";
-import { PageContext } from "@/contexts/PageContext";
+import { useMenuStore } from "@/store/useMenuStore";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
-import { useContext } from "react";
 import { convertBigNumberToDate } from "../utils/ConvertDate";
 
 /**
@@ -13,7 +12,7 @@ import { convertBigNumberToDate } from "../utils/ConvertDate";
 
 export default function StatementMarketCard({ market }) {
     const router = useRouter();
-    const { currentMenu, setCurrentMarketID } = useContext(PageContext);
+    const { currentMenu, setCurrentMarketID } = useMenuStore();
     const userBetType = !!market.yesAmount ? BET_TYPE.YES : BET_TYPE.NO;
     const amount = userBetType === BET_TYPE.YES ? market.yesAmount : market.noAmount;
     const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;

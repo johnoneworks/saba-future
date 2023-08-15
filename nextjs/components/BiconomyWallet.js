@@ -1,130 +1,24 @@
-import { chainId, dappAPIKey, earlyBirdAddress, predictionWorldAddress, providerUrl, sureTokenAddress } from "@/config";
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import useLogin from "@/hooks/useLogin";
+import { useAccountStore } from "@/store/useAccountStore";
+import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
-import EarlyBird from "@/utils/abis/EarlyBird.json";
-import PredictionWorld from "@/utils/abis/PredictionWorld.json";
-import SURE from "@/utils/abis/SureToken.json";
-import SmartAccount from "@biconomy/smart-account";
-import SocialLogin from "@biconomy/web3-auth";
 import "@biconomy/web3-auth/dist/src/style.css";
 import axios from "axios";
-import { ethers } from "ethers";
-import { useCallback, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import PageLoading from "./LoadingPage/PageLoading";
 
 export default function BiconomyWallet() {
-    const {
-        account,
-        setAccount,
-        socialLoginSDK,
-        setSocialLoginSDK,
-        provider,
-        setProvider,
-        smartAccount,
-        setSmartAccount,
-        setSureTokenContract,
-        setSureTokenInterface,
-        setPredictionWorldContract,
-        setPredictionWorldInterface,
-        setEarlyBirdContract,
-        setEarlyBirdInterface,
-        email,
-        setEmail,
-        isSendAccountReady,
-        setisSendAccountReady,
-        setEarlyBirdValidState
-    } = useContext(BiconomyAccountContext);
+    const { account, socialLoginSDK, provider, smartAccount } = useAccountStore();
+    const { email, isSendAccountReady, setisSendAccountReady } = usePlayerInfoStore();
     const { setIsPageLoading } = useContext(LoadingContext);
+    const { connectSDK } = useLogin();
 
-    const connectWallet = useCallback(async () => {
-        console.log("connectWallet()");
-        if (typeof window === "undefined") return;
-        console.log(`socialLoginSDK: ${socialLoginSDK}`);
-
-        let sdk = null;
-        if (window.socialLoginSDK) {
-            sdk = window.socialLoginSDK;
-        } else {
-            sdk = new SocialLogin();
-        }
-
-        if (!sdk.isInit) {
-            const currentUrl = window.location.origin;
-            const signature = await sdk.whitelistUrl(currentUrl);
-            await sdk.init({
-                chainId: ethers.utils.hexValue(chainId),
-                whitelistUrls: {
-                    [currentUrl]: signature
-                }
-            });
-        }
-
-        if (sdk.web3auth.status === "connected") {
-            const web3Provider = new ethers.providers.Web3Provider(sdk.provider);
-            const accounts = await web3Provider.listAccounts();
-            setIsPageLoading(true);
-            console.log(`account:${accounts[0]}`);
-
-            const smartAccountOptions = {
-                activeNetworkId: chainId,
-                supportedNetworksIds: [chainId],
-                networkConfig: [
-                    {
-                        chainId: chainId,
-                        dappAPIKey: dappAPIKey,
-                        providerUrl: providerUrl
-                    }
-                ]
-            };
-
-            let smartAccountSdk = new SmartAccount(web3Provider, smartAccountOptions);
-            smartAccountSdk = await smartAccountSdk.init();
-
-            console.log("%c⧭ Smart Account Owner:", "color: #807160", smartAccountSdk.owner);
-            console.log("%c⧭ Smart Contract Wallet:", "color: #007300", smartAccountSdk.address);
-
-            const signer = web3Provider.getSigner();
-            const sureTokenContract = new ethers.Contract(sureTokenAddress, SURE.abi, signer);
-            const sureTokenInterface = new ethers.utils.Interface(SURE.abi);
-
-            const predictionWorldContract = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, signer);
-            const predictionWorldInterface = new ethers.utils.Interface(PredictionWorld.abi);
-            smartAccountSdk.isAdminUser = await predictionWorldContract.isAdminUser(smartAccountSdk.address);
-
-            const earlyBirdContract = new ethers.Contract(earlyBirdAddress, EarlyBird.abi, signer);
-            const earlyBirdInterface = new ethers.utils.Interface(EarlyBird.abi);
-
-            // 1: Valid
-            // 2: All Occupied
-            // 3: Already Exists
-            const earlyBirdValidState = await earlyBirdContract.validate(smartAccountSdk.address);
-
-            //get user email
-            const user = await sdk.getUserInfo();
-            if (!!user && !!user.email) {
-                setEmail(user.email);
-            }
-
-            setAccount(accounts[0]);
-            setProvider(web3Provider);
-            setSmartAccount(smartAccountSdk);
-            setSureTokenContract(sureTokenContract);
-            setSureTokenInterface(sureTokenInterface);
-            setPredictionWorldContract(predictionWorldContract);
-            setPredictionWorldInterface(predictionWorldInterface);
-            setEarlyBirdContract(earlyBirdContract);
-            setEarlyBirdInterface(earlyBirdInterface);
-            setIsPageLoading(false);
-            setEarlyBirdValidState(earlyBirdValidState);
-        } else {
-        }
-
-        setSocialLoginSDK(sdk);
-        return socialLoginSDK;
-    }, [socialLoginSDK]);
+    const connectWallet = async () => {
+        connectSDK();
+    };
 
     const sendAccountData = async ({ smartAccountAddress, email, isSendAccountReady }) => {
         try {

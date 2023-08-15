@@ -1,8 +1,10 @@
 import { earlyBirdAddress, sureTokenAddress } from "@/config";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-import { UserInfoContext } from "@/contexts/UserInfoContext";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
+import { useStatementStore } from "@/store/useStatementStore";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
@@ -24,18 +26,20 @@ import styles from "./NewbieDialog.module.scss";
 
 export const NewbieDialog = () => {
     const { isPageLoading, setIsPageLoading } = useContext(LoadingContext);
-    const { balance, userStatements, hasGetFirstData } = useContext(UserInfoContext);
-    const { account, smartAccount, earlyBirdValidState, earlyBirdInterface } = useContext(BiconomyAccountContext);
+    const { account, smartAccount } = useAccountStore();
+    const { balance, hasGetFirstInformation } = usePlayerInfoStore();
+    const { earlyBirdValidState, earlyBirdInterface } = useContractStore();
+    const { userStatements } = useStatementStore();
     const { updateBalance } = useGetUserBalance();
     const [isNewbie, setIsNewbie] = useState(false);
     const [hasShow, setHasShow] = useState(false);
 
     useEffect(() => {
-        if (account && balance == 0 && hasGetFirstData && userStatements.length == 0 && !hasShow && earlyBirdValidState === 1) {
+        if (account && balance == 0 && hasGetFirstInformation && userStatements.length == 0 && !hasShow && earlyBirdValidState === 1) {
             setIsNewbie(true);
             setHasShow(true);
         }
-    }, [account, balance, userStatements, hasGetFirstData, earlyBirdValidState]);
+    }, [account, balance, userStatements, hasGetFirstInformation, earlyBirdValidState]);
 
     const handleSnapUpEarlyBird = async () => {
         try {

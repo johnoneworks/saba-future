@@ -1,7 +1,8 @@
 import { AdminHeader } from "@/components/Header/AdminHeader";
 import { predictionWorldAddress } from "@/config";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
 import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { useContext, useState } from "react";
@@ -21,7 +22,8 @@ export default function Admin() {
     const [resolverUrl, setResolverUrl] = useState("");
     const [timestamp, setTimestamp] = useState(Date());
     const [isTest, setIsTest] = useState(false);
-    const { provider, smartAccount, predictionWorldInterface } = useContext(BiconomyAccountContext);
+    const { predictionWorldInterface } = useContractStore();
+    const { provider, smartAccount } = useAccountStore();
 
     const handleSubmit = async () => {
         try {

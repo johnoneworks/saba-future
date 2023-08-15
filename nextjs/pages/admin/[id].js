@@ -1,8 +1,10 @@
 import { AdminHeader } from "@/components/Header/AdminHeader";
 import { predictionWorldAddress } from "@/config";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketDetailContext, MarketDetailProvider } from "@/contexts/MarketDetailProvider";
+import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useMarketDetailStore } from "@/store/useMarketDetailStore";
 import SaveIcon from "@mui/icons-material/Save";
 import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import moment from "moment";
@@ -18,11 +20,7 @@ import { useContext, useEffect, useState } from "react";
 const dateFormat = "YYYY-MM-DDTHH:mm";
 
 export default function EditMarketPage() {
-    return (
-        <MarketDetailProvider>
-            <EditMarket />
-        </MarketDetailProvider>
-    );
+    return <EditMarket />;
 }
 
 const EditMarket = () => {
@@ -36,8 +34,10 @@ const EditMarket = () => {
     const [timestamp, setTimestamp] = useState();
     const [date, setDate] = useState("");
     const [isTest, setIsTest] = useState(false);
-    const { provider, account, smartAccount, predictionWorldContract, predictionWorldInterface } = useContext(BiconomyAccountContext);
-    const { marketDetail, updateMarketDetail } = useContext(MarketDetailContext);
+    const { marketDetail } = useMarketDetailStore();
+    const { predictionWorldContract, predictionWorldInterface } = useContractStore();
+    const { provider, account, smartAccount } = useAccountStore();
+    const { updateMarketDetail } = useGetMarketDetail();
 
     useEffect(() => {
         if (id && account && smartAccount?.isAdminUser) {
