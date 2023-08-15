@@ -1,11 +1,11 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMarketDetailStore } from "@/store/useMarketDetailStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import moment from "moment";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 export const useGetMarketDetail = () => {
     const { account } = useAccountStore();
@@ -13,7 +13,7 @@ export const useGetMarketDetail = () => {
 
     const { marketDetail, setMarketDetail } = useMarketDetailStore();
     const { currentMarketID } = useMenuStore();
-    const { setIsPageLoading } = useContext(LoadingContext);
+    const { setIsPageLoading } = useLoadingStore();
 
     const updateMarketDetail = useCallback(
         async (currentMarketID, predictionWorldContract) => {

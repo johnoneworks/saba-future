@@ -1,11 +1,11 @@
 import { AdminHeader } from "@/components/Header/AdminHeader";
 import { predictionWorldAddress } from "@/config";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 /**
  * TODO:
@@ -14,7 +14,7 @@ import { useContext, useState } from "react";
  */
 
 export default function Admin() {
-    const { isPageLoading, setIsPageLoading } = useContext(LoadingContext);
+    const { isPageLoading, setIsPageLoading } = useLoadingStore();
     const [submitButtonText, setSubmitButtonText] = useState("Create Market");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");

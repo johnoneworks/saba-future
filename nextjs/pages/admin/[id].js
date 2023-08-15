@@ -1,16 +1,16 @@
 import { AdminHeader } from "@/components/Header/AdminHeader";
 import { predictionWorldAddress } from "@/config";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMarketDetailStore } from "@/store/useMarketDetailStore";
 import SaveIcon from "@mui/icons-material/Save";
 import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * TODO:
@@ -26,7 +26,7 @@ export default function EditMarketPage() {
 const EditMarket = () => {
     const router = useRouter();
     const { id } = router.query;
-    const { setIsPageLoading } = useContext(LoadingContext);
+    const { setIsPageLoading } = useLoadingStore();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");

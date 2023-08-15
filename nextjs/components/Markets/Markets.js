@@ -2,14 +2,14 @@ import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { Loading } from "@/components/Loading/Loading";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
-import { LoadingContext } from "@/contexts/LoadingContext";
 import { useAccountStore } from "@/store/useAccountStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMarketsStore } from "@/store/useMarketsStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import styles from "@/styles/Home.module.scss";
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ShowMarkets = (props) => {
     const router = useRouter();
@@ -70,7 +70,7 @@ export const Markets = () => {
     const { markets, marketCount } = useMarketsStore();
 
     const { currentMenu, currentMarketID } = useMenuStore();
-    const { isMarketLoading } = useContext(LoadingContext);
+    const { isMarketLoading } = useLoadingStore();
     const [showTest, setShowTest] = useState(false);
     const hasLogin = !!account;
 

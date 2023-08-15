@@ -1,9 +1,8 @@
-import { LoadingContext } from "@/contexts/LoadingContext";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { Box, CircularProgress, Fade } from "@mui/material";
-import { useContext } from "react";
 
 export default function PageLoading() {
-    const { isPageLoading } = useContext(LoadingContext);
+    const { isPageLoading } = useLoadingStore();
     return (
         <Fade in={isPageLoading}>
             <Box
