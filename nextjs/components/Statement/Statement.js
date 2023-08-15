@@ -2,10 +2,10 @@ import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { Loading } from "@/components/Loading/Loading";
 import StatementMarketCard from "@/components/StatementMarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-import { PageContext } from "@/contexts/PageContext";
-import { UserInfoContext } from "@/contexts/UserInfoContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useMenuStore } from "@/store/useMenuStore";
+import { useStatementStore } from "@/store/useStatementStore";
 import { Box, Grid } from "@mui/material";
 import { useContext } from "react";
 
@@ -18,10 +18,10 @@ import { useContext } from "react";
  *
  */
 export const Statement = () => {
-    const { userTotalBetValue, userStatements } = useContext(UserInfoContext);
-    const { account } = useContext(BiconomyAccountContext);
+    const { userStatements } = useStatementStore();
+    const { account } = useAccountStore();
+    const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading } = useContext(LoadingContext);
-    const { currentMenu, currentMarketID } = useContext(PageContext);
 
     return (
         <>

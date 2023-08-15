@@ -1,11 +1,13 @@
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { UserInfoContext } from "@/contexts/UserInfoContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { ethers } from "ethers";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 
 const useGetUserBalance = () => {
-    const { account, sureTokenContract, smartAccount } = useContext(BiconomyAccountContext);
-    const { setBalance } = useContext(UserInfoContext);
+    const { account, smartAccount } = useAccountStore();
+    const { sureTokenContract } = useContractStore();
+    const { setBalance } = usePlayerInfoStore();
 
     const updateBalance = async () => {
         try {

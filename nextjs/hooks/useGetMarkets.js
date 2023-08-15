@@ -1,28 +1,24 @@
 import { predictionWorldAddress } from "@/config";
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { MARKET_ORDER, MARKET_STATUS, MARKET_WITH_TEST } from "@/constants/MarketCondition";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketContext } from "@/contexts/MarketContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useMarketsStore } from "@/store/useMarketsStore";
 import { testMarketsData } from "@/testData/testMarketsData";
 import { IsLocal } from "@/utils/IsLocal";
 import PredictionWorld from "@/utils/abis/PredictionWorld.json";
 import { ethers } from "ethers";
 import { useContext, useEffect } from "react";
 
-/**
- * TODO:
- * 1. 改作到 provider
- *
- */
-
 // 未登入玩家替代合約提供者
 const PROVIDER = new ethers.providers.JsonRpcProvider("https://polygon-mainnet.g.alchemy.com/v2/B8ncZIIjNn8eul-QPcOcgBac3pFdOH6_");
 const PREDICTION_WORLD_CONTRACT = new ethers.Contract(predictionWorldAddress, PredictionWorld.abi, PROVIDER);
 
 const useGetMarkets = () => {
-    const { setMarketCount, markets, setMarkets } = useContext(MarketContext);
-    const { account, predictionWorldContract, setPredictionWorldContract } = useContext(BiconomyAccountContext);
+    const { markets, setMarkets, setMarketCount } = useMarketsStore();
+    const { account } = useAccountStore();
+    const { predictionWorldContract, setPredictionWorldContract } = useContractStore();
     const { setIsMarketLoading } = useContext(LoadingContext);
 
     const useTestData = () => {

@@ -1,14 +1,14 @@
-import { MarketContext } from "@/contexts/MarketContext";
+import { useMarketsStore } from "@/store/useMarketsStore";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import classnames from "classnames";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./ChartContainer.module.scss";
 
 export default function ChartContainer() {
-    const { yesInfo, noInfo } = useContext(MarketContext);
+    const { yesInfo, noInfo } = useMarketsStore();
 
     const InfoTable = ({ info, title, buttonStyle }) => {
         const theme = createTheme();

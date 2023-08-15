@@ -1,8 +1,11 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { MarketDetailContext } from "@/contexts/MarketDetailProvider";
+import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useMarketDetailStore } from "@/store/useMarketDetailStore";
+import { useMenuStore } from "@/store/useMenuStore";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import BlockIcon from "@mui/icons-material/Block";
@@ -10,19 +13,8 @@ import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/system";
 import moment from "moment";
-import { useContext } from "react";
+import { useEffect } from "react";
 import styles from "./MarketDetail.module.scss";
-
-/** TODO LIST:
- 1. Return back button √
- 2. Add loading 
- 3. Add error handling
- 4. Add chart √
- 5. update bet button
- 6. 下注後，要更新資料 √
- 7. 顯示資料 √
- 8. 將此頁移到 index.js √
- */
 
 const CustomTypography = styled(Typography)({
     fontSize: "12px",
@@ -121,11 +113,18 @@ const MarketDescription = (props) => {
 };
 
 export default function MarketDetail() {
-    const { account } = useContext(BiconomyAccountContext);
-    const { marketDetail } = useContext(MarketDetailContext);
+    const { marketDetail } = useMarketDetailStore();
+    const { updateMarketDetail } = useGetMarketDetail();
+    const { account } = useAccountStore();
+    const { predictionWorldContract } = useContractStore();
+    const { currentMarketID } = useMenuStore();
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
+
+    useEffect(() => {
+        updateMarketDetail(currentMarketID, predictionWorldContract);
+    }, []);
 
     return (
         <>

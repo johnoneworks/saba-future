@@ -8,7 +8,6 @@ export const useContractStore = create((set) => ({
     earlyBirdContract: null,
     earlyBirdInterface: null,
     earlyBirdValidState: 0,
-
     setSureTokenContract: (sureTokenContract) => set((state) => ({ ...state, sureTokenContract })),
     setSureTokenInterface: (sureTokenInterface) => set((state) => ({ ...state, sureTokenInterface })),
     setPredictionWorldContract: (predictionWorldContract) => set((state) => ({ ...state, predictionWorldContract })),

@@ -1,12 +1,13 @@
 import { predictionWorldAddress, sureTokenAddress } from "@/config";
 import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketDetailContext } from "@/contexts/MarketDetailProvider";
-import { PageContext } from "@/contexts/PageContext";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
+import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useMenuStore } from "@/store/useMenuStore";
 import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
 import classnames from "classnames";
 import { useContext, useState } from "react";
@@ -41,9 +42,10 @@ const SelectButton = (props) => {
 
 export const BetArea = (props) => {
     const { id, market } = props;
-    const { smartAccount, predictionWorldInterface, sureTokenInterface, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { updateMarketDetail } = useContext(MarketDetailContext);
-    const { currentMarketID } = useContext(PageContext);
+    const { smartAccount } = useAccountStore();
+    const { predictionWorldInterface, sureTokenInterface, predictionWorldContract } = useContractStore();
+    const { updateMarketDetail } = useGetMarketDetail();
+    const { currentMarketID } = useMenuStore();
     const { setIsPageLoading } = useContext(LoadingContext);
 
     const { updateBalance } = useGetUserBalance();
