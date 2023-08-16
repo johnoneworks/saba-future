@@ -129,9 +129,6 @@ export const Header = () => {
 
     return (
         <>
-            {/* <Suspense>
-                <BiconomyWallet />
-            </Suspense> */}
             <BiconomyWallet />
             <div className={styles.root}>
                 <div className={styles.header}>

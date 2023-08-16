@@ -4,7 +4,7 @@ import "@biconomy/web3-auth/dist/src/style.css";
 
 const useLogout = () => {
     const { setAccount, socialLoginSDK, setProvider } = useAccountStore();
-    const { setisSendAccountReady } = usePlayerInfoStore();
+    const { setIsSendAccountReady } = usePlayerInfoStore();
 
     const disconnectWallet = async () => {
         if (!socialLoginSDK || !socialLoginSDK.web3auth) {
@@ -13,7 +13,7 @@ const useLogout = () => {
         }
 
         await socialLoginSDK.logout();
-        setisSendAccountReady(false);
+        setIsSendAccountReady(false);
         socialLoginSDK.hideWallet();
         setProvider(undefined);
         setAccount(undefined);

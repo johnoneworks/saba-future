@@ -1,7 +1,6 @@
 import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import useLogin from "@/hooks/useLogin";
 import { useAccountStore } from "@/store/useAccountStore";
-import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
@@ -12,8 +11,7 @@ import PageLoading from "./LoadingPage/PageLoading";
 
 export default function BiconomyWallet() {
     const { account, socialLoginSDK, provider, smartAccount } = useAccountStore();
-    const { email, isSendAccountReady, setisSendAccountReady } = usePlayerInfoStore();
-    const { setIsPageLoading } = useLoadingStore();
+    const { email, isSendAccountReady, setIsSendAccountReady } = usePlayerInfoStore();
     const { connectSDK } = useLogin();
 
     const connectWallet = async () => {
@@ -34,7 +32,7 @@ export default function BiconomyWallet() {
                 }
             });
             if (!!response && !!response.data && response.data.ErrorCode === 0) {
-                setisSendAccountReady(!isSendAccountReady);
+                setIsSendAccountReady(!isSendAccountReady);
             }
         } catch (error) {
             console.log("%c⧭ accoutSaveApiIsError", "color: #731d6d", error);

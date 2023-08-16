@@ -1,6 +1,7 @@
 import { chainId, dappAPIKey, earlyBirdAddress, predictionWorldAddress, providerUrl, sureTokenAddress } from "@/config";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import EarlyBird from "@/utils/abis/EarlyBird.json";
 import PredictionWorld from "@/utils/abis/PredictionWorld.json";
@@ -23,6 +24,7 @@ const useLogin = () => {
         setEarlyBirdValidState
     } = useContractStore();
     const { setEmail } = usePlayerInfoStore();
+    const { setIsPageLoading } = useLoadingStore();
 
     const connectSDK = useCallback(async () => {
         console.log("connectWallet()");
@@ -48,6 +50,7 @@ const useLogin = () => {
         }
 
         if (sdk.web3auth.status === "connected") {
+            setIsPageLoading(true);
             const web3Provider = new ethers.providers.Web3Provider(sdk.provider);
             const accounts = await web3Provider.listAccounts();
 
@@ -90,6 +93,7 @@ const useLogin = () => {
             setAccount(accounts[0]);
             setProvider(web3Provider);
             setSmartAccount(smartAccountSdk);
+            setIsPageLoading(false);
 
             setSureTokenContract(sureTokenContract);
             setSureTokenInterface(sureTokenInterface);
