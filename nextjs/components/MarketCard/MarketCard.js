@@ -136,24 +136,9 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     return (
-        <Box onClick={account ? handleSelectMarket : handleLogin}>
+        <Box sx={{ height: "100%" }} onClick={account ? handleSelectMarket : handleLogin}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
-                {!isClosed && market.isSuspended && (
-                    <Tooltip title="Suspended">
-                        <BlockIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
-                    </Tooltip>
-                )}
-                {!isClosed && market.endTimestamp < Date.now() && (
-                    <Tooltip title="Time Over">
-                        <AccessAlarmIcon className="float-right mt-2" color="warning" aria-label="market suspended" fontSize="medium" />
-                    </Tooltip>
-                )}
-                {isEditable && (
-                    <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
-                        <BorderColorOutlinedIcon />
-                    </IconButton>
-                )}
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
                         <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
@@ -161,6 +146,27 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                     <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
                         {market.question}
                     </Typography>
+                    {isEditable && (
+                        <Tooltip title="Edit">
+                            <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
+                                <BorderColorOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                    {!isClosed && market.endTimestamp < Date.now() && (
+                        <Tooltip title="Time Over">
+                            <IconButton className="float-right" color="warning" aria-label="go to edit" onClick={handleEdit} fontSize="small">
+                                <AccessAlarmIcon />
+                            </IconButton>
+                        </Tooltip>
+                    )}
+                    {!isClosed && market.isSuspended && (
+                        <Tooltip title="Suspended">
+                            <IconButton className="float-right" color="warning" aria-label="go to edit" onClick={handleEdit} fontSize="small">
+                                <BlockIcon />
+                            </IconButton>
+                        </Tooltip>
+                    )}
                 </Box>
                 {win ? successIcon : null}
                 {lost ? failIcon : null}
