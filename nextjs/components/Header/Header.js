@@ -145,8 +145,7 @@ export const Header = () => {
                 <div className={styles.header}>
                     <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>{currentMarketID ? <ArrowBackIcon /> : <RefreshIcon />}</div>
                     <div className={styles.logo}>
-                        <Image src="/logo.svg" alt="placeholder" width={20} height={20} margin={20} />
-                        <span style={{ marginLeft: 10 }}>{"Saba Future"} </span>
+                        <Image src="/logo-text.svg" alt="placeholder" width={150} height={30} />
                     </div>
                     <div>
                         {account && smartAccount && smartAccount.isAdminUser && (
