@@ -74,7 +74,7 @@ export const NewbieDialog = () => {
                 <DialogTitle sx={{ fontSize: 16 }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <span style={{ width: "10px", height: "1px", backgroundColor: "#fff", marginRight: "4px" }}></span>
-                        <span style={{ color: "#fff" }}>Welcome to SaBa Future</span>
+                        <span style={{ color: "#fff" }}>Welcome to SaBa Orb</span>
                         <span style={{ width: "10px", height: "1px", backgroundColor: "#fff", marginLeft: "4px" }}></span>
                     </div>
                 </DialogTitle>
