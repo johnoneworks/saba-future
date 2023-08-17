@@ -80,7 +80,7 @@ export const AdminHeader = () => {
                     <div onClick={handleReturnBack}>
                         <HomeOutlinedIcon />
                     </div>
-                    <div> {account ? "Saba Future" : "Wallet Connecting..."} </div>
+                    <div> {account ? "Saba Orb" : "Wallet Connecting..."} </div>
                     <div className="cursor-pointer" onClick={handleLogout}>
                         {account ? <LogoutIcon /> : <LoginIcon />}
                     </div>
