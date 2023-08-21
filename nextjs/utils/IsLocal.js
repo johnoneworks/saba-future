@@ -1,4 +1,4 @@
 export const IsLocal = () => {
     const environment = process.env.NODE_ENV;
-    return false;
+    return environment === "development";
 };
