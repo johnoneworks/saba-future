@@ -1,9 +1,10 @@
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import "@biconomy/web3-auth/dist/src/style.css";
-import { useContext } from "react";
 
 const useLogout = () => {
-    const { setAccount, socialLoginSDK, setProvider, setisSendAccountReady } = useContext(BiconomyAccountContext);
+    const { setAccount, socialLoginSDK, setProvider } = useAccountStore();
+    const { setIsSendAccountReady } = usePlayerInfoStore();
 
     const disconnectWallet = async () => {
         if (!socialLoginSDK || !socialLoginSDK.web3auth) {
@@ -12,7 +13,7 @@ const useLogout = () => {
         }
 
         await socialLoginSDK.logout();
-        setisSendAccountReady(false); // reset send account status
+        setIsSendAccountReady(false);
         socialLoginSDK.hideWallet();
         setProvider(undefined);
         setAccount(undefined);

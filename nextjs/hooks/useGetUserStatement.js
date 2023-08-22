@@ -1,23 +1,20 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { LoadingContext } from "@/contexts/LoadingContext";
-import { UserInfoContext } from "@/contexts/UserInfoContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
+import { useStatementStore } from "@/store/useStatementStore";
 import { testMarketsData } from "@/testData/testMarketsData";
 import { testUserBetList } from "@/testData/testStatementsData";
 import { IsLocal } from "@/utils/IsLocal";
-import { useCallback, useContext, useEffect } from "react";
-
-/**
- * TODO
- * 1. 確認資料正確 √
- * 2. 優化速度
- * 3. setHasGetFirstData 優化
- */
+import { useCallback, useEffect } from "react";
 
 const useGetUserStatement = () => {
-    const { smartAccount, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { setUserTotalBetValue, setUserStatements, setHasGetFirstData } = useContext(UserInfoContext);
-    const { setIsMarketLoading } = useContext(LoadingContext);
+    const { smartAccount } = useAccountStore();
+    const { predictionWorldContract } = useContractStore();
+    const { setHasGetFirstInformation } = usePlayerInfoStore();
+    const { setUserStatements } = useStatementStore();
+    const { setIsMarketLoading } = useLoadingStore();
 
     const useTestData = () => {
         let tempMarkets = testMarketsData;
@@ -42,7 +39,6 @@ const useGetUserStatement = () => {
             }
             return info;
         }, []);
-        setUserTotalBetValue(totalBetValue);
         setUserStatements(StatementsInfo);
     };
 
@@ -71,7 +67,7 @@ const useGetUserStatement = () => {
                     endTimestamp: market.info.endTimestamp,
                     timestamp: market.info.timestamp,
                     outcome: market.outcome,
-                    isTest: market.info.isTest,
+                    isTest: market.info.isTest
                 });
             }
             console.log(`markets size: ${markets.length}`);
@@ -119,9 +115,8 @@ const useGetUserStatement = () => {
                 return info;
             }, []);
 
-            setUserTotalBetValue(totalBetAmount);
             setUserStatements(StatementsInfo);
-            setHasGetFirstData(true);
+            setHasGetFirstInformation(true);
             setIsMarketLoading(false);
         } catch (error) {
             console.error(`Error getting markets, ${error}`);

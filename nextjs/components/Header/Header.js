@@ -1,12 +1,12 @@
 import ProfileDialog from "@/components/ProfileDialog";
 import { MENU_TYPE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { PageContext } from "@/contexts/PageContext";
-import { UserInfoContext } from "@/contexts/UserInfoContext";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
 import useLogout from "@/hooks/useLogout";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useMenuStore } from "@/store/useMenuStore";
+import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -21,18 +21,9 @@ import classnames from "classnames";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Suspense, useContext, useState } from "react";
+import { useState } from "react";
 import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
-
-/**
- * TODO:
- * 1. return back button √
- * 2. add MUI style √
- * 3. 個人資訊 icon √
- * 4. Login / Logout Logic √
- * 5. newbie dialog refactor
- */
 
 const CustomPersonIcon = styled(PersonIcon)({
     fontSize: 16
@@ -58,7 +49,7 @@ const ProfileItem = ({ type, text }) => {
 };
 
 const MenuTab = ({ tab }) => {
-    const { currentMenu, setCurrentMenu } = useContext(PageContext);
+    const { currentMenu, setCurrentMenu } = useMenuStore();
     const router = useRouter();
     return (
         <div
@@ -78,9 +69,9 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, email, smartAccount, socialLoginSDK } = useContext(BiconomyAccountContext);
-    const { currentMarketID, currentMenu, setCurrentMarketID } = useContext(PageContext);
-    const { balance } = useContext(UserInfoContext);
+    const { account, smartAccount, socialLoginSDK } = useAccountStore();
+    const { email, balance } = usePlayerInfoStore();
+    const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateStatements } = useGetUserStatement();
     const { updateBalance } = useGetUserBalance();
@@ -138,9 +129,7 @@ export const Header = () => {
 
     return (
         <>
-            <Suspense>
-                <BiconomyWallet />
-            </Suspense>
+            <BiconomyWallet />
             <div className={styles.root}>
                 <div className={styles.header}>
                     <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>{currentMarketID ? <ArrowBackIcon /> : <RefreshIcon />}</div>

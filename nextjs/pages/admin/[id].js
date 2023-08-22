@@ -1,15 +1,16 @@
 import { AdminHeader } from "@/components/Header/AdminHeader";
 import { predictionWorldAddress } from "@/config";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketContext } from "@/contexts/MarketContext";
-import useGetMarketDetail from "@/hooks/useGetMarketDetail";
+import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import { useMarketDetailStore } from "@/store/useMarketDetailStore";
 import SaveIcon from "@mui/icons-material/Save";
 import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * TODO:
@@ -18,10 +19,14 @@ import { useContext, useEffect, useState } from "react";
 
 const dateFormat = "YYYY-MM-DDTHH:mm";
 
-export default function EditMarket() {
+export default function EditMarketPage() {
+    return <EditMarket />;
+}
+
+const EditMarket = () => {
     const router = useRouter();
     const { id } = router.query;
-    const { setIsPageLoading } = useContext(LoadingContext);
+    const { setIsPageLoading } = useLoadingStore();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
@@ -29,8 +34,9 @@ export default function EditMarket() {
     const [timestamp, setTimestamp] = useState();
     const [date, setDate] = useState("");
     const [isTest, setIsTest] = useState(false);
-    const { provider, account, smartAccount, predictionWorldContract, predictionWorldInterface } = useContext(BiconomyAccountContext);
-    const { marketDetail } = useContext(MarketContext);
+    const { marketDetail } = useMarketDetailStore();
+    const { predictionWorldContract, predictionWorldInterface } = useContractStore();
+    const { provider, account, smartAccount } = useAccountStore();
     const { updateMarketDetail } = useGetMarketDetail();
 
     useEffect(() => {
@@ -233,4 +239,4 @@ export default function EditMarket() {
             </Container>
         </Box>
     );
-}
+};
