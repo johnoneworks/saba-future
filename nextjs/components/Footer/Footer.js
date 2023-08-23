@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import styles from "./Footer.module.scss";
 
 export const Footer = () => {
@@ -9,20 +9,10 @@ export const Footer = () => {
                     <img src="/logo.svg" alt="placeholder" width={70} height={70} />
                 </Box>
                 <Box className={styles.info}>
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Typography variant="body1">Sign up for 1000 SURE tokens!</Typography>
-                        <Box ml={2}>
-                            <Button variant="contained" style={{ backgroundColor: "#fff", color: "#1A84F2", fontWeight: "bold" }}>
-                                sign up
-                            </Button>
-                        </Box>
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Typography variant="overline">Powered by</Typography>
-                        <a href="https://polygon.technology/" target="_blank" rel="noopener noreferrer">
-                            <img src="/polygon.png" alt="placeholder" width={80} height={24} />
-                        </a>
-                    </Box>
+                    <Typography variant="overline">Powered by</Typography>
+                    <a href="https://polygon.technology/" target="_blank" rel="noopener noreferrer">
+                        <img src="/polygon.png" alt="placeholder" width={80} height={24} />
+                    </a>
                 </Box>
             </Grid>
             <Grid item sx={{ width: "100%" }}>
