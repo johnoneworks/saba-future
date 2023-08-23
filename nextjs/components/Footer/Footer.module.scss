@@ -1,0 +1,33 @@
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   @media (min-width: 768px) {
+        & {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+    }
+}
+
+.logo {
+    margin-bottom: 16px;
+    @media (min-width: 768px) {
+            & {
+                margin-bottom: 8px;
+            }
+        }
+}
+
+.info {
+
+    @media (min-width: 768px) {
+        & {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+}

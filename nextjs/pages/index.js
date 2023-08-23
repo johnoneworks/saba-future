@@ -1,3 +1,4 @@
+import { Footer } from "@/components/Footer/Footer";
 import { Header } from "@/components/Header/Header";
 import MarketDetail from "@/components/MarketDetail/MarketDetail";
 import { Markets } from "@/components/Markets/Markets";
@@ -41,6 +42,7 @@ export default function Home() {
                 {account && <Statement />}
                 {account && currentMarketID && <MarketDetail />}
             </Box>
+            <Footer />
         </Box>
     );
 }
