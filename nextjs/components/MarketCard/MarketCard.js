@@ -82,31 +82,24 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
         : market.totalNoAmount > 0
         ? `${Math.floor((market.totalYesAmount * 100) / market.totalNoAmount) - 1} %`
         : "-";
-    const cardValueTitle = isClosed ? ["Outcome", "Winners Count", "Profit"] : ["Volume", "Yes", "No"];
     const cardValues = [
         {
-            title: cardValueTitle[0],
-            openValueBgClass: "isVolume",
-            isClosedOutcome: outcomeValue,
-            openOutcome: market.totalAmount.toString(),
-            openColor: "",
-            isClosedcolor: "#E84D4D"
-        },
-        {
-            title: cardValueTitle[1],
-            openValueBgClass: "isYes",
-            isClosedOutcome: winnersCount,
+            openTitle: "Yes",
+            closeTitle: "Winners Count",
+            openYesNoBgClass: "isYes",
             openOutcome: market.totalYesAmount.toString(),
-            openColor: "#3FB06B",
-            isClosedcolor: ""
+            closeValue: winnersCount,
+            YesNoColor: "#3FB06B",
+            note: ""
         },
         {
-            title: cardValueTitle[2],
-            openValueBgClass: "isNo",
-            isClosedOutcome: bonus.toString(),
+            openTitle: "No",
+            closeTitle: "Profit",
+            openYesNoBgClass: "isNo",
             openOutcome: market.totalNoAmount.toString(),
-            openColor: "#E84D4D",
-            isClosedcolor: ""
+            closeValue: bonus.toString(),
+            YesNoColor: "#E84D4D",
+            note: "possible fee included"
         }
     ];
 
@@ -143,9 +136,21 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                     <CustomAvatar>
                         <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
                     </CustomAvatar>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
-                        {market.question}
-                    </Typography>
+                    <Box ml={1}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: "bolder" }}>
+                            {market.question}
+                        </Typography>
+                        {isClosed && (
+                            <Box
+                                className={classnames(styles.outcome, {
+                                    [styles.isYes]: market.outcome === true,
+                                    [styles.isNo]: market.outcome === false
+                                })}
+                            >
+                                {outcomeValue}
+                            </Box>
+                        )}
+                    </Box>
                     {isEditable && (
                         <Tooltip title="Edit">
                             <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
@@ -168,61 +173,37 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                         </Tooltip>
                     )}
                 </Box>
+                {!isClosed && (
+                    <Box>
+                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
+                            {market.totalAmount.toString()} <Typography variant="caption">SURE BET</Typography>
+                        </Typography>
+                    </Box>
+                )}
                 {win ? successIcon : null}
                 {lost ? failIcon : null}
-                <Box className={styles.valueContainer}>
+                <Box className={classnames(styles.valueContainer, { [styles.isClosed]: isClosed })}>
                     {cardValues.map((value, index) => {
-                        let displayElement;
-
-                        if (index === 0) {
-                            displayElement = (
-                                <Box className={styles.info}>
-                                    <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px" }}>
-                                        {cardValueTitle[0]}
-                                    </Typography>
-                                    <Typography
-                                        className={classnames(styles.outcomeValue, {
-                                            [styles.isYes]: market.outcome === true,
-                                            [styles.isNo]: market.outcome === false
-                                        })}
-                                        variant="body1"
-                                        sx={{ fontWeight: "bold", mr: "6px" }}
-                                    >
-                                        {outcomeValue}
-                                    </Typography>
-                                </Box>
-                            );
-                        } else if (index === 1) {
-                            displayElement = (
-                                <Box className={styles.info} sx={{ display: "flex", flexDirection: "column" }}>
-                                    <Typography variant="filled">{value.isClosedOutcome}</Typography>
-                                    <CustomTypography>{value.title}</CustomTypography>
-                                </Box>
-                            );
-                        } else {
-                            displayElement = (
-                                <Box className={styles.sureGroup}>
-                                    <Box className={styles.info}>
-                                        <Typography variant="body2" sx={{ fontWeight: "bold", mr: "6px" }}>
-                                            {cardValueTitle[2]}
-                                        </Typography>
-                                        <Box className={styles.sureGroup}>
-                                            <Typography variant="filled">{bonus.toString()}</Typography>
-                                        </Box>
-                                    </Box>
-                                    <CustomTypography variant="body2">possible fee included</CustomTypography>
-                                </Box>
-                            );
-                        }
-
                         return (
-                            <Box key={index} className={classnames(styles.valueBox, { [styles[value.openValueBgClass]]: !isClosed })}>
+                            <Box key={index} className={classnames(styles.valueBox, { [styles[value.openYesNoBgClass]]: !isClosed })}>
                                 {isClosed ? (
-                                    <Box className={styles.info}>{displayElement}</Box>
+                                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                                        <Box className={styles.info}>
+                                            <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
+                                                {value.closeTitle}
+                                            </Typography>
+                                            <Typography variant="body1" sx={{ fontWeight: "bold", color: "#585353" }}>
+                                                {value.closeValue}
+                                            </Typography>
+                                        </Box>
+                                        <Typography variant="caption" color="#A0A4A8">
+                                            {value.note}
+                                        </Typography>
+                                    </Box>
                                 ) : (
                                     <Box className={styles.info}>
-                                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.openColor }}>
-                                            {value.title}
+                                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.YesNoColor }}>
+                                            {value.openTitle}
                                         </Typography>
                                         <Box className={styles.sureGroup}>
                                             <Typography variant="filled" sx={{ fontWeight: "bold" }}>
