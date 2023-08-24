@@ -66,13 +66,11 @@
     font-weight: bold;
 
     &.isYes {
-        width: 60%;
         align-items: flex-start;
         background-color: #E9F6EE;
     }
 
     &.isNo {
-        width: 40%;
         align-items: flex-end;
         background-color: #FDEDED;
     }

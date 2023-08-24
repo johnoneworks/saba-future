@@ -75,6 +75,8 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     }
     const outcomeValue = market.outcome ? "Yes" : "No";
     const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
+    const yesAmount = parseFloat(market.totalYesAmount.toString());
+    const noAmount = parseFloat(market.totalNoAmount.toString());
     const bonus = market.outcome
         ? market.totalYesAmount > 0
             ? `${Math.floor((market.totalNoAmount * 100) / market.totalYesAmount) - 1} %`
@@ -102,6 +104,11 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             note: "possible fee included"
         }
     ];
+
+    const yesProportion = `${(yesAmount / (yesAmount + noAmount)) * 100}%`;
+    const noProportion = `${(noAmount / (yesAmount + noAmount)) * 100}%`;
+    const isYes = market.outcome;
+    const widthProportion = isYes ? yesProportion : noProportion;
 
     const handleLogin = async () => {
         if (!account && socialLoginSDK.web3auth.status !== "connected") {
@@ -185,7 +192,11 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                 <Box className={classnames(styles.valueContainer, { [styles.isClosed]: isClosed })}>
                     {cardValues.map((value, index) => {
                         return (
-                            <Box key={index} className={classnames(styles.valueBox, { [styles[value.openYesNoBgClass]]: !isClosed })}>
+                            <Box
+                                key={index}
+                                sx={{ width: `${widthProportion}` }}
+                                className={classnames(styles.valueBox, { [styles[value.openYesNoBgClass]]: !isClosed })}
+                            >
                                 {isClosed ? (
                                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                                         <Box className={styles.info}>
