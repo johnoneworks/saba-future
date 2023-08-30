@@ -86,15 +86,6 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
         : "-";
     const cardValues = [
         {
-            openTitle: "Yes",
-            closeTitle: "Winners Count",
-            openYesNoBgClass: "isYes",
-            openOutcome: market.totalYesAmount.toString(),
-            closeValue: winnersCount,
-            YesNoColor: "#3FB06B",
-            note: ""
-        },
-        {
             openTitle: "No",
             closeTitle: "Profit",
             openYesNoBgClass: "isNo",
@@ -102,13 +93,20 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             closeValue: bonus.toString(),
             YesNoColor: "#E84D4D",
             note: "possible fee included"
+        },
+        {
+            openTitle: "Yes",
+            closeTitle: "Winners Count",
+            openYesNoBgClass: "isYes",
+            openOutcome: market.totalYesAmount.toString(),
+            closeValue: winnersCount,
+            YesNoColor: "#3FB06B",
+            note: ""
         }
     ];
 
-    const yesProportion = `${(yesAmount / (yesAmount + noAmount)) * 100}%`;
-    const noProportion = `${(noAmount / (yesAmount + noAmount)) * 100}%`;
-    const isYes = market.outcome;
-    const widthProportion = isYes ? yesProportion : noProportion;
+    const yesProportion = `${yesAmount + noAmount === 0 ? `50%` : `${(yesAmount / (yesAmount + noAmount)) * 100}%`}`;
+    const noProportion = `${yesAmount + noAmount === 0 ? `50%` : `${(noAmount / (yesAmount + noAmount)) * 100}%`}`;
 
     const handleLogin = async () => {
         if (!account && socialLoginSDK.web3auth.status !== "connected") {
@@ -194,7 +192,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                         return (
                             <Box
                                 key={index}
-                                sx={{ width: `${widthProportion}` }}
+                                sx={{ width: `${value.openTitle === `Yes` ? yesProportion : noProportion}` }}
                                 className={classnames(styles.valueBox, { [styles[value.openYesNoBgClass]]: !isClosed })}
                             >
                                 {isClosed ? (
