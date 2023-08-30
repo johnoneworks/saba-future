@@ -22,6 +22,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import HowToPlayDialog from "../HowToPlayDialog/HowToPlayDialog";
 import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
 
@@ -77,6 +78,7 @@ export const Header = () => {
     const { updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
+    const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
 
     const refreshMarkets = () => {
         updateMarkets();
@@ -127,6 +129,14 @@ export const Header = () => {
         setOpenProfileDialog(false);
     };
 
+    const handleClickHowToPlay = () => {
+        setOpenHowToPlayDialog(true);
+    };
+
+    const handleCloseHowToPlay = () => {
+        setOpenHowToPlayDialog(false);
+    };
+
     return (
         <>
             <BiconomyWallet />
@@ -170,6 +180,9 @@ export const Header = () => {
                             <div className={styles.tab}>
                                 <MenuTab tab={MENU_TYPE.MARKET} />
                                 <MenuTab tab={MENU_TYPE.STATEMENT} />
+                                <div className={styles.howToPlayButton} onClick={handleClickHowToPlay}>
+                                    <Image src="/howToPlay/how-to-play.svg" alt="HowToPlayImage" width={20} height={20} />
+                                </div>
                             </div>
                         )}
                     </div>
@@ -179,6 +192,7 @@ export const Header = () => {
                 <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
             )}
             <NewbieDialog />
+            <HowToPlayDialog open={openHowToPlayDialog} onClose={handleCloseHowToPlay} />
         </>
     );
 };
