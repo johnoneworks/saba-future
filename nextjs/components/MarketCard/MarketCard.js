@@ -51,7 +51,6 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const { account, predictionWorldContract, socialLoginSDK } = useContext(BiconomyAccountContext);
     const { updateMarketDetail } = useGetMarketDetail();
 
-    let titleWidth = "w-[calc(100%-72px)]";
     let win = false;
     let lost = false;
     if (market.yesBets?.filter((bet) => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
@@ -68,11 +67,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             win = true;
         }
     }
-    if (win && lost) {
-        titleWidth = "w-[calc(100%-168px)]";
-    } else if (win || lost) {
-        titleWidth = "w-[calc(100%-120px)]";
-    }
+
     const outcomeValue = market.outcome ? "Yes" : "No";
     const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
     const yesAmount = parseFloat(market.totalYesAmount.toString());
@@ -87,26 +82,29 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const cardValues = [
         {
             openTitle: "No",
-            closeTitle: "Profit",
+            closeTitle: "Winners Count",
             openYesNoBgClass: "isNo",
-            openOutcome: market.totalNoAmount.toString(),
-            closeValue: bonus.toString(),
+            openOutcome: market.totalYesAmount.toString(),
+            closeValue: winnersCount,
             YesNoColor: "#E84D4D",
-            note: "possible fee included"
+            note: ""
         },
         {
             openTitle: "Yes",
-            closeTitle: "Winners Count",
+            closeTitle: "Profit",
             openYesNoBgClass: "isYes",
-            openOutcome: market.totalYesAmount.toString(),
-            closeValue: winnersCount,
+            openOutcome: market.totalNoAmount.toString(),
+            closeValue: bonus.toString(),
             YesNoColor: "#3FB06B",
-            note: ""
+            note: "possible fee included"
         }
     ];
 
-    const yesProportion = `${yesAmount + noAmount === 0 ? `50%` : `${(yesAmount / (yesAmount + noAmount)) * 100}%`}`;
-    const noProportion = `${yesAmount + noAmount === 0 ? `50%` : `${(noAmount / (yesAmount + noAmount)) * 100}%`}`;
+    const getPercentage = (targetAmount) => {
+        const total = yesAmount + noAmount;
+        const result = total == 0 ? `50%` : `${(targetAmount / total) * 100}%`;
+        return result;
+    };
 
     const handleLogin = async () => {
         if (!account && socialLoginSDK.web3auth.status !== "connected") {
@@ -148,8 +146,8 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                         {isClosed && (
                             <Box
                                 className={classnames(styles.outcome, {
-                                    [styles.isYes]: market.outcome === true,
-                                    [styles.isNo]: market.outcome === false
+                                    [styles.isYes]: market.outcome,
+                                    [styles.isNo]: !market.outcome
                                 })}
                             >
                                 {outcomeValue}
@@ -189,40 +187,45 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                 {lost ? failIcon : null}
                 <Box className={classnames(styles.valueContainer, { [styles.isClosed]: isClosed })}>
                     {cardValues.map((value, index) => {
+                        const currentAmount = value.openTitle === `Yes` ? yesAmount : noAmount;
                         return (
-                            <Box
-                                key={index}
-                                sx={{ width: `${value.openTitle === `Yes` ? yesProportion : noProportion}` }}
-                                className={classnames(styles.valueBox, { [styles[value.openYesNoBgClass]]: !isClosed })}
-                            >
+                            <>
                                 {isClosed ? (
-                                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                                        <Box className={styles.info}>
-                                            <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
-                                                {value.closeTitle}
-                                            </Typography>
-                                            <Typography variant="body1" sx={{ fontWeight: "bold", color: "#585353" }}>
-                                                {value.closeValue}
+                                    <Box key={index} sx={{ width: "50%" }} className={classnames(styles.valueBox)}>
+                                        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                                            <Box className={styles.info}>
+                                                <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
+                                                    {value.closeTitle}
+                                                </Typography>
+                                                <Typography variant="body1" sx={{ fontWeight: "bold", color: "#585353" }}>
+                                                    {value.closeValue}
+                                                </Typography>
+                                            </Box>
+                                            <Typography variant="caption" color="#A0A4A8">
+                                                {value.note}
                                             </Typography>
                                         </Box>
-                                        <Typography variant="caption" color="#A0A4A8">
-                                            {value.note}
-                                        </Typography>
                                     </Box>
                                 ) : (
-                                    <Box className={styles.info}>
-                                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.YesNoColor }}>
-                                            {value.openTitle}
-                                        </Typography>
-                                        <Box className={styles.sureGroup}>
-                                            <Typography variant="filled" sx={{ fontWeight: "bold" }}>
-                                                {value.openOutcome}
+                                    <Box
+                                        key={index}
+                                        sx={{ width: getPercentage(currentAmount) }}
+                                        className={classnames(styles.valueBox, styles[value.openYesNoBgClass])}
+                                    >
+                                        <Box className={styles.info}>
+                                            <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.YesNoColor }}>
+                                                {value.openTitle}
                                             </Typography>
-                                            <CustomTypography variant="body2">SURE</CustomTypography>
+                                            <Box className={styles.sureGroup}>
+                                                <Typography variant="filled" sx={{ fontWeight: "bold" }}>
+                                                    {value.openOutcome}
+                                                </Typography>
+                                                <CustomTypography variant="body2">SURE</CustomTypography>
+                                            </Box>
                                         </Box>
                                     </Box>
                                 )}
-                            </Box>
+                            </>
                         );
                     })}
                 </Box>
