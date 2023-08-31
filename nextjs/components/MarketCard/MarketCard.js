@@ -72,6 +72,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
     const yesAmount = parseFloat(market.totalYesAmount.toString());
     const noAmount = parseFloat(market.totalNoAmount.toString());
+    const totalAmount = parseFloat(market.totalAmount.toString());
     const bonus = market.outcome
         ? market.totalYesAmount > 0
             ? `${Math.floor((market.totalNoAmount * 100) / market.totalYesAmount) - 1} %`
@@ -84,7 +85,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             openTitle: "No",
             closeTitle: "Winners Count",
             openYesNoBgClass: "isNo",
-            openOutcome: market.totalYesAmount.toString(),
+            openOutcome: yesAmount,
             closeValue: winnersCount,
             YesNoColor: "#E84D4D",
             note: ""
@@ -93,7 +94,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             openTitle: "Yes",
             closeTitle: "Profit",
             openYesNoBgClass: "isYes",
-            openOutcome: market.totalNoAmount.toString(),
+            openOutcome: noAmount,
             closeValue: bonus.toString(),
             YesNoColor: "#3FB06B",
             note: "possible fee included"
@@ -101,8 +102,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     ];
 
     const getPercentage = (targetAmount) => {
-        const total = yesAmount + noAmount;
-        const result = total == 0 ? `50%` : `${(targetAmount / total) * 100}%`;
+        const result = totalAmount == 0 ? `50%` : `${(targetAmount / totalAmount) * 100}%`;
         return result;
     };
 
@@ -179,7 +179,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                 {!isClosed && (
                     <Box>
                         <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
-                            {market.totalAmount.toString()} <Typography variant="caption">SURE BET</Typography>
+                            {totalAmount} <Typography variant="caption">SURE BET</Typography>
                         </Typography>
                     </Box>
                 )}
