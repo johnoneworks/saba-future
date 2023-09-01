@@ -51,7 +51,6 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const { account, predictionWorldContract, socialLoginSDK } = useContext(BiconomyAccountContext);
     const { updateMarketDetail } = useGetMarketDetail();
 
-    let titleWidth = "w-[calc(100%-72px)]";
     let win = false;
     let lost = false;
     if (market.yesBets?.filter((bet) => bet.user.toLowerCase() === currentUser?.toLowerCase()).length > 0) {
@@ -68,13 +67,12 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             win = true;
         }
     }
-    if (win && lost) {
-        titleWidth = "w-[calc(100%-168px)]";
-    } else if (win || lost) {
-        titleWidth = "w-[calc(100%-120px)]";
-    }
+
     const outcomeValue = market.outcome ? "Yes" : "No";
     const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
+    const yesAmount = parseFloat(market.totalYesAmount.toString());
+    const noAmount = parseFloat(market.totalNoAmount.toString());
+    const totalAmount = parseFloat(market.totalAmount.toString());
     const bonus = market.outcome
         ? market.totalYesAmount > 0
             ? `${Math.floor((market.totalNoAmount * 100) / market.totalYesAmount) - 1} %`
@@ -82,33 +80,31 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
         : market.totalNoAmount > 0
         ? `${Math.floor((market.totalYesAmount * 100) / market.totalNoAmount) - 1} %`
         : "-";
-    const cardValueTitle = isClosed ? ["Outcome", "Winners Count", "Profit"] : ["Volume", "Yes", "No"];
     const cardValues = [
         {
-            title: cardValueTitle[0],
-            openValueBgClass: "isVolume",
-            isClosedOutcome: outcomeValue,
-            openOutcome: market.totalAmount.toString(),
-            openColor: "",
-            isClosedcolor: "#E84D4D"
+            openTitle: "No",
+            closeTitle: "Winners Count",
+            openYesNoBgClass: "isNo",
+            openOutcome: yesAmount,
+            closeValue: winnersCount,
+            YesNoColor: "#E84D4D",
+            note: ""
         },
         {
-            title: cardValueTitle[1],
-            openValueBgClass: "isYes",
-            isClosedOutcome: winnersCount,
-            openOutcome: market.totalYesAmount.toString(),
-            openColor: "#3FB06B",
-            isClosedcolor: ""
-        },
-        {
-            title: cardValueTitle[2],
-            openValueBgClass: "isNo",
-            isClosedOutcome: bonus.toString(),
-            openOutcome: market.totalNoAmount.toString(),
-            openColor: "#E84D4D",
-            isClosedcolor: ""
+            openTitle: "Yes",
+            closeTitle: "Profit",
+            openYesNoBgClass: "isYes",
+            openOutcome: noAmount,
+            closeValue: bonus.toString(),
+            YesNoColor: "#3FB06B",
+            note: "possible fee included"
         }
     ];
+
+    const getPercentage = (targetAmount) => {
+        const result = totalAmount == 0 ? `50%` : `${(targetAmount / totalAmount) * 100}%`;
+        return result;
+    };
 
     const handleLogin = async () => {
         if (!account && socialLoginSDK.web3auth.status !== "connected") {
@@ -143,9 +139,21 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                     <CustomAvatar>
                         <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: "100%", height: "100%" }} />
                     </CustomAvatar>
-                    <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: "6px" }}>
-                        {market.question}
-                    </Typography>
+                    <Box ml={1}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: "bolder" }}>
+                            {market.question}
+                        </Typography>
+                        {isClosed && (
+                            <Box
+                                className={classnames(styles.outcome, {
+                                    [styles.isYes]: market.outcome,
+                                    [styles.isNo]: !market.outcome
+                                })}
+                            >
+                                {outcomeValue}
+                            </Box>
+                        )}
+                    </Box>
                     {isEditable && (
                         <Tooltip title="Edit">
                             <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
@@ -168,71 +176,56 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                         </Tooltip>
                     )}
                 </Box>
+                {!isClosed && (
+                    <Box>
+                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
+                            {totalAmount} <Typography variant="caption">SURE BET</Typography>
+                        </Typography>
+                    </Box>
+                )}
                 {win ? successIcon : null}
                 {lost ? failIcon : null}
-                <Box className={styles.valueContainer}>
+                <Box className={classnames(styles.valueContainer, { [styles.isClosed]: isClosed })}>
                     {cardValues.map((value, index) => {
-                        let displayElement;
-
-                        if (index === 0) {
-                            displayElement = (
-                                <Box className={styles.info}>
-                                    <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px" }}>
-                                        {cardValueTitle[0]}
-                                    </Typography>
-                                    <Typography
-                                        className={classnames(styles.outcomeValue, {
-                                            [styles.isYes]: market.outcome === true,
-                                            [styles.isNo]: market.outcome === false
-                                        })}
-                                        variant="body1"
-                                        sx={{ fontWeight: "bold", mr: "6px" }}
-                                    >
-                                        {outcomeValue}
-                                    </Typography>
-                                </Box>
-                            );
-                        } else if (index === 1) {
-                            displayElement = (
-                                <Box className={styles.info} sx={{ display: "flex", flexDirection: "column" }}>
-                                    <Typography variant="filled">{value.isClosedOutcome}</Typography>
-                                    <CustomTypography>{value.title}</CustomTypography>
-                                </Box>
-                            );
-                        } else {
-                            displayElement = (
-                                <Box className={styles.sureGroup}>
-                                    <Box className={styles.info}>
-                                        <Typography variant="body2" sx={{ fontWeight: "bold", mr: "6px" }}>
-                                            {cardValueTitle[2]}
-                                        </Typography>
-                                        <Box className={styles.sureGroup}>
-                                            <Typography variant="filled">{bonus.toString()}</Typography>
+                        const currentAmount = value.openTitle === `Yes` ? yesAmount : noAmount;
+                        return (
+                            <>
+                                {isClosed ? (
+                                    <Box key={index} sx={{ width: "50%" }} className={classnames(styles.valueBox)}>
+                                        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                                            <Box className={styles.info}>
+                                                <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
+                                                    {value.closeTitle}
+                                                </Typography>
+                                                <Typography variant="body1" sx={{ fontWeight: "bold", color: "#585353" }}>
+                                                    {value.closeValue}
+                                                </Typography>
+                                            </Box>
+                                            <Typography variant="caption" color="#A0A4A8">
+                                                {value.note}
+                                            </Typography>
                                         </Box>
                                     </Box>
-                                    <CustomTypography variant="body2">possible fee included</CustomTypography>
-                                </Box>
-                            );
-                        }
-
-                        return (
-                            <Box key={index} className={classnames(styles.valueBox, { [styles[value.openValueBgClass]]: !isClosed })}>
-                                {isClosed ? (
-                                    <Box className={styles.info}>{displayElement}</Box>
                                 ) : (
-                                    <Box className={styles.info}>
-                                        <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.openColor }}>
-                                            {value.title}
-                                        </Typography>
-                                        <Box className={styles.sureGroup}>
-                                            <Typography variant="filled" sx={{ fontWeight: "bold" }}>
-                                                {value.openOutcome}
+                                    <Box
+                                        key={index}
+                                        sx={{ width: getPercentage(currentAmount) }}
+                                        className={classnames(styles.valueBox, styles[value.openYesNoBgClass])}
+                                    >
+                                        <Box className={styles.info}>
+                                            <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.YesNoColor }}>
+                                                {value.openTitle}
                                             </Typography>
-                                            <CustomTypography variant="body2">SURE</CustomTypography>
+                                            <Box className={styles.sureGroup}>
+                                                <Typography variant="filled" sx={{ fontWeight: "bold" }}>
+                                                    {value.openOutcome}
+                                                </Typography>
+                                                <CustomTypography variant="body2">SURE</CustomTypography>
+                                            </Box>
                                         </Box>
                                     </Box>
                                 )}
-                            </Box>
+                            </>
                         );
                     })}
                 </Box>
