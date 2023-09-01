@@ -3,9 +3,7 @@ import Image from "next/image";
 import PropTypes from "prop-types";
 import styles from "./HowToPlay.module.scss";
 
-export default function HowToPlay(props) {
-    const { onClose } = props;
-
+export default function HowToPlay({ onClose }) {
     const steps = [
         {
             title: "Sign In",
@@ -33,27 +31,30 @@ export default function HowToPlay(props) {
         <Dialog onClose={onClose} open PaperProps={{ sx: { overflowY: "unset" } }}>
             <div className={styles.dialogContainer}>
                 <div className={styles.introduce}>
-                    <Image src="/howToPlay/orb-ball.svg" alt="SabaOrbIntroduce" width={92} height={92} />
+                    <Image src="/howToPlay/orb_ball.svg" alt="SabaOrbIntroduce" width={92} height={92} />
                     <div className={styles.title}>What is Saba Orb?</div>
                     <div className={styles.description}>
                         Saba Orb is a thrilling prediction platform. Here, you can bet on various current events, and even craft your own questions to challenge
                         others. Through interaction and creativity, every prediction turns into an exciting adventure.
                     </div>
                 </div>
-                {steps.map((step, index) => (
-                    <div className={styles.stepCard}>
-                        <div className={styles.imageGroup}>
-                            <div className={styles.stepNumber}>{index + 1}</div>
-                            <Image src={step.imageURL} width={283} height={164} />
+                {steps.map((step, index) => {
+                    const stepNumber = index + 1;
+                    return (
+                        <div className={styles.stepCard}>
+                            <div className={styles.imageGroup}>
+                                <div className={styles.stepNumber}>{stepNumber}</div>
+                                <Image src={step.imageURL} width={283} height={164} />
+                            </div>
+                            <div className={styles.stepExplain}>
+                                <div className={styles.title}>{step.title}</div>
+                                <div className={styles.description}>{step.description}</div>
+                            </div>
                         </div>
-                        <div className={styles.stepExplain}>
-                            <div className={styles.title}>{step.title}</div>
-                            <div className={styles.description}>{step.description}</div>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
-            <div onClick={onClose} className={styles.closeHowToPlayButton}>
+            <div onClick={onClose} className={styles.closeButton}>
                 <Image src="/howToPlay/close.svg" alt="closeHowToPlay" width={14} height={14} />
             </div>
         </Dialog>
