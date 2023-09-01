@@ -31,7 +31,7 @@ export default function HowToPlay({ onClose }) {
         <Dialog onClose={onClose} open PaperProps={{ sx: { overflowY: "unset" } }}>
             <div className={styles.dialogContainer}>
                 <div className={styles.introduce}>
-                    <Image src="/howToPlay/orb_ball.svg" alt="SabaOrbIntroduce" width={92} height={92} />
+                    <Image src="/howToPlay/orb_ball.svg" alt="SabaOrbIntroduce" width={140} height={92} />
                     <div className={styles.title}>What is Saba Orb?</div>
                     <div className={styles.description}>
                         Saba Orb is a thrilling prediction platform. Here, you can bet on various current events, and even craft your own questions to challenge
@@ -41,10 +41,10 @@ export default function HowToPlay({ onClose }) {
                 {steps.map((step, index) => {
                     const stepNumber = index + 1;
                     return (
-                        <div className={styles.stepCard}>
+                        <div className={styles.stepCard} key={stepNumber}>
                             <div className={styles.imageGroup}>
                                 <div className={styles.stepNumber}>{stepNumber}</div>
-                                <Image src={step.imageURL} width={283} height={164} />
+                                <Image src={step.imageURL} alt="stepImage" width={283} height={164} />
                             </div>
                             <div className={styles.stepExplain}>
                                 <div className={styles.title}>{step.title}</div>
