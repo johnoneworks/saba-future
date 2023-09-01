@@ -10,6 +10,7 @@ import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -143,6 +144,9 @@ export const Header = () => {
                         <Image src="/logo-text.svg" alt="placeholder" width={150} height={30} />
                     </div>
                     <div>
+                        <span onClick={handleSwitchHowToPlay} className="pr-4">
+                            <LightbulbIcon />
+                        </span>
                         {account && smartAccount && smartAccount.isAdminUser && (
                             <>
                                 <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>
@@ -176,9 +180,6 @@ export const Header = () => {
                             <div className={styles.tab}>
                                 <MenuTab tab={MENU_TYPE.MARKET} />
                                 <MenuTab tab={MENU_TYPE.STATEMENT} />
-                                <div className={styles.howToPlayButton} onClick={handleSwitchHowToPlay}>
-                                    <Image src="/howToPlay/how_to_play.svg" alt="HowToPlayImage" width={20} height={20} />
-                                </div>
                             </div>
                         )}
                     </div>
