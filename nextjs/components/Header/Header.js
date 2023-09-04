@@ -18,6 +18,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/system";
 import classnames from "classnames";
+import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -79,6 +80,7 @@ export const Header = () => {
     const { disconnectWallet } = useLogout();
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
     const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
+    const { t } = useTranslation("common");
 
     const refreshMarkets = () => {
         updateMarkets();
