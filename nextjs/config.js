@@ -36,3 +36,7 @@ export const earlyBirdAddress = "0x053956480291E63bA438Ac8cc4856cAf4Fb4D347";
 
 export const sureToken2Address = "0xd63E83580bBEc586665ABBD4e1B02f8bBD6F8bE0";
 export const predictionWorld2Address = "0xa33984BDD910d25C9d4ad11dD50E2ba18E0Ab7FD";
+
+//Google OAutg 2.0 config
+export const GOOGLE_CLIENT_ID = "998041040341-2lbq325g9238esd80epg00qqpqiam0ni.apps.googleusercontent.com";
+export const GOOGLE_GSI_URL = "https://accounts.google.com/gsi/client";
