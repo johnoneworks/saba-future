@@ -1,18 +1,16 @@
 import { chainId, dappAPIKey, earlyBirdAddress, predictionWorldAddress, providerUrl, sureTokenAddress } from "@/config";
-import { API_SAVE_ACCOUNT } from "@/constants/Constant";
 import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { currentDate } from "@/utils/ConvertDate";
-import uuidv4 from "@/utils/Uuid";
 import EarlyBird from "@/utils/abis/EarlyBird.json";
 import PredictionWorld from "@/utils/abis/PredictionWorld.json";
 import SURE from "@/utils/abis/SureToken.json";
 import SmartAccount from "@biconomy/smart-account";
 import SocialLogin from "@biconomy/web3-auth";
 import "@biconomy/web3-auth/dist/src/style.css";
-import axios from "axios";
 import { ethers } from "ethers";
 import { useCallback, useContext, useEffect } from "react";
+import syncCustInfo from "../service/auth";
 import PageLoading from "./LoadingPage/PageLoading";
 
 export default function BiconomyWallet() {
@@ -128,18 +126,13 @@ export default function BiconomyWallet() {
 
     const sendAccountData = async ({ smartAccountAddress, email, isSendAccountReady }) => {
         try {
-            const requestBody = {
-                TimeStamp: currentDate(),
-                Seq: uuidv4(),
-                WalletId: smartAccountAddress,
-                Email: email
-            };
-            const response = await axios.post(API_SAVE_ACCOUNT, requestBody, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
+            const response = await syncCustInfo({
+                currentDate: currentDate(),
+                walletId: smartAccountAddress,
+                email: email
             });
-            if (!!response && !!response.data && response.data.ErrorCode === 0) {
+
+            if (!!response && response.ErrorCode === 0) {
                 setisSendAccountReady(!isSendAccountReady);
             }
         } catch (error) {
