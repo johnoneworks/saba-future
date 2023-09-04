@@ -2,18 +2,18 @@ import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { Loading } from "@/components/Loading/Loading";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketContext } from "@/contexts/MarketContext";
-import { PageContext } from "@/contexts/PageContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import { useMarketsStore } from "@/store/useMarketsStore";
+import { useMenuStore } from "@/store/useMenuStore";
 import styles from "@/styles/Home.module.scss";
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ShowMarkets = (props) => {
     const router = useRouter();
-    const { markets } = useContext(MarketContext);
+    const { markets } = useMarketsStore();
     const { account, showTest, isEditable } = props;
 
     const [openMarkets, setOpenMarkets] = useState([]);
@@ -66,10 +66,11 @@ const ShowMarkets = (props) => {
 };
 
 export const Markets = () => {
-    const { account, smartAccount } = useContext(BiconomyAccountContext);
-    const { currentMenu, currentMarketID } = useContext(PageContext);
-    const { isMarketLoading } = useContext(LoadingContext);
-    const { marketCount, markets } = useContext(MarketContext);
+    const { account, smartAccount } = useAccountStore();
+    const { markets, marketCount } = useMarketsStore();
+
+    const { currentMenu, currentMarketID } = useMenuStore();
+    const { isMarketLoading } = useLoadingStore();
     const [showTest, setShowTest] = useState(false);
     const hasLogin = !!account;
 

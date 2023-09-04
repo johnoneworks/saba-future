@@ -35,7 +35,8 @@
         "react-loader-spinner": "^5.3.4",
         "sass": "^1.63.4",
         "tailwindcss": "^3.3.2",
-        "tls": "^0.0.1"
+        "tls": "^0.0.1",
+        "zustand": "^4.4.1"
     },
     "devDependencies": {
         "cross-env": "^7.0.3",

@@ -1,11 +1,11 @@
 import AdminMarketCard from "@/components/AdminMarketCard";
 import { AdminHeader } from "@/components/Header/AdminHeader";
 import { BACKUP_IMAGE, MARKET_STATUS } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
+import { useContractStore } from "@/store/useContractStore";
 import styles from "@/styles/Home.module.scss";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * TODO:
@@ -47,7 +47,7 @@ const ShowMarkets = (props) => {
 
 export default function Markets() {
     const [markets, setMarkets] = useState([]);
-    const { predictionWorldContract } = useContext(BiconomyAccountContext);
+    const { predictionWorldContract } = useContractStore();
 
     const getMarkets = async () => {
         try {

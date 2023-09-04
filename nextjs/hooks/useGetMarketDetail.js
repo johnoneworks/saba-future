@@ -1,16 +1,19 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketContext } from "@/contexts/MarketContext";
-import { PageContext } from "@/contexts/PageContext";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import { useMarketDetailStore } from "@/store/useMarketDetailStore";
+import { useMenuStore } from "@/store/useMenuStore";
 import moment from "moment";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
-const useGetMarketDetail = () => {
-    const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { setMarketDetail } = useContext(MarketContext);
-    const { currentMarketID } = useContext(PageContext);
-    const { setIsPageLoading } = useContext(LoadingContext);
+export const useGetMarketDetail = () => {
+    const { account } = useAccountStore();
+    const { predictionWorldContract } = useContractStore();
+
+    const { marketDetail, setMarketDetail } = useMarketDetailStore();
+    const { currentMarketID } = useMenuStore();
+    const { setIsPageLoading } = useLoadingStore();
 
     const updateMarketDetail = useCallback(
         async (currentMarketID, predictionWorldContract) => {
@@ -32,7 +35,7 @@ const useGetMarketDetail = () => {
                     resolverUrl: market.info.resolverUrl,
                     isClose: market.marketClosed,
                     isTest: market.info.isTest,
-                    isSuspended: market.isSuspended,
+                    isSuspended: market.isSuspended
                 });
                 setIsPageLoading(false);
             } catch (error) {
@@ -49,7 +52,5 @@ const useGetMarketDetail = () => {
         }
     }, [currentMarketID, account, updateMarketDetail]);
 
-    return { updateMarketDetail };
+    return { marketDetail, updateMarketDetail };
 };
-
-export default useGetMarketDetail;

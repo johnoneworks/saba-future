@@ -1,12 +1,14 @@
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { MarketContext } from "@/contexts/MarketContext";
-import { PageContext } from "@/contexts/PageContext";
-import { useCallback, useContext, useEffect } from "react";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useContractStore } from "@/store/useContractStore";
+import { useMarketsStore } from "@/store/useMarketsStore";
+import { useMenuStore } from "@/store/useMenuStore";
+import { useCallback, useEffect } from "react";
 
 const useGetBetsInfo = () => {
-    const { setYesInfo, setNoInfo } = useContext(MarketContext);
-    const { account, predictionWorldContract } = useContext(BiconomyAccountContext);
-    const { currentMarketID } = useContext(PageContext);
+    const { setYesInfo, setNoInfo } = useMarketsStore();
+    const { account } = useAccountStore();
+    const { predictionWorldContract } = useContractStore();
+    const { currentMarketID } = useMenuStore();
 
     const updateBetsInfo = useCallback(
         async (currentMarketID, predictionWorldContract) => {
