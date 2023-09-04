@@ -5,7 +5,9 @@ import "../styles/globals.css";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useMenuStore } from "../store/useMenuStore";
+import "tailwindcss/tailwind.css";
+import "../styles/globals.css";
+import "./i18n.js";
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
