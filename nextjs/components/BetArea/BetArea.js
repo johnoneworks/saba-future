@@ -139,8 +139,13 @@ export const BetArea = (props) => {
                     autoComplete="off"
                     min={0}
                     InputProps={{
-                        endAdornment: <InputAdornment position="end">SURE</InputAdornment>
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <span style={{ fontSize: "8px" }}>SURE</span>
+                            </InputAdornment>
+                        )
                     }}
+                    className={classnames(styles.betInput)}
                 />
             </Box>
             <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !input}>

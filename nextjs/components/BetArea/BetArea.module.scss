@@ -94,3 +94,21 @@
     left: 0;
     top:0;
 }
+
+.betInput{
+    input{
+        text-align: right;
+        color: #00000080;
+        font-size: 24px;
+        font-weight: 700;
+    }
+    :first-child{
+        align-items: baseline;
+    }
+    ::placeholder{
+        text-align: right;
+        color: #00000080;
+        font-size: 24px;
+        font-weight: 700;
+    }
+}
