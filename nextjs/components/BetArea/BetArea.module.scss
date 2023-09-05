@@ -39,22 +39,58 @@
 .volumeButton {
     padding: 6px;
     width: 100%;
-    background-color: #f2f5fa;
     border-radius: 4px;
+    box-shadow: #DBDFE6 0px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 
     + .volumeButton {
         margin-top: 8px;
     }
 
     &.isYES {
-        color: #3fb06b;
+        color: #3fb06b; 
+        &.selected {
+            box-shadow: #339A5B 0px 4px;
+        }
     }
 
     &.isNO {
         color: #e84d4d;
+        &.selected{
+            box-shadow: #CB3C3C 0px 4px;
+        }
+    }
+
+    .amount{
+        color:#585353;
+        font-weight: bold;
+        line-height:1,
+    }
+
+    .amountUnit{
+        color: #A0A4A8;
+        font-weight: 700;
+        font-size: 8px;
     }
 
     &.selected {
-        color: #fff;
+        color:#fff;
+        .amountUnit{
+            color: #fff;
+        }
+        .amount{
+            color:#fff;
+        }
     }
+}
+
+.volume{
+    position: absolute;
+    height: 100%;
+    border-radius: 4px;
+    left: 0;
+    top:0;
 }

@@ -16,26 +16,31 @@ import styles from "./BetArea.module.scss";
 const SelectButton = (props) => {
     const { type, selected, selectedAmount, totalAmount, onClick } = props;
     const buttonName = type;
-    const totalAmountText = `${totalAmount == 0 ? `0` : ((selectedAmount * 100) / totalAmount).toFixed(2)}%`;
     const buttonClass = `is${buttonName}`;
-    let selectedStyle;
-    if (type === BET_TYPE.YES) {
-        selectedStyle = selected === type ? "#3FB06B" : "#F2F5FA";
-    } else if (type === BET_TYPE.NO) {
-        selectedStyle = selected === type ? "#E84D4D" : "#F2F5FA";
-    }
+    const buttonStyle = {
+        backgroundColor: selected === type ? (type === BET_TYPE.YES ? "#74D399" : "#FF7C7C") : "#F2F5FA"
+    };
+    const volumeStyle = {
+        zIndex: 0,
+        width: totalAmount == 0 ? `50%` : `${(selectedAmount / totalAmount) * 100}%`,
+        backgroundColor: selected === type ? (type === BET_TYPE.YES ? "#339A5B" : "#E84D4D") : type === BET_TYPE.YES ? "#DFF7E8" : "#FDEDED"
+    };
 
     return (
         <Box
             id={buttonName}
-            style={{ backgroundColor: selectedStyle }}
+            style={buttonStyle}
             className={classnames(styles.volumeButton, styles[buttonClass], { [styles.selected]: selected === type })}
             onClick={onClick}
         >
-            <Typography sx={{ fontWeight: "bold", mr: "4px" }} variant="subtitle1" component="span">
+            <Typography sx={{ fontWeight: "bold", mr: "4px", zIndex: 1 }} variant="subtitle1" component="span">
                 {buttonName}
             </Typography>
-            <span style={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.65)" }}>{totalAmountText}</span>
+            <span style={{ display: "flex", flexDirection: "column", zIndex: 1 }}>
+                <span className={classnames(styles.amount)}>{selectedAmount}</span>
+                <span className={classnames(styles.amountUnit)}>SURE</span>
+            </span>
+            <div className={classnames(styles.volume)} style={volumeStyle}></div>
         </Box>
     );
 };
