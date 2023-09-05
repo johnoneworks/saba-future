@@ -21,7 +21,7 @@ import classnames from "classnames";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
 
@@ -103,10 +103,25 @@ export const Header = () => {
     };
 
     const handleLogin = async () => {
-        if (!account && socialLoginSDK.web3auth.status !== "connected") {
-            await socialLoginSDK.showWallet();
-        }
+        // if (!account && socialLoginSDK.web3auth.status !== "connected") {
+        //     await socialLoginSDK.showWallet();
+        // }
+
+        window.location.href =
+        'https://accounts.google.com/o/oauth2/v2/auth?client_id=998041040341-2lbq325g9238esd80epg00qqpqiam0ni.apps.googleusercontent.com&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile&redirect_uri=http://localhost:3000';
+    
     };
+
+    useEffect(() => {
+        const currentUrl = window.location.href;
+    console.error('Current URL: ' + currentUrl);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    console.log('Authorization code: ' + code);
+      }, [router.asPath]);
+
+
 
     const handleReturnBack = () => {
         if (currentMarketID) {

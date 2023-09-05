@@ -1,61 +1,43 @@
-import { GOOGLE_CLIENT_ID, GOOGLE_GSI_URL } from "@/config";
-import { useEffect } from "react";
+import { GOOGLE_CLIENT_ID } from '@/config';
+import { useEffect, useState } from 'react';
 
-const GoogleLoginButton = ({ onSuccess, onFailure }) => {
-    useEffect(() => {
-        // Load Google Sign-In API script
-        const script = document.createElement("script");
-        script.src = GOOGLE_GSI_URL;
-        script.async = true;
-        script.defer = true;
-        document.body.appendChild(script);
+const GoogleOneTapButton = () => {
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
-        // Initialize Google Sign-In API
-        script.onload = () => {
-            window.google.accounts.id.initialize({
-                client_id: GOOGLE_CLIENT_ID,
-                callback: handleGoogleSignIn
-            });
-        };
+  useEffect(() => {
+    const handleCredentialResponse = (response) => {
+      console.log('Encoded JWT ID token: ' + response.credential);
+      setIsSignedIn(true);
+    };
 
-        // Handle Google Sign-In callback
-        const handleGoogleSignIn = (response) => {
-            if (response.error) {
-                onFailure(response.error);
-            } else {
-                // Get Google user profile information，寄給 server
-                console.error("token: ", response.credential);
+    const initGoogleOneTap = () => {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+      });
+      window.google.accounts.id.prompt();
+    };
 
-                // Disable auto select and add sign out button
-                const googleAccountsId = window.google.accounts.id;
-                googleAccountsId.disableAutoSelect();
-                const signOutButton = document.createElement("button");
-                signOutButton.innerText = "Sign Out";
-                signOutButton.onclick = () => {
-                    googleAccountsId.signOut();
-                };
-                document.querySelector(".g_id_signin").appendChild(signOutButton);
-            }
-        };
+    initGoogleOneTap();
+  }, []);
 
-        // Clean up
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, [GOOGLE_CLIENT_ID, onFailure]);
+  const handleGoogleLogin = () => {
+    window.location.href =
+      'https://accounts.google.com/o/oauth2/v2/auth?client_id=998041040341-2lbq325g9238esd80epg00qqpqiam0ni.apps.googleusercontent.com&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile&redirect_uri=http://localhost:3000';
+  };
 
-    // Render Google Sign-In button
-    return (
-        <div
-            className="g_id_signin"
-            data-type="standard"
-            data-size="large"
-            data-theme="outline"
-            data-text="sign_in_with"
-            data-shape="rectangular"
-            data-logo_alignment="left"
-        />
-    );
+  return (
+    <div>
+      {isSignedIn ? (
+        <p>You are signed in.</p>
+      ) : (
+        <div>
+          <button onClick={handleGoogleLogin}>Sign in with Google</button>
+          <script src="https://accounts.google.com/gsi/client" async defer />
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default GoogleLoginButton;
+export default GoogleOneTapButton;
