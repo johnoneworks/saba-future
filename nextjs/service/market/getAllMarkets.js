@@ -1,12 +1,12 @@
 import { API_GET_ALL_MARKET } from "@/constants/api";
+import uuidv4 from "@/utils/Uuid";
 import baseAxios from "../baseAxios";
 
 const syncAllMarkets = async ({ currentDate }) => {
-    console.log("in syncAllMarkets");
     const data = {
         TimeStamp: currentDate,
-        Seq: "string",
-        Token: "string"
+        Seq: uuidv4(),
+        Token: " "
     };
 
     const response = await baseAxios({

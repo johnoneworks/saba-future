@@ -93,7 +93,6 @@ const useGetMarkets = () => {
                     isSuspended: market.isSuspended,
                     endTimestamp: market.info.endTimestamp
                 };
-
                 if (currentMarket.marketClosed) {
                     const bets = await getBets(currentMarket.id);
                     currentMarket = { ...currentMarket, ...bets };
@@ -110,7 +109,7 @@ const useGetMarkets = () => {
     };
 
     // api market
-    const updateServiceMarket = async () => {
+    const updateMarkets = async () => {
         try {
             const response = await syncAllMarkets({
                 currentDate: currentDate()
@@ -126,11 +125,11 @@ const useGetMarkets = () => {
                         totalAmount: market.BetInfo.Yes + market.BetInfo.No,
                         totalYesAmount: market.BetInfo.Yes,
                         totalNoAmount: market.BetInfo.No,
-                        marketClosed: market.Status == 10,
+                        marketClosed: market.Status == "10",
                         outcome: market.Outcome,
-                        isTest: market.isTest,
-                        isSuspended: !!market.ResolveUrl,
-                        endTimestamp: market.Outcome
+                        isTest: market.IsTest,
+                        isSuspended: market.Status == "20",
+                        endTimestamp: market.EndTimeStamp ? market.EndTimeStamp : ""
                     };
                     tempMarkets.push(currentMarket);
                 }
@@ -145,10 +144,9 @@ const useGetMarkets = () => {
     };
 
     useEffect(() => {
-        // web3.0
-        // updateMarkets();
         // web2.0
-        updateServiceMarket();
+        // updateMarkets();
+        updateWeb3Markets();
     }, [account, predictionWorldContract]);
 
     //如未登入，使用預設合約
