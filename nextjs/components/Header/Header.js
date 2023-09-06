@@ -8,8 +8,8 @@ import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -22,6 +22,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import HowToPlay from "../HowToPlay/HowToPlay";
 import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
 
@@ -77,17 +78,12 @@ export const Header = () => {
     const { updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
+    const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
 
     const refreshMarkets = () => {
         updateMarkets();
         updateStatements();
         updateBalance();
-    };
-
-    const handleRedirectToAdmin = () => {
-        router.push({
-            pathname: `/admin`
-        });
     };
 
     const handleRedirectToAdminMarkets = () => {
@@ -127,6 +123,10 @@ export const Header = () => {
         setOpenProfileDialog(false);
     };
 
+    const handleSwitchHowToPlay = () => {
+        setOpenHowToPlayDialog(!openHowToPlayDialog);
+    };
+
     return (
         <>
             <BiconomyWallet />
@@ -137,23 +137,18 @@ export const Header = () => {
                         <Image src="/logo-text.svg" alt="placeholder" width={150} height={30} />
                     </div>
                     <div>
-                        {account && smartAccount && smartAccount.isAdminUser && (
-                            <>
-                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>
-                                    {
-                                        <Tooltip title="Create a market">
-                                            <AddIcon />
-                                        </Tooltip>
-                                    }
-                                </span>
-                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>
-                                    {
-                                        <Tooltip title="Manage markets">
-                                            <ManageAccountsIcon />
-                                        </Tooltip>
-                                    }
-                                </span>
-                            </>
+                        {account && smartAccount && smartAccount.isAdminUser ? (
+                            <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>
+                                {
+                                    <Tooltip title="Manage markets">
+                                        <ManageAccountsIcon />
+                                    </Tooltip>
+                                }
+                            </span>
+                        ) : (
+                            <span onClick={handleSwitchHowToPlay} className="pr-4">
+                                <LightbulbIcon />
+                            </span>
                         )}
                         <span className="cursor-pointer" onClick={account ? handleLogout : handleLogin}>
                             {account ? <LogoutIcon /> : <LoginIcon />}
@@ -179,6 +174,7 @@ export const Header = () => {
                 <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
             )}
             <NewbieDialog />
+            {openHowToPlayDialog && <HowToPlay onClose={handleSwitchHowToPlay} />}
         </>
     );
 };
