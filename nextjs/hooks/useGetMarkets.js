@@ -1,11 +1,13 @@
 import { predictionWorldAddress } from "@/config";
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { MARKET_ORDER, MARKET_STATUS, MARKET_WITH_TEST } from "@/constants/MarketCondition";
+import syncAllMarkets from "@/service/market/getAllMarkets";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMarketsStore } from "@/store/useMarketsStore";
 import { testMarketsData } from "@/testData/testMarketsData";
+import { currentDate } from "@/utils/ConvertDate";
 import { IsLocal } from "@/utils/IsLocal";
 import PredictionWorld from "@/utils/abis/PredictionWorld.json";
 import { ethers } from "ethers";
@@ -107,8 +109,46 @@ const useGetMarkets = () => {
         }
     };
 
+    // api market
+    const updateServiceMarket = async () => {
+        try {
+            const response = await syncAllMarkets({
+                currentDate: currentDate()
+            });
+            if (!!response && response.ErrorCode === 0) {
+                let tempMarkets = [];
+                for (let i = 0; i < response.Result.Markets.length; i++) {
+                    let market = response.Result.Markets[i];
+                    let currentMarket = {
+                        id: market.MarketId,
+                        question: market.Title,
+                        imageHash: market.ImageUrl ? market.ImageUrl : BACKUP_IMAGE,
+                        totalAmount: market.BetInfo.Yes + market.BetInfo.No,
+                        totalYesAmount: market.BetInfo.Yes,
+                        totalNoAmount: market.BetInfo.No,
+                        marketClosed: market.Status == 10,
+                        outcome: market.Outcome,
+                        isTest: market.isTest,
+                        isSuspended: !!market.ResolveUrl,
+                        endTimestamp: market.Outcome
+                    };
+                    tempMarkets.push(currentMarket);
+                }
+                setMarkets(tempMarkets);
+                setMarketCount(response.Result.Markets.length);
+            }
+        } catch (error) {
+            console.error(`Error getting market: ${error}`);
+        } finally {
+            setIsMarketLoading(false);
+        }
+    };
+
     useEffect(() => {
-        updateMarkets();
+        // web3.0
+        // updateMarkets();
+        // web2.0
+        updateServiceMarket();
     }, [account, predictionWorldContract]);
 
     //如未登入，使用預設合約
