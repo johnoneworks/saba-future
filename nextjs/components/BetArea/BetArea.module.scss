@@ -40,6 +40,7 @@
     padding: 6px;
     width: 100%;
     border-radius: 4px;
+    background: #F2F5FA;
     box-shadow: #DBDFE6 0px 4px;
     display: flex;
     align-items: center;
@@ -53,6 +54,7 @@
     &.isYES {
         color: #3fb06b; 
         &.selected {
+            background-color: #74D399;
             box-shadow: #339A5B 0px 4px;
         }
     }
@@ -60,6 +62,7 @@
     &.isNO {
         color: #e84d4d;
         &.selected{
+            background-color: #FF7C7C;
             box-shadow: #CB3C3C 0px 4px;
         }
     }
@@ -93,6 +96,19 @@
     border-radius: 4px;
     left: 0;
     top:0;
+    z-index: 0;
+    &.isYES {
+        background-color: #DFF7E8;
+        &.selected{
+            background-color: #339A5B;
+        }
+    }
+    &.isNO {
+        background-color: #FDEDED;
+        &.selected{
+            background-color: #E84D4D;
+        }
+    }
 }
 
 .betInput{

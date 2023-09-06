@@ -17,22 +17,10 @@ const SelectButton = (props) => {
     const { type, selected, selectedAmount, totalAmount, onClick } = props;
     const buttonName = type;
     const buttonClass = `is${buttonName}`;
-    const buttonStyle = {
-        backgroundColor: selected === type ? (type === BET_TYPE.YES ? "#74D399" : "#FF7C7C") : "#F2F5FA"
-    };
-    const volumeStyle = {
-        zIndex: 0,
-        width: totalAmount == 0 ? `50%` : `${(selectedAmount / totalAmount) * 100}%`,
-        backgroundColor: selected === type ? (type === BET_TYPE.YES ? "#339A5B" : "#E84D4D") : type === BET_TYPE.YES ? "#DFF7E8" : "#FDEDED"
-    };
+    const volumeWidth = totalAmount == 0 ? `50%` : `${(selectedAmount / totalAmount) * 100}%`;
 
     return (
-        <Box
-            id={buttonName}
-            style={buttonStyle}
-            className={classnames(styles.volumeButton, styles[buttonClass], { [styles.selected]: selected === type })}
-            onClick={onClick}
-        >
+        <Box id={buttonName} className={classnames(styles.volumeButton, styles[buttonClass], { [styles.selected]: selected === type })} onClick={onClick}>
             <Typography sx={{ fontWeight: "bold", mr: "4px", zIndex: 1 }} variant="subtitle1" component="span">
                 {buttonName}
             </Typography>
@@ -40,7 +28,7 @@ const SelectButton = (props) => {
                 <span className={classnames(styles.amount)}>{selectedAmount}</span>
                 <span className={classnames(styles.amountUnit)}>SURE</span>
             </span>
-            <div className={classnames(styles.volume)} style={volumeStyle}></div>
+            <div className={classnames(styles.volume, styles[buttonClass], { [styles.selected]: selected === type })} style={{ width: volumeWidth }}></div>
         </Box>
     );
 };
