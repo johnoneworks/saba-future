@@ -8,7 +8,6 @@ import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import LoginIcon from "@mui/icons-material/Login";
@@ -87,12 +86,6 @@ export const Header = () => {
         updateBalance();
     };
 
-    const handleRedirectToAdmin = () => {
-        router.push({
-            pathname: `/admin`
-        });
-    };
-
     const handleRedirectToAdminMarkets = () => {
         router.push({
             pathname: `/admin/markets`
@@ -144,26 +137,18 @@ export const Header = () => {
                         <Image src="/logo-text.svg" alt="placeholder" width={150} height={30} />
                     </div>
                     <div>
-                        <span onClick={handleSwitchHowToPlay} className="pr-4">
-                            <LightbulbIcon />
-                        </span>
-                        {account && smartAccount && smartAccount.isAdminUser && (
-                            <>
-                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdmin}>
-                                    {
-                                        <Tooltip title="Create a market">
-                                            <AddIcon />
-                                        </Tooltip>
-                                    }
-                                </span>
-                                <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>
-                                    {
-                                        <Tooltip title="Manage markets">
-                                            <ManageAccountsIcon />
-                                        </Tooltip>
-                                    }
-                                </span>
-                            </>
+                        {account && smartAccount && smartAccount.isAdminUser ? (
+                            <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>
+                                {
+                                    <Tooltip title="Manage markets">
+                                        <ManageAccountsIcon />
+                                    </Tooltip>
+                                }
+                            </span>
+                        ) : (
+                            <span onClick={handleSwitchHowToPlay} className="pr-4">
+                                <LightbulbIcon />
+                            </span>
                         )}
                         <span className="cursor-pointer" onClick={account ? handleLogout : handleLogin}>
                             {account ? <LogoutIcon /> : <LoginIcon />}
