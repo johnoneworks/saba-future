@@ -1,7 +1,6 @@
 import { AdminHeader } from "@/components/Header/AdminHeader";
-import { predictionWorldAddress } from "@/config";
-import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
+import { API_CREATE_MARKET } from "@/constants/api";
+import baseAxios from "@/service/baseAxios";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
 import Link from "next/link";
@@ -13,6 +12,8 @@ import { useState } from "react";
  * 2. is production 的條件
  */
 
+// 取出要用的資料
+// 送 api
 export default function Admin() {
     const { isPageLoading, setIsPageLoading } = useLoadingStore();
     const [submitButtonText, setSubmitButtonText] = useState("Create Market");
@@ -20,16 +21,30 @@ export default function Admin() {
     const [description, setDescription] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const [resolverUrl, setResolverUrl] = useState("");
-    const [timestamp, setTimestamp] = useState(Date());
+    const [timestamp, setTimestamp] = useState(new Date());
     const [isTest, setIsTest] = useState(false);
-    const { predictionWorldInterface } = useContractStore();
-    const { provider, smartAccount } = useAccountStore();
 
     const handleSubmit = async () => {
         try {
             setIsPageLoading(true);
             setSubmitButtonText("Creating");
-            await createMarketWithGasless();
+            const toEndTimestamp = new Date(timestamp);
+            const utcString = toEndTimestamp.toISOString();
+            const data = {
+                Payload: {
+                    Title: title,
+                    Description: description,
+                    ImageUrl: imageUrl,
+                    ResolveUrl: resolverUrl,
+                    EndTime: utcString,
+                    IsTest: isTest
+                }
+            };
+            const response = await baseAxios({
+                method: "POST",
+                url: API_CREATE_MARKET,
+                data: data
+            });
             setTitle("");
             setDescription("");
             setImageUrl("");
@@ -40,26 +55,10 @@ export default function Admin() {
         } catch (error) {
             console.error(`Error creating market`);
             console.error(error);
-            alert("Error!!");
         } finally {
             setIsPageLoading(false);
             setSubmitButtonText("Create Market");
         }
-    };
-
-    const createMarketWithGasless = async () => {
-        const transactionData = predictionWorldInterface.encodeFunctionData("createMarket", [title, imageUrl, description, resolverUrl, timestamp, isTest]);
-
-        const transaction = {
-            to: predictionWorldAddress,
-            data: transactionData
-        };
-
-        const txResponse = await smartAccount.sendTransaction({ transaction });
-        console.log("UserOp hash", txResponse.hash);
-        const txReceipt = await txResponse.wait();
-        console.log("Tx hash", txReceipt.transactionHash);
-        const txReceipt2 = await provider.getTransactionReceipt(txReceipt.transactionHash);
     };
 
     return (
@@ -149,7 +148,6 @@ export default function Admin() {
                         <TextField
                             type="datetime-local"
                             name="timestamp"
-                            // value={timestamp}
                             onChange={(e) => {
                                 setTimestamp(Date.parse(e.target.value));
                             }}
@@ -163,16 +161,7 @@ export default function Admin() {
                             sx={{ mt: 2, mb: 1 }}
                             control={<Checkbox checked={isTest} onChange={(e) => setIsTest(!isTest)} />}
                         />
-                        <Button
-                            variant="contained"
-                            color="success"
-                            fullWidth
-                            style={{ backgroundColor: "#2e7d32" }}
-                            sx={{ mt: 2 }}
-                            onClick={() => {
-                                handleSubmit();
-                            }}
-                        >
+                        <Button variant="contained" color="success" fullWidth style={{ backgroundColor: "#2e7d32" }} sx={{ mt: 2 }} onClick={handleSubmit}>
                             {submitButtonText}
                         </Button>
                     </Box>

@@ -1,5 +1,4 @@
 import useGetMarkets from "@/hooks/useGetMarkets";
-import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
 import useLogout from "@/hooks/useLogout";
 import { useAccountStore } from "@/store/useAccountStore";
@@ -11,9 +10,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import { styled } from "@mui/system";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { Suspense } from "react";
 import styles from "./Header.module.scss";
 
 const CustomPersonIcon = styled(PersonIcon)({
@@ -22,10 +19,6 @@ const CustomPersonIcon = styled(PersonIcon)({
 
 const CustomAccountBalanceWalletIcon = styled(AccountBalanceWalletIcon)({
     fontSize: 16
-});
-
-const BiconomyWallet = dynamic(() => import("@/components/BiconomyWallet").then((res) => res.default), {
-    ssr: false
 });
 
 const ProfileItem = ({ type, text }) => {
@@ -46,13 +39,11 @@ export const AdminHeader = () => {
     const { currentMenu, setCurrentMarketID } = useMarketsStore();
     const { updateMarkets } = useGetMarkets();
     const { updateStatements } = useGetUserStatement();
-    const { updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
 
     const refreshMarkets = () => {
         updateMarkets();
         updateStatements();
-        updateBalance();
     };
 
     const handleReturnBack = () => {
@@ -72,9 +63,6 @@ export const AdminHeader = () => {
 
     return (
         <>
-            <Suspense>
-                <BiconomyWallet />
-            </Suspense>
             <div className={styles.root}>
                 <div className={styles.header}>
                     <div onClick={handleReturnBack}>
