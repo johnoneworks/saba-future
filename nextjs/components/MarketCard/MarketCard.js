@@ -66,7 +66,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     }
 
     const outcomeValue = market.outcome ? "Yes" : "No";
-    const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
+    // const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
     const yesAmount = parseFloat(market.totalYesAmount.toString());
     const noAmount = parseFloat(market.totalNoAmount.toString());
     const totalAmount = parseFloat(market.totalAmount.toString());
@@ -83,7 +83,8 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             closeTitle: "Winners Count",
             openYesNoBgClass: "isNo",
             openOutcome: yesAmount,
-            closeValue: winnersCount,
+            // closeValue: winnersCount,
+            closeValue: market.winnerCount,
             YesNoColor: "#E84D4D",
             note: ""
         },
@@ -92,7 +93,8 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             closeTitle: "Profit",
             openYesNoBgClass: "isYes",
             openOutcome: noAmount,
-            closeValue: bonus.toString(),
+            // closeValue: bonus.toString(),
+            closeValue: market.winnerProfit,
             YesNoColor: "#3FB06B",
             note: "possible fee included"
         }

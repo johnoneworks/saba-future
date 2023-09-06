@@ -30,7 +30,7 @@ const useGetMarkets = () => {
         setIsMarketLoading(false);
     };
 
-    const getBets = async (marketId) => {
+    const getWeb3Bets = async (marketId) => {
         let bets = await predictionWorldContract.getBets(Number(marketId));
         let yesBets = [];
         let noBets = [];
@@ -56,7 +56,7 @@ const useGetMarkets = () => {
         };
     };
 
-    const updateMarkets = async () => {
+    const updateWeb3Markets = async () => {
         //使用假資料，不需要就 false 掉
         if (IsLocal()) {
             useTestData();
@@ -94,7 +94,7 @@ const useGetMarkets = () => {
                     endTimestamp: market.info.endTimestamp
                 };
                 if (currentMarket.marketClosed) {
-                    const bets = await getBets(currentMarket.id);
+                    const bets = await getWeb3Bets(currentMarket.id);
                     currentMarket = { ...currentMarket, ...bets };
                 }
 
@@ -129,7 +129,9 @@ const useGetMarkets = () => {
                         outcome: market.Outcome,
                         isTest: market.IsTest,
                         isSuspended: market.Status == "20",
-                        endTimestamp: market.EndTimeStamp ? market.EndTimeStamp : ""
+                        endTimestamp: market.EndTime,
+                        winnerCount: market.WinnerCount,
+                        winnerProfit: market.WinnerProfit
                     };
                     tempMarkets.push(currentMarket);
                 }
@@ -145,8 +147,9 @@ const useGetMarkets = () => {
 
     useEffect(() => {
         // web2.0
-        // updateMarkets();
-        updateWeb3Markets();
+        updateMarkets();
+        // web3.0
+        // updateWeb3Markets();
     }, [account, predictionWorldContract]);
 
     //如未登入，使用預設合約
@@ -156,7 +159,7 @@ const useGetMarkets = () => {
         }
     }, []);
 
-    return { markets, updateMarkets };
+    return { markets, updateMarkets, updateWeb3Markets };
 };
 
 export default useGetMarkets;
