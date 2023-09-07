@@ -4,7 +4,6 @@ import { BET_TYPE } from "@/constants/Constant";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
-import { convertBigNumberToDate } from "@/utils/ConvertDate";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
@@ -25,7 +24,7 @@ const CustomAvatar = styled(Avatar)({
     height: "56px"
 });
 
-export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
+export default function AdminMarketCard({ id, market }) {
     const { setIsPageLoading } = useLoadingStore();
     const { smartAccount } = useAccountStore();
     const { predictionWorldInterface } = useContractStore();
@@ -48,7 +47,6 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
             console.error(err);
             alert("Error!!");
         } finally {
-            onUpdateMarkets();
             setIsPageLoading(false);
             setSelectedResolve(null);
         }
@@ -80,7 +78,6 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
             console.error(err);
             alert("Error!!");
         } finally {
-            onUpdateMarkets();
             setIsPageLoading(false);
             setSelectedResolve(null);
         }
@@ -138,7 +135,7 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
                         </div>
                         <div className="flex flex-col space-y-1">
                             <span className="text-xs text-gray-500 font-light">Ending In</span>
-                            <span className="text-base">{convertBigNumberToDate(market.endTimestamp)}</span>
+                            <span className="text-base">{market.endTimestamp}</span>
                         </div>
                         {!isResolved ? (
                             <div className="flex flex-row space-x-2 items-end">
