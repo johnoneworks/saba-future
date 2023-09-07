@@ -129,7 +129,7 @@ export const BetArea = (props) => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <span style={{ fontSize: "8px" }}>SURE</span>
+                                <span className={classnames(styles.amountUnit)}>SURE</span>
                             </InputAdornment>
                         )
                     }}

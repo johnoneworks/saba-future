@@ -54,6 +54,7 @@
     &.isYES {
         color: #3fb06b; 
         &.selected {
+            color:#fff;
             background-color: #74D399;
             box-shadow: #339A5B 0px 4px;
         }
@@ -62,6 +63,7 @@
     &.isNO {
         color: #e84d4d;
         &.selected{
+            color:#fff;
             background-color: #FF7C7C;
             box-shadow: #CB3C3C 0px 4px;
         }
@@ -70,7 +72,7 @@
     .amount{
         color:#585353;
         font-weight: bold;
-        line-height:1,
+        line-height:1
     }
 
     .amountUnit{
@@ -80,7 +82,6 @@
     }
 
     &.selected {
-        color:#fff;
         .amountUnit{
             color: #fff;
         }
@@ -117,6 +118,11 @@
         color: #00000080;
         font-size: 24px;
         font-weight: 700;
+    }
+    .amountUnit{
+        color: #0000004D;
+        font-weight: 700;
+        font-size: 8px;
     }
     :first-child{
         align-items: baseline;
