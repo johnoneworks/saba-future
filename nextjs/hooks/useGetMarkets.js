@@ -2,7 +2,6 @@ import { BACKUP_IMAGE } from "@/constants/Constant";
 import { API_MARKET_STATUS } from "@/constants/MarketCondition";
 import syncAllMarkets from "@/service/market/getAllMarkets";
 import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMarketsStore } from "@/store/useMarketsStore";
 import { useEffect } from "react";
@@ -10,7 +9,6 @@ import { useEffect } from "react";
 const useGetMarkets = () => {
     const { markets, setMarkets, setMarketCount } = useMarketsStore();
     const { account } = useAccountStore();
-    const { predictionWorldContract, setPredictionWorldContract } = useContractStore();
     const { setIsMarketLoading } = useLoadingStore();
 
     const updateMarkets = async () => {
@@ -19,13 +17,12 @@ const useGetMarkets = () => {
             if (!!response && response.ErrorCode === 0) {
                 let tempMarkets = [];
                 if (!!response.Result.Markets) {
-                    console.log("in here");
                     response.Result.Markets.reduce((markets, market) => {
                         markets.push({
                             id: market.MarketId,
                             question: market.Title,
                             imageHash: market.ImageUrl ? market.ImageUrl : BACKUP_IMAGE,
-                            totalAmount: market.BetInfo.Yes + market.BetInfo.No,
+                            totalAmount: Number(market.BetInfo.Yes + market.BetInfo.No),
                             totalYesAmount: market.BetInfo.Yes,
                             totalNoAmount: market.BetInfo.No,
                             marketClosed: market.Status === API_MARKET_STATUS.CLOSED,
@@ -52,7 +49,7 @@ const useGetMarkets = () => {
 
     useEffect(() => {
         updateMarkets();
-    }, [account, predictionWorldContract]);
+    }, [account]);
 
     return { markets, updateMarkets };
 };

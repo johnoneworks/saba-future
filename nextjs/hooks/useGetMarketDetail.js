@@ -1,4 +1,5 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
+import { API_MARKET_STATUS } from "@/constants/MarketCondition";
 import syncMarketDetail from "@/service/market/getMarketDetail";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
@@ -16,13 +17,6 @@ export const useGetMarketDetail = () => {
     const { setIsPageLoading } = useLoadingStore();
     const { markets } = useMarketsStore();
 
-    const marketStatus = {
-        RUNNING: "00",
-        CLOSED: "10",
-        SUSPEND: "20",
-        REFUND: "30"
-    };
-
     const updateMarketDetail = useCallback(
         async (currentMarketID) => {
             try {
@@ -31,11 +25,10 @@ export const useGetMarketDetail = () => {
                     marketId: currentMarketID
                 });
                 if (!!response && response.ErrorCode === 0) {
-                    const responseEndTime = response.Result.MarketDetail.EndTime;
+                    const detail = response.Result.MarketDetail;
+                    const responseEndTime = detail.EndTime;
                     const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
                     const dateFormat = moment.unix(responseEndTime / 1000);
-
-                    const detail = response.Result.MarketDetail;
                     const target = markets.find((item) => {
                         if (item.id == currentMarketID) {
                             return item;
@@ -56,9 +49,9 @@ export const useGetMarketDetail = () => {
                         totalNoAmount: getNoTotal,
                         description: detail.Description,
                         resolverUrl: detail.ResolveUrl,
-                        isClose: detail.Status === marketStatus.CLOSED,
+                        isClose: detail.Status === API_MARKET_STATUS.CLOSED,
                         isTest: detail.IsTest,
-                        isSuspended: detail.Status === marketStatus.SUSPEND
+                        isSuspended: detail.Status === API_MARKET_STATUS.SUSPENDED
                     });
                 }
                 setIsPageLoading(false);
