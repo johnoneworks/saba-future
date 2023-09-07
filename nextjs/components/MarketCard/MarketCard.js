@@ -74,7 +74,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             openTitle: "No",
             closeTitle: "Winners Count",
             openYesNoBgClass: "isNo",
-            openOutcome: yesAmount,
+            openOutcome: noAmount,
             closeValue: market.winnerCount,
             YesNoColor: "#E84D4D",
             note: ""
@@ -83,7 +83,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             openTitle: "Yes",
             closeTitle: "Profit",
             openYesNoBgClass: "isYes",
-            openOutcome: noAmount,
+            openOutcome: yesAmount,
             closeValue: market.winnerProfit,
             YesNoColor: "#3FB06B",
             note: "possible fee included"
