@@ -1,4 +1,4 @@
-import { AdminHeader } from "@/components/Header/AdminHeader";
+import { Header } from "@/components/Header/Header";
 import { API_CREATE_MARKET } from "@/constants/api";
 import baseAxios from "@/service/baseAxios";
 import { useLoadingStore } from "@/store/useLoadingStore";
@@ -71,7 +71,7 @@ export default function Admin() {
                 height: "100%"
             }}
         >
-            <AdminHeader />
+            <Header />
             {!isPageLoading && (
                 <Container maxWidth="md" component="main">
                     <Link href="/admin/markets">

@@ -1,4 +1,4 @@
-import { AdminHeader } from "@/components/Header/AdminHeader";
+import { Header } from "@/components/Header/Header";
 import { predictionWorldAddress } from "@/config";
 import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
 import { useAccountStore } from "@/store/useAccountStore";
@@ -116,7 +116,7 @@ const EditMarket = () => {
                 height: "100%"
             }}
         >
-            <AdminHeader />
+            <Header />
             <Container maxWidth="md" component="main">
                 <Link href="/?menu=Market">
                     <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
