@@ -128,7 +128,9 @@ export default function MarketDetail() {
 
     return (
         <>
-            {account && marketDetail && (
+            {/* 轉 Web2.0 先註解 account */}
+            {/* {account && marketDetail && ( */}
+            {marketDetail && (
                 <>
                     <MarketTitle
                         title={marketDetail?.title}
