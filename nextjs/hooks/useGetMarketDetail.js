@@ -1,54 +1,77 @@
 import { BACKUP_IMAGE } from "@/constants/Constant";
+import syncMarketDetail from "@/service/market/getMarketDetail";
 import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMarketDetailStore } from "@/store/useMarketDetailStore";
+import { useMarketsStore } from "@/store/useMarketsStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import moment from "moment";
 import { useCallback, useEffect } from "react";
 
 export const useGetMarketDetail = () => {
     const { account } = useAccountStore();
-    const { predictionWorldContract } = useContractStore();
 
     const { marketDetail, setMarketDetail } = useMarketDetailStore();
     const { currentMarketID } = useMenuStore();
     const { setIsPageLoading } = useLoadingStore();
+    const { markets } = useMarketsStore();
+
+    const marketStatus = {
+        RUNNING: "00",
+        CLOSED: "10",
+        SUSPEND: "20",
+        REFUND: "30"
+    };
 
     const updateMarketDetail = useCallback(
-        async (currentMarketID, predictionWorldContract) => {
+        async (currentMarketID) => {
             try {
                 setIsPageLoading(true);
-                const market = await predictionWorldContract.markets(currentMarketID);
-                const date = moment.unix(market.info.endTimestamp / 1000);
-                const dateString = date.format("MMMM D, YYYY HH:mm");
-                setMarketDetail({
-                    id: currentMarketID,
-                    title: market.info.question,
-                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : BACKUP_IMAGE,
-                    endTimestamp: dateString,
-                    endDate: date,
-                    totalAmount: market.totalAmount,
-                    totalYesAmount: market.totalYesAmount,
-                    totalNoAmount: market.totalNoAmount,
-                    description: market.info.description,
-                    resolverUrl: market.info.resolverUrl,
-                    isClose: market.marketClosed,
-                    isTest: market.info.isTest,
-                    isSuspended: market.isSuspended
+                const response = await syncMarketDetail({
+                    marketId: currentMarketID
                 });
+                if (!!response && response.ErrorCode === 0) {
+                    const responseEndTime = response.Result.MarketDetail.EndTime;
+                    const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
+                    const dateFormat = moment.unix(responseEndTime / 1000);
+
+                    const detail = response.Result.MarketDetail;
+                    const target = markets.find((item) => {
+                        if (item.id == currentMarketID) {
+                            return item;
+                        }
+                    });
+                    const getTotal = target.totalAmount;
+                    const getYesTotal = target.totalYesAmount;
+                    const getNoTotal = target.totalNoAmount;
+
+                    setMarketDetail({
+                        id: detail.MarketId,
+                        title: detail.Title,
+                        imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
+                        endTimestamp: endTimeFormat,
+                        endDate: dateFormat,
+                        totalAmount: getTotal,
+                        totalYesAmount: getYesTotal,
+                        totalNoAmount: getNoTotal,
+                        description: detail.Description,
+                        resolverUrl: detail.ResolveUrl,
+                        isClose: detail.Status === marketStatus.CLOSED,
+                        isTest: detail.IsTest,
+                        isSuspended: detail.Status === marketStatus.SUSPEND
+                    });
+                }
                 setIsPageLoading(false);
             } catch (error) {
-                console.error(`Error getting market detail`);
-                console.error(error);
+                console.error(`Error getting market detail ${error}`);
             }
         },
-        [currentMarketID, predictionWorldContract]
+        [currentMarketID]
     );
 
     useEffect(() => {
-        if (currentMarketID && predictionWorldContract) {
-            updateMarketDetail(currentMarketID, predictionWorldContract);
+        if (currentMarketID) {
+            updateMarketDetail(currentMarketID);
         }
     }, [currentMarketID, account, updateMarketDetail]);
 
