@@ -66,24 +66,15 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     }
 
     const outcomeValue = market.outcome ? "Yes" : "No";
-    // const winnersCount = market.outcome ? market.yesBets?.length : market.noBets?.length;
     const yesAmount = parseFloat(market.totalYesAmount.toString());
     const noAmount = parseFloat(market.totalNoAmount.toString());
     const totalAmount = parseFloat(market.totalAmount.toString());
-    const bonus = market.outcome
-        ? market.totalYesAmount > 0
-            ? `${Math.floor((market.totalNoAmount * 100) / market.totalYesAmount) - 1} %`
-            : "-"
-        : market.totalNoAmount > 0
-        ? `${Math.floor((market.totalYesAmount * 100) / market.totalNoAmount) - 1} %`
-        : "-";
     const cardValues = [
         {
             openTitle: "No",
             closeTitle: "Winners Count",
             openYesNoBgClass: "isNo",
             openOutcome: yesAmount,
-            // closeValue: winnersCount,
             closeValue: market.winnerCount,
             YesNoColor: "#E84D4D",
             note: ""
@@ -93,7 +84,6 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             closeTitle: "Profit",
             openYesNoBgClass: "isYes",
             openOutcome: noAmount,
-            // closeValue: bonus.toString(),
             closeValue: market.winnerProfit,
             YesNoColor: "#3FB06B",
             note: "possible fee included"
@@ -130,7 +120,8 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     return (
-        <Box sx={{ height: "100%" }} onClick={account ? handleSelectMarket : handleLogin}>
+        // <Box sx={{ height: "100%" }} onClick={account ? handleSelectMarket : handleLogin}>
+        <Box sx={{ height: "100%" }} onClick={handleSelectMarket}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
                 <Box sx={{ display: "flex" }}>
