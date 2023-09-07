@@ -116,24 +116,26 @@ const useGetMarkets = () => {
             });
             if (!!response && response.ErrorCode === 0) {
                 let tempMarkets = [];
-                for (let i = 0; i < response.Result.Markets.length; i++) {
-                    let market = response.Result.Markets[i];
-                    let currentMarket = {
-                        id: market.MarketId,
-                        question: market.Title,
-                        imageHash: market.ImageUrl ? market.ImageUrl : BACKUP_IMAGE,
-                        totalAmount: market.BetInfo.Yes + market.BetInfo.No,
-                        totalYesAmount: market.BetInfo.Yes,
-                        totalNoAmount: market.BetInfo.No,
-                        marketClosed: market.Status == "10",
-                        outcome: market.Outcome,
-                        isTest: market.IsTest,
-                        isSuspended: market.Status == "20",
-                        endTimestamp: market.EndTime,
-                        winnerCount: market.WinnerCount,
-                        winnerProfit: market.WinnerProfit
-                    };
-                    tempMarkets.push(currentMarket);
+                if (!!response.Result.Markets) {
+                    for (let i = 0; i < response.Result.Markets.length; i++) {
+                        let market = response.Result.Markets[i];
+                        let currentMarket = {
+                            id: market.MarketId,
+                            question: market.Title,
+                            imageHash: market.ImageUrl ? market.ImageUrl : BACKUP_IMAGE,
+                            totalAmount: market.BetInfo.Yes + market.BetInfo.No,
+                            totalYesAmount: market.BetInfo.Yes,
+                            totalNoAmount: market.BetInfo.No,
+                            marketClosed: market.Status == "10",
+                            outcome: market.Outcome,
+                            isTest: market.IsTest,
+                            isSuspended: market.Status == "20",
+                            endTimestamp: market.EndTime,
+                            winnerCount: market.WinnerCount,
+                            winnerProfit: market.WinnerProfit
+                        };
+                        tempMarkets.push(currentMarket);
+                    }
                 }
                 setMarkets(tempMarkets);
                 setMarketCount(response.Result.Markets.length);
