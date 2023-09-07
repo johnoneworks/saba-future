@@ -22,7 +22,7 @@ const useGetMarkets = () => {
                             id: market.MarketId,
                             question: market.Title,
                             imageHash: market.ImageUrl ? market.ImageUrl : BACKUP_IMAGE,
-                            totalAmount: Number(market.BetInfo.Yes + market.BetInfo.No),
+                            totalAmount: Number(market.BetInfo.Yes) + Number(market.BetInfo.No),
                             totalYesAmount: market.BetInfo.Yes,
                             totalNoAmount: market.BetInfo.No,
                             marketClosed: market.Status === API_MARKET_STATUS.CLOSED,
