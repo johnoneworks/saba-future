@@ -108,6 +108,12 @@ const useGetMarkets = () => {
         }
     };
 
+    const MarketStatus = {
+        OPEN: "00",
+        CLOSED: "10",
+        SUSPENDED: "20",
+        REFUND: "30"
+    };
     // api market
     const updateMarkets = async () => {
         try {
@@ -126,10 +132,10 @@ const useGetMarkets = () => {
                             totalAmount: market.BetInfo.Yes + market.BetInfo.No,
                             totalYesAmount: market.BetInfo.Yes,
                             totalNoAmount: market.BetInfo.No,
-                            marketClosed: market.Status == "10",
+                            marketClosed: market.Status === MarketStatus.CLOSED,
                             outcome: market.Outcome,
                             isTest: market.IsTest,
-                            isSuspended: market.Status == "20",
+                            isSuspended: market.Status === MarketStatus.SUSPENDED,
                             endTimestamp: market.EndTime,
                             winnerCount: market.WinnerCount,
                             winnerProfit: market.WinnerProfit

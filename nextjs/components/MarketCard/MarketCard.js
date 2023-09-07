@@ -120,6 +120,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     return (
+        // 轉 Web2.0 先註解 account
         // <Box sx={{ height: "100%" }} onClick={account ? handleSelectMarket : handleLogin}>
         <Box sx={{ height: "100%" }} onClick={handleSelectMarket}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
