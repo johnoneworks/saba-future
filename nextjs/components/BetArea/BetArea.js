@@ -118,6 +118,7 @@ export const BetArea = (props) => {
             </Typography>
             <Box sx={{ width: "100%", display: "flex", alignItems: "center" }}>
                 <TextField
+                    className={classnames(styles.betInput)}
                     type="number"
                     name="q"
                     value={input}
@@ -133,7 +134,6 @@ export const BetArea = (props) => {
                             </InputAdornment>
                         )
                     }}
-                    className={classnames(styles.betInput)}
                 />
             </Box>
             <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !input}>
