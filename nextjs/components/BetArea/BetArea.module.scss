@@ -39,22 +39,98 @@
 .volumeButton {
     padding: 6px;
     width: 100%;
-    background-color: #f2f5fa;
     border-radius: 4px;
+    background: #F2F5FA;
+    box-shadow: #DBDFE6 0px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 
     + .volumeButton {
         margin-top: 8px;
     }
 
     &.isYES {
-        color: #3fb06b;
+        color: #3fb06b; 
+        &.selected {
+            color:#fff;
+            background-color: #74D399;
+            box-shadow: #339A5B 0px 4px;
+        }
     }
 
     &.isNO {
         color: #e84d4d;
+        &.selected{
+            color:#fff;
+            background-color: #FF7C7C;
+            box-shadow: #CB3C3C 0px 4px;
+        }
+    }
+
+    .amount{
+        color:#585353;
+        font-weight: bold;
+        line-height:1
+    }
+
+    .amountUnit{
+        color: #A0A4A8;
+        font-weight: 700;
+        font-size: 8px;
     }
 
     &.selected {
-        color: #fff;
+        .amountUnit{
+            color: #fff;
+        }
+        .amount{
+            color:#fff;
+        }
+    }
+}
+
+.volume{
+    position: absolute;
+    height: 100%;
+    border-radius: 4px;
+    left: 0;
+    top:0;
+    z-index: 0;
+    &.isYES {
+        background-color: #DFF7E8;
+        &.selected{
+            background-color: #339A5B;
+        }
+    }
+    &.isNO {
+        background-color: #FDEDED;
+        &.selected{
+            background-color: #E84D4D;
+        }
+    }
+}
+
+.betInput{
+    input{
+        text-align: right;
+        color: #00000080;
+        font-size: 24px;
+        font-weight: 700;
+    }
+    .amountUnit{
+        color: #0000004D;
+        font-weight: 700;
+        font-size: 8px;
+    }
+    :first-child{
+        align-items: baseline;
+    }
+    ::placeholder{
+        text-align: right;
+        color: #00000080;
+        font-size: 24px;
+        font-weight: 700;
     }
 }

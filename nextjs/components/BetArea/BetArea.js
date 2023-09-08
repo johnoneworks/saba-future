@@ -16,26 +16,19 @@ import styles from "./BetArea.module.scss";
 const SelectButton = (props) => {
     const { type, selected, selectedAmount, totalAmount, onClick } = props;
     const buttonName = type;
-    const totalAmountText = `${totalAmount == 0 ? `0` : ((selectedAmount * 100) / totalAmount).toFixed(2)}%`;
     const buttonClass = `is${buttonName}`;
-    let selectedStyle;
-    if (type === BET_TYPE.YES) {
-        selectedStyle = selected === type ? "#3FB06B" : "#F2F5FA";
-    } else if (type === BET_TYPE.NO) {
-        selectedStyle = selected === type ? "#E84D4D" : "#F2F5FA";
-    }
+    const volumeWidth = totalAmount == 0 ? `50%` : `${(selectedAmount / totalAmount) * 100}%`;
 
     return (
-        <Box
-            id={buttonName}
-            style={{ backgroundColor: selectedStyle }}
-            className={classnames(styles.volumeButton, styles[buttonClass], { [styles.selected]: selected === type })}
-            onClick={onClick}
-        >
-            <Typography sx={{ fontWeight: "bold", mr: "4px" }} variant="subtitle1" component="span">
+        <Box id={buttonName} className={classnames(styles.volumeButton, styles[buttonClass], { [styles.selected]: selected === type })} onClick={onClick}>
+            <Typography sx={{ fontWeight: "bold", mr: "4px", zIndex: 1 }} variant="subtitle1" component="span">
                 {buttonName}
             </Typography>
-            <span style={{ fontWeight: "bold", color: "rgba(0, 0, 0, 0.65)" }}>{totalAmountText}</span>
+            <span style={{ display: "flex", flexDirection: "column", zIndex: 1 }}>
+                <span className={classnames(styles.amount)}>{selectedAmount}</span>
+                <span className={classnames(styles.amountUnit)}>SURE</span>
+            </span>
+            <div className={classnames(styles.volume, styles[buttonClass], { [styles.selected]: selected === type })} style={{ width: volumeWidth }}></div>
         </Box>
     );
 };
@@ -120,6 +113,7 @@ export const BetArea = (props) => {
             </Typography>
             <Box sx={{ width: "100%", display: "flex", alignItems: "center" }}>
                 <TextField
+                    className={classnames(styles.betInput)}
                     type="number"
                     name="q"
                     value={input}
@@ -129,7 +123,11 @@ export const BetArea = (props) => {
                     autoComplete="off"
                     min={0}
                     InputProps={{
-                        endAdornment: <InputAdornment position="end">SURE</InputAdornment>
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <span className={classnames(styles.amountUnit)}>SURE</span>
+                            </InputAdornment>
+                        )
                     }}
                 />
             </Box>
