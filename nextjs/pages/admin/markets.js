@@ -15,7 +15,7 @@ const ShowMarkets = (props) => {
                     if (!isClosed) {
                         accumulator.push(
                             <div key={market.id} className={styles.adminMarketCard}>
-                                <div>{`is isSuspended: ${!!market.isSuspended ? "true" : "false"}`}</div>
+                                <div>{`isSuspended: ${!!market.isSuspended ? "true" : "false"}`}</div>
                                 <AdminMarketCard id={market.id} market={market} />
                             </div>
                         );
