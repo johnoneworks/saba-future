@@ -5,6 +5,7 @@ import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
 import { useMarketDetailStore } from "@/store/useMarketDetailStore";
+import { useMarketsStore } from "@/store/useMarketsStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -33,7 +34,6 @@ const CustomAvatar = styled(Avatar)({
 const MarketTitle = (props) => {
     const { title, endTimestamp, totalAmount, imageHash, isTest, isMarketSuspended, isTimeOver } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
-    const totalSureAmount = `${totalAmount}`;
 
     return (
         <Box className={styles.marketTitle}>
@@ -81,7 +81,7 @@ const MarketTitle = (props) => {
                     </Typography>
                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", transform: "translateY(-3px)" }}>
                         <Typography variant="subtitle2" sx={{ fontWeight: "bold" }} noWrap color="grey.700">
-                            {totalSureAmount}
+                            {totalAmount}
                         </Typography>
                         <CustomTypography color="grey.500">SURE</CustomTypography>
                     </Box>
@@ -121,6 +121,10 @@ export default function MarketDetail() {
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
+    const { yesInfo, noInfo } = useMarketsStore();
+    const yesAmount = yesInfo.reduce((prev, current) => (prev += current.amount), 0);
+    const noAmount = noInfo.reduce((prev, current) => (prev += current.amount), 0);
+    const totalAmount = yesAmount + noAmount;
 
     useEffect(() => {
         updateMarketDetail(currentMarketID, predictionWorldContract);
@@ -135,7 +139,7 @@ export default function MarketDetail() {
                     <MarketTitle
                         title={marketDetail?.title}
                         endTimestamp={marketDetail?.endTimestamp}
-                        totalAmount={marketDetail?.totalAmount}
+                        totalAmount={totalAmount}
                         imageHash={marketDetail?.imageHash}
                         isTest={marketDetail?.isTest}
                         isMarketSuspended={!isMarketClose && isMarketSuspended}
@@ -144,7 +148,7 @@ export default function MarketDetail() {
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && !isMarketSuspended && !isTimeOver && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
-                                <BetArea id={marketDetail?.id} market={marketDetail} />
+                                <BetArea id={marketDetail?.id} market={marketDetail} yesAmount={yesAmount} noAmount={noAmount} />
                             </Grid>
                         )}
                         <Grid item xs={12} md={isMarketClose || isMarketSuspended || isTimeOver ? 12 : 6} className={styles.chartContainer}>
