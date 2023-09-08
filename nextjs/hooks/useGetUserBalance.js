@@ -9,7 +9,7 @@ const useGetUserBalance = () => {
 
     const updateBalance = async () => {
         try {
-            let response = await syncGetBalance();
+            const response = await syncGetBalance();
             if (!!response && response.ErrorCode === 0) {
                 setBalance(response.Result.Balance);
             }
