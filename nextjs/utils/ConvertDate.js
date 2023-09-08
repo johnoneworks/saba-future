@@ -25,3 +25,17 @@ export const currentDate = () => {
     const timeStamp = currentDate.toISOString();
     return timeStamp;
 };
+
+export function convertToDatetimeLocalFormat(dateTimeStr) {
+    return dateTimeStr.substring(0, 16);
+}
+
+export function formatDateToInput(date) {
+    const y = date.getFullYear().toString().padStart(4, "0");
+    const m = (date.getMonth() + 1).toString().padStart(2, "0"); // 因為月份是從 0 開始
+    const d = date.getDate().toString().padStart(2, "0");
+    const h = date.getHours().toString().padStart(2, "0");
+    const min = date.getMinutes().toString().padStart(2, "0");
+
+    return `${y}-${m}-${d}T${h}:${min}`;
+}

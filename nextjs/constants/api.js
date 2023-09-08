@@ -5,3 +5,5 @@ export const API_GET_ALL_MARKET = "Market/GetAllMarkets";
 export const API_GET_MARKET_DETAIL = "Market/GetMarketDetail";
 export const API_GET_MARKET_TICKETS = "Ticket/GetMarketTickets";
 export const API_GET_BALANCE = "Wallet/GetBalance";
+export const API_SUSPEND_MARKET = "Market/SetSuspendMarket";
+export const API_EDIT_MARKET = "Market/EditMarket";

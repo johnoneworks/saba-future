@@ -1,23 +1,14 @@
 import { Header } from "@/components/Header/Header";
-import { predictionWorldAddress } from "@/config";
-import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
-import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
-import { useLoadingStore } from "@/store/useLoadingStore";
-import { useMarketDetailStore } from "@/store/useMarketDetailStore";
-import SaveIcon from "@mui/icons-material/Save";
-import { Box, Button, Checkbox, Container, FormControlLabel, TextField, Typography } from "@mui/material";
-import moment from "moment";
-import Link from "next/link";
+import MarketEditForm from "@/components/MarketEditForm/MarketEditForm";
+import { API_EDIT_MARKET, API_GET_MARKET_DETAIL } from "@/constants/api";
+import baseAxios from "@/service/baseAxios";
+import { Box, Button, Container, Link } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
 /**
  * TODO:
  * 1. 暫時使用之編輯畫面，UI 團隊可以重新調整，目前感覺應該是 Dialog 更為適合
  */
-
-const dateFormat = "YYYY-MM-DDTHH:mm";
 
 export default function EditMarketPage() {
     return <EditMarket />;
@@ -26,85 +17,45 @@ export default function EditMarketPage() {
 const EditMarket = () => {
     const router = useRouter();
     const { id } = router.query;
-    const { setIsPageLoading } = useLoadingStore();
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [imageUrl, setImageUrl] = useState("");
-    const [resolverUrl, setResolverUrl] = useState("");
-    const [timestamp, setTimestamp] = useState();
-    const [date, setDate] = useState("");
-    const [isTest, setIsTest] = useState(false);
-    const { marketDetail } = useMarketDetailStore();
-    const { predictionWorldContract, predictionWorldInterface } = useContractStore();
-    const { provider, account, smartAccount } = useAccountStore();
-    const { updateMarketDetail } = useGetMarketDetail();
-
-    useEffect(() => {
-        if (id && account && smartAccount?.isAdminUser) {
-            updateMarketDetail(id, predictionWorldContract);
-        }
-    }, [id, account]);
-
-    useEffect(() => {
-        if (marketDetail) {
-            setTitle(marketDetail.title);
-            setDescription(marketDetail.description);
-            setImageUrl(marketDetail.imageHash);
-            setResolverUrl(marketDetail.resolverUrl);
-            setIsTest(marketDetail.isTest);
-            if (marketDetail.endDate) {
-                setDate(marketDetail.endDate.format(dateFormat));
-                setTimestamp(marketDetail.endDate.valueOf());
+    const [marketDetail, setMarketDetail] = useState({});
+    const getMarket = async () => {
+        const data = {
+            Payload: {
+                MarketId: id
             }
+        };
+
+        const response = await baseAxios({
+            method: "POST",
+            url: API_GET_MARKET_DETAIL,
+            data: data
+        });
+
+        if (response && response.ErrorCode !== 0) {
+            router.push("/admin/markets");
         }
-    }, [marketDetail]);
+        if (response && response.ErrorCode === 0) {
+            const {
+                Result: { MarketDetail }
+            } = response;
 
-    const handleSaveTitle = async () => {
-        await updateMarketInfoWithGasless("setMarketInfoQuestion", title);
-    };
-
-    const handleSaveDescription = async () => {
-        await updateMarketInfoWithGasless("setMarketInfoDescription", description);
-    };
-
-    const handleSaveImageUrl = async () => {
-        await updateMarketInfoWithGasless("setMarketInfoImage", imageUrl);
-    };
-
-    const handleSaveResolverUrl = async () => {
-        await updateMarketInfoWithGasless("setMarketInfoResolverUrl", resolverUrl);
-    };
-
-    const handleSaveEndTimestamp = async () => {
-        await updateMarketInfoWithGasless("setMarketInfoEndTimestamp", timestamp);
-    };
-
-    const handleSaveIsTest = async () => {
-        await updateMarketInfoWithGasless("setMarketInfoIsTest", isTest);
-    };
-
-    const updateMarketInfoWithGasless = async (functionName, value) => {
-        setIsPageLoading(true);
-
-        try {
-            const transactionData = predictionWorldInterface.encodeFunctionData(functionName, [id, value]);
-
-            const transaction = {
-                to: predictionWorldAddress,
-                data: transactionData
+            const editPropsData = {
+                title: MarketDetail.Title,
+                description: MarketDetail.Description,
+                imageUrl: MarketDetail.ImageUrl,
+                resolverUrl: MarketDetail.ResolveUrl,
+                timestamp: MarketDetail.EndTime,
+                isTest: MarketDetail.IsTest
             };
-
-            const txResponse = await smartAccount.sendTransaction({ transaction });
-            console.log(`[UserOp hash] [${functionName}]: ${txResponse.hash}`);
-            const txReceipt = await txResponse.wait();
-            console.log(`[Tx hash] [${functionName}] ${txReceipt.transactionHash}`);
-            await provider.getTransactionReceipt(txReceipt.transactionHash);
-
-            await updateMarketDetail(id, predictionWorldContract);
-        } finally {
-            setIsPageLoading(false);
+            setMarketDetail(editPropsData);
         }
     };
+
+    useEffect(() => {
+        if (id) {
+            getMarket();
+        }
+    }, [id]);
 
     return (
         <Box
@@ -120,122 +71,10 @@ const EditMarket = () => {
             <Container maxWidth="md" component="main">
                 <Link href="/?menu=Market">
                     <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
-                        Home
+                        All Markets
                     </Button>
                 </Link>
-                <Box
-                    sx={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        mt: 1,
-                        borderColor: "divider",
-                        borderWidth: 1,
-                        borderRadius: 1,
-                        p: 2
-                    }}
-                >
-                    <Typography variant="h6" component="div" sx={{ mt: 1 }}>
-                        Add New Market
-                    </Typography>
-                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                        Market Title
-                    </Typography>
-                    <TextField
-                        type="input"
-                        name="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        fullWidth
-                        placeholder="Title"
-                        autoComplete="off"
-                        InputProps={{
-                            endAdornment: title && title !== marketDetail.title && (
-                                <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveTitle} />
-                            )
-                        }}
-                    />
-                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                        Market Description
-                    </Typography>
-                    <TextField
-                        name="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        fullWidth
-                        placeholder="Description"
-                        autoComplete="off"
-                        multiline
-                        InputProps={{
-                            endAdornment: description && description !== marketDetail.description && (
-                                <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveDescription} />
-                            )
-                        }}
-                    />
-                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                        Market Image URL
-                    </Typography>
-                    <TextField
-                        type="input"
-                        name="imageUrl"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        fullWidth
-                        placeholder="URL"
-                        autoComplete="off"
-                        InputProps={{
-                            endAdornment: imageUrl && imageUrl !== marketDetail.imageHash && (
-                                <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveImageUrl} />
-                            )
-                        }}
-                    />
-                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                        Resolve URL
-                    </Typography>
-                    <TextField
-                        type="input"
-                        name="resolverUrl"
-                        value={resolverUrl}
-                        onChange={(e) => setResolverUrl(e.target.value)}
-                        fullWidth
-                        placeholder="URL"
-                        autoComplete="off"
-                        InputProps={{
-                            endAdornment: resolverUrl && resolverUrl !== marketDetail.resolverUrl && (
-                                <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveResolverUrl} />
-                            )
-                        }}
-                    />
-                    <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                        End Date
-                    </Typography>
-                    <TextField
-                        type="datetime-local"
-                        name="timestamp"
-                        value={date}
-                        onChange={(e) => {
-                            setTimestamp(Date.parse(e.target.value));
-                            setDate(moment(Date.parse(e.target.value)).format(dateFormat));
-                        }}
-                        fullWidth
-                        InputLabelProps={{
-                            shrink: true
-                        }}
-                        InputProps={{
-                            endAdornment: timestamp && timestamp !== marketDetail.endDate.valueOf() && (
-                                <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveEndTimestamp} />
-                            )
-                        }}
-                    />
-                    <div>
-                        <FormControlLabel
-                            label="Is this for testing?"
-                            sx={{ mt: 2, mb: 1 }}
-                            control={<Checkbox checked={isTest} onChange={() => setIsTest(!isTest)} />}
-                        />
-                        {isTest !== marketDetail.isTest && <SaveIcon color="primary" className="cursor-pointer" onClick={handleSaveIsTest} />}
-                    </div>
-                </Box>
+                <MarketEditForm editPropsData={marketDetail} apiPath={API_EDIT_MARKET} marketId={id} />
             </Container>
         </Box>
     );

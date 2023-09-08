@@ -1,13 +1,18 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { predictionWorldAddress } from "@/config";
 import { BET_TYPE } from "@/constants/Constant";
+import { API_SUSPEND_MARKET } from "@/constants/api";
+import useGetMarkets from "@/hooks/useGetMarkets";
+import baseAxios from "@/service/baseAxios";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { styled } from "@mui/system";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { AdminConfirmPage } from "./ConfirmPage/AdminConfirmPage";
 
@@ -29,6 +34,8 @@ export default function AdminMarketCard({ id, market }) {
     const { smartAccount } = useAccountStore();
     const { predictionWorldInterface } = useContractStore();
     const [selectedResolve, setSelectedResolve] = useState(null);
+    const { updateMarkets } = useGetMarkets();
+    const router = useRouter();
     const isResolved = market.hasResolved;
     const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
     const isTest = market.isTest;
@@ -69,35 +76,38 @@ export default function AdminMarketCard({ id, market }) {
         console.log("Tx hash", txReceipt.transactionHash);
     };
 
+    // TODO: suspend 要有開關
     const handleSuspend = async (isSuspended) => {
         try {
             setIsPageLoading(true);
-            await setIsSuspended(isSuspended);
-            alert("Success!");
+            const response = await baseAxios({
+                method: "POST",
+                url: API_SUSPEND_MARKET,
+                data: {
+                    Payload: {
+                        MarketId: id,
+                        IsSuspend: isSuspended
+                    }
+                }
+            });
+            if (response && response.ErrorCode === 0) {
+                updateMarkets();
+            } else {
+                throw new Error("Error suspend market");
+            }
         } catch (err) {
-            console.error(err);
-            alert("Error!!");
+            console.log("%c⧭ Error suspend market", "color: #917399", err);
         } finally {
             setIsPageLoading(false);
-            setSelectedResolve(null);
         }
     };
 
-    const setIsSuspended = async (isSuspended) => {
-        let transactions = [];
-        const transactionData = predictionWorldInterface.encodeFunctionData("setMarketIsSuspended", [id, isSuspended]);
-
-        transactions = [
-            {
-                to: predictionWorldAddress,
-                data: transactionData
-            }
-        ];
-
-        const txResponse = await smartAccount.sendTransactionBatch({ transactions });
-        console.log("UserOp hash", txResponse.hash);
-        const txReceipt = await txResponse.wait();
-        console.log("Tx hash", txReceipt.transactionHash);
+    const handleEdit = (e) => {
+        e.stopPropagation();
+        router.push({
+            pathname: `/admin/${id}`
+        });
+        return false;
     };
 
     return (
@@ -106,6 +116,11 @@ export default function AdminMarketCard({ id, market }) {
                 <div className="flex flex-col border border-gray-300 rounded-lg p-5 hover:border-blue-700 cursor-pointer">
                     {isTest && <TestDataMark />}
                     <div className="flex flex-row space-x-5 pb-4">
+                        <Tooltip title="Edit">
+                            <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
+                                <BorderColorOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
                         <div className="h-w-15">
                             <CustomAvatar>
                                 <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: 55, height: 55 }} />
@@ -114,16 +129,11 @@ export default function AdminMarketCard({ id, market }) {
                         <span className="text-lg font-semibold w-full">{market.question}</span>
                         {!market.hasResolved &&
                             (market.isSuspended ? (
-                                <IconButton
-                                    className="h-w-15 text-right"
-                                    color="primary"
-                                    aria-label="add to shopping cart"
-                                    onClick={() => handleSuspend(false)}
-                                >
+                                <IconButton className="h-w-15 text-right" color="primary" onClick={() => handleSuspend(false)}>
                                     <PlayCircleIcon />
                                 </IconButton>
                             ) : (
-                                <IconButton className="h-w-15 text-right" color="primary" aria-label="add to shopping cart" onClick={() => handleSuspend(true)}>
+                                <IconButton className="h-w-15 text-right" color="primary" onClick={() => handleSuspend(true)}>
                                     <PauseCircleIcon />
                                 </IconButton>
                             ))}
