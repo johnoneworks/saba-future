@@ -1,7 +1,7 @@
 import { MENU_TYPE } from "@/constants/Constant";
+import { useMenuStore } from "@/store/useMenuStore";
 import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
-
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
