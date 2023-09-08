@@ -41,7 +41,8 @@ const SelectButton = (props) => {
 };
 
 export const BetArea = (props) => {
-    const { id, market, yesAmount, noAmount } = props;
+    const { id, yesAmount, noAmount } = props;
+    const totalAmount = Number(yesAmount) + Number(noAmount);
     const { smartAccount } = useAccountStore();
     const { predictionWorldInterface, sureTokenInterface } = useContractStore();
     const { updateMarketDetail } = useGetMarketDetail();
@@ -110,16 +111,10 @@ export const BetArea = (props) => {
                 type={BET_TYPE.YES}
                 selected={selected}
                 selectedAmount={yesAmount}
-                totalAmount={Number(yesAmount) + Number(noAmount)}
+                totalAmount={totalAmount}
                 onClick={() => setSelected(BET_TYPE.YES)}
             />
-            <SelectButton
-                type={BET_TYPE.NO}
-                selected={selected}
-                selectedAmount={noAmount}
-                totalAmount={Number(yesAmount) + Number(noAmount)}
-                onClick={() => setSelected(BET_TYPE.NO)}
-            />
+            <SelectButton type={BET_TYPE.NO} selected={selected} selectedAmount={noAmount} totalAmount={totalAmount} onClick={() => setSelected(BET_TYPE.NO)} />
             <Typography variant="body2" sx={{ m: 1, fontWeight: "bold", width: "100%" }}>
                 How much?
             </Typography>

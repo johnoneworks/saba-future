@@ -122,12 +122,8 @@ export default function MarketDetail() {
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
     const { yesInfo, noInfo } = useMarketsStore();
-    const yesAmount = yesInfo.reduce((prev, current) => {
-        return (prev += current.amount);
-    }, 0);
-    const noAmount = noInfo.reduce((prev, current) => {
-        return (prev += current.amount);
-    }, 0);
+    const yesAmount = yesInfo.reduce((prev, current) => (prev += current.amount), 0);
+    const noAmount = noInfo.reduce((prev, current) => (prev += current.amount), 0);
     const totalAmount = yesAmount + noAmount;
 
     useEffect(() => {
