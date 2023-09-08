@@ -1,5 +1,4 @@
 import ProfileDialog from "@/components/ProfileDialog";
-import { MENU_TYPE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
@@ -9,14 +8,16 @@ import { useMenuStore } from "@/store/useMenuStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
+import LanguageIcon from "@mui/icons-material/Language";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/system";
+import { Button } from "@mui/material";
 import classnames from "classnames";
 import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
@@ -27,14 +28,6 @@ import HowToPlay from "../HowToPlay/HowToPlay";
 import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
 
-const CustomPersonIcon = styled(PersonIcon)({
-    fontSize: 16
-});
-
-const CustomAccountBalanceWalletIcon = styled(AccountBalanceWalletIcon)({
-    fontSize: 16
-});
-
 const BiconomyWallet = dynamic(() => import("@/components/BiconomyWallet").then((res) => res.default), {
     ssr: false
 });
@@ -42,9 +35,9 @@ const BiconomyWallet = dynamic(() => import("@/components/BiconomyWallet").then(
 const ProfileItem = ({ type, text }) => {
     return (
         <div className={styles.profileItem}>
-            {type === "person" && <CustomPersonIcon />}
+            {type === "person" && <PersonIcon sx={{ fontSize: 16 }} />}
 
-            {type === "wallet" && <CustomAccountBalanceWalletIcon />}
+            {type === "wallet" && <AccountBalanceWalletIcon sx={{ fontSize: 16 }} />}
             <span> {text}</span>
         </div>
     );
@@ -80,7 +73,9 @@ export const Header = () => {
     const { disconnectWallet } = useLogout();
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
     const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
-    const { t } = useTranslation("common");
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isLanguageExpand, setIsLanguageExpand] = useState(false);
+    const { t, i18n } = useTranslation();
 
     const refreshMarkets = () => {
         updateMarkets();
@@ -129,6 +124,81 @@ export const Header = () => {
         setOpenHowToPlayDialog(!openHowToPlayDialog);
     };
 
+    const handleDrawer = () => {
+        if (isDrawerOpen === true) {
+            setIsLanguageExpand(false);
+        }
+        setIsDrawerOpen(!isDrawerOpen);
+    };
+
+    const handleLanguageArea = () => {
+        setIsLanguageExpand(!isLanguageExpand);
+    };
+
+    const handleSwitchLanguage = (lan) => {
+        i18n.changeLanguage(lan);
+    };
+
+    // 測試 是否登入, 是否為manage
+    let isLogin = false;
+    let isManage = false;
+    const menuList = [
+        {
+            icon: isLogin && isManage ? <ManageAccountsIcon sx={{ color: "#1A84F2" }} /> : <LightbulbIcon sx={{ color: "#1A84F2" }} />,
+            menuTitle: isLogin && isManage ? "Manage markets" : "How To Play",
+            clickAction: isLogin && isManage ? handleRedirectToAdminMarkets : handleSwitchHowToPlay
+        },
+        {
+            icon: <LanguageIcon sx={{ color: "#1A84F2" }} />,
+            menuTitle: "Language",
+            clickAction: handleLanguageArea,
+            languageArea: (
+                <div className={classnames(styles.languageArea)}>
+                    <button
+                        onClick={() => {
+                            handleSwitchLanguage("en");
+                        }}
+                    >
+                        English
+                    </button>
+                    <button
+                        onClick={() => {
+                            handleSwitchLanguage("ind");
+                        }}
+                    >
+                        English(India)
+                    </button>
+                    <button
+                        onClick={() => {
+                            handleSwitchLanguage("vn");
+                        }}
+                    >
+                        Tiếng Việt
+                    </button>
+                    <button
+                        onClick={() => {
+                            handleSwitchLanguage("th");
+                        }}
+                    >
+                        ภาษาไทย
+                    </button>
+                    <button
+                        onClick={() => {
+                            handleSwitchLanguage("idn");
+                        }}
+                    >
+                        Indonesian
+                    </button>
+                </div>
+            )
+        },
+        {
+            icon: isLogin ? <LogoutIcon sx={{ color: "#1A84F2" }} /> : <LoginIcon sx={{ color: "#1A84F2" }} />,
+            menuTitle: isLogin ? "Logout" : "Login",
+            clickAction: isLogin ? handleLogout : handleLogin
+        }
+    ];
+
     return (
         <>
             <BiconomyWallet />
@@ -139,38 +209,41 @@ export const Header = () => {
                         <Image src="/logo-text.svg" alt="placeholder" width={150} height={30} />
                     </div>
                     <div>
-                        {account && smartAccount && smartAccount.isAdminUser ? (
-                            <span className="cursor-pointer pr-4" onClick={handleRedirectToAdminMarkets}>
-                                {
-                                    <Tooltip title="Manage markets">
-                                        <ManageAccountsIcon />
-                                    </Tooltip>
-                                }
-                            </span>
-                        ) : (
-                            <span onClick={handleSwitchHowToPlay} className="pr-4">
-                                <LightbulbIcon />
-                            </span>
-                        )}
-                        <span className="cursor-pointer" onClick={account ? handleLogout : handleLogin}>
-                            {account ? <LogoutIcon /> : <LoginIcon />}
-                        </span>
-                    </div>
-                </div>
-                {account && (
-                    <div className={styles.headerInfo}>
-                        <div className={styles.profile} onClick={handleClickProfile}>
-                            <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
-                            <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
-                        </div>
-                        {!currentMarketID && (
-                            <div className={styles.tab}>
-                                <MenuTab tab={MENU_TYPE.MARKET} />
-                                <MenuTab tab={MENU_TYPE.STATEMENT} />
+                        <Button onClick={handleDrawer}>
+                            <MenuIcon sx={{ color: "#ffffff" }} />
+                        </Button>
+                        {isDrawerOpen && (
+                            <div className={classnames(styles.drawerContainer)}>
+                                <div className={classnames(styles.closeDrawer)}>
+                                    <CloseIcon onClick={handleDrawer} sx={{ color: "#1A84F2" }} />
+                                </div>
+                                {menuList.map((item) => (
+                                    <div className={classnames(styles.list)}>
+                                        <div className={classnames(styles.listItem)} onClick={item.clickAction}>
+                                            {item.icon}
+                                            <span className={classnames(styles.listItemName)}>{item.menuTitle}</span>
+                                        </div>
+                                        {isLanguageExpand ? item.languageArea : <></>}
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>
-                )}
+                </div>
+                {/* {account && ( */}
+                <div className={styles.headerInfo}>
+                    <div className={styles.profile} onClick={handleClickProfile}>
+                        <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
+                        <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
+                    </div>
+                    {!currentMarketID && (
+                        <div className={styles.tab}>
+                            <MenuTab tab={t("market")} />
+                            <MenuTab tab={t("statement")} />
+                        </div>
+                    )}
+                </div>
+                {/* )} */}
             </div>
             {smartAccount && (
                 <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
