@@ -1,22 +1,18 @@
+import syncGetBalance from "@/service/wallet/getBalance";
 import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
-import { ethers } from "ethers";
 import { useEffect } from "react";
 
 const useGetUserBalance = () => {
-    const { account, smartAccount } = useAccountStore();
-    const { sureTokenContract } = useContractStore();
+    const { account } = useAccountStore();
     const { setBalance } = usePlayerInfoStore();
 
     const updateBalance = async () => {
         try {
-            if (!smartAccount.address) {
-                return;
+            const response = await syncGetBalance();
+            if (!!response && response.ErrorCode === 0) {
+                setBalance(response.Result.Balance);
             }
-            let count = await sureTokenContract.balanceOf(smartAccount.address);
-            console.error("hook Balance ", ethers.utils.commify(count));
-            setBalance(ethers.utils.commify(count));
         } catch (error) {
             console.error(`Error getting balance, ${error}`);
         }
