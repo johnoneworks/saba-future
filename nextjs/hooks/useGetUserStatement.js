@@ -1,133 +1,92 @@
-import { BACKUP_IMAGE } from "@/constants/Constant";
-import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
+import { BACKUP_IMAGE, BET_TYPE } from "@/constants/Constant";
+import syncMarketDetail from "@/service/market/getMarketDetail";
+import syncCustomerTickets from "@/service/ticket/getCustomerTickets";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { useStatementStore } from "@/store/useStatementStore";
-import { testMarketsData } from "@/testData/testMarketsData";
-import { testUserBetList } from "@/testData/testStatementsData";
-import { IsLocal } from "@/utils/IsLocal";
+import moment from "moment";
 import { useCallback, useEffect } from "react";
 
 const useGetUserStatement = () => {
-    const { smartAccount } = useAccountStore();
-    const { predictionWorldContract } = useContractStore();
     const { setHasGetFirstInformation } = usePlayerInfoStore();
     const { setUserStatements } = useStatementStore();
     const { setIsMarketLoading } = useLoadingStore();
 
-    const useTestData = () => {
-        let tempMarkets = testMarketsData;
-        let userBetList = testUserBetList;
-        let totalBetValue = 0;
-        const StatementsInfo = userBetList.reduce((info, statement) => {
-            const market = tempMarkets.find((market) => market.id == statement.id);
-            totalBetValue += parseInt(statement?.yesAmount) + parseInt(statement?.noAmount);
-            if (market) {
-                info.push({
-                    ...statement,
-                    title: market?.info.question,
-                    imageHash: market?.imageHash,
-                    totalAmount: market?.totalAmount,
-                    totalYesAmount: market?.totalYesAmount,
-                    totalNoAmount: market?.totalNoAmount,
-                    hasResolved: market?.marketClosed,
-                    endTimestamp: market?.info.endTimestamp,
-                    timestamp: market?.info.timestamp,
-                    outcome: market?.outcome
-                });
+    let getMarket = [];
+    const getMarketDetail = async (currentMarketID) => {
+        try {
+            const response = await syncMarketDetail({
+                marketId: currentMarketID
+            });
+            if (!!response && response.ErrorCode === 0) {
+                const detail = response.Result.MarketDetail;
+                const responseEndTime = detail.EndTime;
+                const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
+                const dateFormat = moment.unix(responseEndTime / 1000);
+
+                const data = {
+                    id: detail.MarketId,
+                    title: detail.Title,
+                    imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
+                    endTimestamp: endTimeFormat,
+                    endDate: dateFormat,
+                    resolverUrl: detail.ResolveUrl,
+                    yesAmount: detail.BetInfo.Yes,
+                    noAmount: detail.BetInfo.No,
+                    createDate: detail.CreateTime,
+                    outcome: detail.Outcome
+                };
+                if (!getMarket.some((item) => item.id === data.id)) {
+                    getMarket.push(data);
+                }
             }
-            return info;
-        }, []);
-        setUserStatements(StatementsInfo);
-    };
-
-    const updateStatements = useCallback(async () => {
-        //使用假資料，不需要就 false 掉
-        if (IsLocal()) {
-            useTestData();
-            return;
+        } catch (error) {
+            console.error(`Error getting market detail ${error}`);
         }
-
+    };
+    const updateStatements = useCallback(async () => {
         try {
             setIsMarketLoading(true);
-            let marketCount = await predictionWorldContract.totalMarkets();
+            let response = await syncCustomerTickets();
 
-            let markets = [];
-            for (let i = 0; i < marketCount; i++) {
-                let market = await predictionWorldContract.markets(i);
-                markets.push({
-                    id: market.id,
-                    title: market.info.question,
-                    imageHash: market.info.creatorImageHash ? market.info.creatorImageHash : BACKUP_IMAGE,
-                    totalAmount: market.totalAmount,
-                    totalYesAmount: market.totalYesAmount,
-                    totalNoAmount: market.totalNoAmount,
-                    hasResolved: market.marketClosed,
-                    endTimestamp: market.info.endTimestamp,
-                    timestamp: market.info.timestamp,
-                    outcome: market.outcome,
-                    isTest: market.info.isTest
+            const statementInfo = [];
+            if (!!response && response.ErrorCode === 0) {
+                const uniqueIds = [...new Set(response.Result.Tickets.map((item) => item.MarketId))];
+                await Promise.all(
+                    uniqueIds.map(async (id) => {
+                        await getMarketDetail(id);
+                    })
+                );
+                response.Result.Tickets.map((item) => {
+                    const market = getMarket.find((marketItem) => marketItem.id === item.MarketId);
+                    const newData = {
+                        id: item.MarketId,
+                        yesAmount: item.BetTypeName.toUpperCase() === BET_TYPE.YES ? item.Stake : 0,
+                        noAmount: item.BetTypeName.toUpperCase() === BET_TYPE.NO ? item.Stake : 0,
+                        hasResolved: !!market.resolverUrl,
+                        imageHash: market.imageHash,
+                        title: market.title,
+                        totalYesAmount: market.yesAmount,
+                        totalNoAmount: market.noAmount,
+                        timestamp: market.createDate,
+                        endTimestamp: market.endTimestamp,
+                        win: item.Win,
+                        outcome: market.outcome
+                    };
+                    statementInfo.push(newData);
                 });
             }
-            console.log(`markets size: ${markets.length}`);
-
-            let userBetList = [];
-            let totalBetAmount = 0;
-            for (let i = 0; i < markets.length; i++) {
-                const marketBets = await predictionWorldContract.getUserBets(smartAccount.address, i);
-                const yesBets = marketBets.yesBets;
-                yesBets.forEach((bet) => {
-                    userBetList.push({
-                        id: i.toString(),
-                        yesAmount: bet.amount.toString(),
-                        timestamp: bet.timestamp.toString()
-                    });
-                    totalBetAmount += parseInt(bet.amount);
-                });
-                const noBets = marketBets.noBets;
-                noBets.forEach((bet) => {
-                    userBetList.push({
-                        id: i.toString(),
-                        noAmount: bet.amount.toString(),
-                        timestamp: bet.timestamp.toString()
-                    });
-                    totalBetAmount += parseInt(bet.amount);
-                });
-            }
-
-            const StatementsInfo = userBetList.reduce((info, statement) => {
-                const market = markets.find((market) => market.id == statement.id);
-                if (market) {
-                    info.push({
-                        ...statement,
-                        title: market?.title,
-                        imageHash: market?.imageHash,
-                        totalAmount: market?.totalAmount,
-                        totalYesAmount: market?.totalYesAmount,
-                        totalNoAmount: market?.totalNoAmount,
-                        hasResolved: market?.hasResolved,
-                        endTimestamp: market?.endTimestamp,
-                        timestamp: market?.timestamp,
-                        outcome: market?.outcome
-                    });
-                }
-                return info;
-            }, []);
-
-            setUserStatements(StatementsInfo);
+            setUserStatements(statementInfo);
             setHasGetFirstInformation(true);
             setIsMarketLoading(false);
         } catch (error) {
-            console.error(`Error getting markets, ${error}`);
+            console.error(`Error getting statement, ${error}`);
         }
-    }, [predictionWorldContract]);
+    }, []);
 
     useEffect(() => {
-        if (smartAccount && predictionWorldContract) {
-            updateStatements();
-        }
-    }, [smartAccount, updateStatements]);
+        updateStatements();
+    }, [updateStatements]);
 
     return { updateStatements };
 };

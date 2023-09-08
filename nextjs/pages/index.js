@@ -30,7 +30,7 @@ export default function Home() {
             <Header />
             <Box className={styles.homeContent}>
                 <Markets />
-                {account && <Statement />}
+                <Statement />
                 {/* 轉 Web2.0 先註解 account */}
                 {/* {account && currentMarketID && <MarketDetail />} */}
                 {currentMarketID && <MarketDetail />}

@@ -24,7 +24,7 @@ export const Statement = () => {
 
     return (
         <>
-            {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
+            {currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
                 <>
                     {isMarketLoading && <Loading />}
                     {!isMarketLoading &&
