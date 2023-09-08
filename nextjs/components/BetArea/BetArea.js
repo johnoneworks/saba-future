@@ -41,9 +41,9 @@ const SelectButton = (props) => {
 };
 
 export const BetArea = (props) => {
-    const { id, market } = props;
+    const { id, market, yesAmount, noAmount } = props;
     const { smartAccount } = useAccountStore();
-    const { predictionWorldInterface, sureTokenInterface, predictionWorldContract } = useContractStore();
+    const { predictionWorldInterface, sureTokenInterface } = useContractStore();
     const { updateMarketDetail } = useGetMarketDetail();
     const { currentMarketID } = useMenuStore();
     const { setIsPageLoading } = useLoadingStore();
@@ -88,10 +88,10 @@ export const BetArea = (props) => {
             setIsPageLoading(false);
             console.error(`Error trading: ${error}`);
         } finally {
-            updateMarketDetail(currentMarketID, predictionWorldContract);
+            updateMarketDetail(currentMarketID);
             updateBalance();
             updateStatements();
-            updateBetsInfo(currentMarketID, predictionWorldContract);
+            updateBetsInfo(currentMarketID);
             setInput("");
             setIsPageLoading(false);
         }
@@ -109,15 +109,15 @@ export const BetArea = (props) => {
             <SelectButton
                 type={BET_TYPE.YES}
                 selected={selected}
-                selectedAmount={market?.totalYesAmount}
-                totalAmount={market?.totalAmount}
+                selectedAmount={yesAmount}
+                totalAmount={Number(yesAmount) + Number(noAmount)}
                 onClick={() => setSelected(BET_TYPE.YES)}
             />
             <SelectButton
                 type={BET_TYPE.NO}
                 selected={selected}
-                selectedAmount={market?.totalNoAmount}
-                totalAmount={market?.totalAmount}
+                selectedAmount={noAmount}
+                totalAmount={Number(yesAmount) + Number(noAmount)}
                 onClick={() => setSelected(BET_TYPE.NO)}
             />
             <Typography variant="body2" sx={{ m: 1, fontWeight: "bold", width: "100%" }}>

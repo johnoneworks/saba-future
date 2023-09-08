@@ -45,7 +45,7 @@ const useGetBetsInfo = () => {
         if (currentMarketID) {
             updateBetsInfo(currentMarketID);
         }
-    }, [currentMarketID, account, updateBetsInfo]);
+    }, [currentMarketID, updateBetsInfo]);
 
     return { updateBetsInfo };
 };
