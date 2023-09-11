@@ -90,23 +90,24 @@ export const Markets = () => {
                     {isMarketLoading && marketCount != 0 && <Loading />}
                     {!isMarketLoading && markets && (
                         <>
-                            {account && smartAccount && smartAccount.isAdminUser && (
-                                <>
-                                    <div className={classnames(styles.buttonContainer)}>
-                                        <div className={classnames(styles.creatMarketButton)} onClick={handleRedirectToAdmin}>
-                                            <AddIcon />
-                                            <span>Create Market</span>
-                                        </div>
+                            {/* 轉 Web2.0 先註解 */}
+                            {/* {account && smartAccount && smartAccount.isAdminUser && ( */}
+                            <>
+                                <div className={classnames(styles.buttonContainer)}>
+                                    <div className={classnames(styles.creatMarketButton)} onClick={handleRedirectToAdmin}>
+                                        <AddIcon />
+                                        <span>Create Market</span>
                                     </div>
-                                    <div>
-                                        <FormControlLabel
-                                            label="Show Test Markets"
-                                            sx={{ mt: 2, mb: 1 }}
-                                            control={<Checkbox checked={showTest} onChange={(e) => setShowTest(!showTest)} />}
-                                        />
-                                    </div>
-                                </>
-                            )}
+                                </div>
+                                <div>
+                                    <FormControlLabel
+                                        label="Show Test Markets"
+                                        sx={{ mt: 2, mb: 1 }}
+                                        control={<Checkbox checked={showTest} onChange={(e) => setShowTest(!showTest)} />}
+                                    />
+                                </div>
+                            </>
+                            {/* )} */}
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
                                 <ShowMarkets account={account} showTest={showTest} isEditable={hasLogin ? smartAccount.isAdminUser : false} />
                             </Grid>
