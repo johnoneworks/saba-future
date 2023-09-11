@@ -9,8 +9,9 @@ export const MARKET_STATUS = {
 };
 
 export const BET_TYPE = {
-    YES: "YES",
-    NO: "NO"
+    YES: "Yes",
+    NO: "No",
+    DRAW: "Draw"
 };
 
 export const CONTRACTS_NAME = {

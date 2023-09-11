@@ -1,16 +1,13 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { predictionWorldAddress } from "@/config";
 import { BET_TYPE } from "@/constants/Constant";
-import { API_SUSPEND_MARKET } from "@/constants/api";
+import { API_RESOLVE_MARKET, API_SUSPEND_MARKET } from "@/constants/api";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import baseAxios from "@/service/baseAxios";
-import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { Avatar, Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Tooltip } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -31,13 +28,9 @@ const CustomAvatar = styled(Avatar)({
 
 export default function AdminMarketCard({ id, market }) {
     const { setIsPageLoading } = useLoadingStore();
-    const { smartAccount } = useAccountStore();
-    const { predictionWorldInterface } = useContractStore();
     const [selectedResolve, setSelectedResolve] = useState(null);
     const { updateMarkets } = useGetMarkets();
     const router = useRouter();
-    const isResolved = market.hasResolved;
-    const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
     const isTest = market.isTest;
 
     const onCancelResolve = () => {
@@ -48,7 +41,7 @@ export default function AdminMarketCard({ id, market }) {
         if (selectedResolve === null) return;
         try {
             setIsPageLoading(true);
-            await distributeWithGasless(selectedResolve === BET_TYPE.YES);
+            await handleResolveMarket(selectedResolve);
             alert("Success!");
         } catch (err) {
             console.error(err);
@@ -59,24 +52,6 @@ export default function AdminMarketCard({ id, market }) {
         }
     };
 
-    const distributeWithGasless = async (result) => {
-        let transactions = [];
-        const transactionData = predictionWorldInterface.encodeFunctionData("distributeWinningAmount", [id, result]);
-
-        transactions = [
-            {
-                to: predictionWorldAddress,
-                data: transactionData
-            }
-        ];
-
-        const txResponse = await smartAccount.sendTransactionBatch({ transactions });
-        console.log("UserOp hash", txResponse.hash);
-        const txReceipt = await txResponse.wait();
-        console.log("Tx hash", txReceipt.transactionHash);
-    };
-
-    // TODO: suspend 要有開關
     const handleSuspend = async (isSuspended) => {
         try {
             setIsPageLoading(true);
@@ -102,6 +77,31 @@ export default function AdminMarketCard({ id, market }) {
         }
     };
 
+    const handleResolveMarket = async (selectedResolve) => {
+        try {
+            setIsPageLoading(true);
+            const response = await baseAxios({
+                method: "POST",
+                url: API_RESOLVE_MARKET,
+                data: {
+                    Payload: {
+                        MarketId: id,
+                        Outcome: selectedResolve
+                    }
+                }
+            });
+            if (response && response.ErrorCode === 0) {
+                updateMarkets();
+            } else {
+                throw new Error("Error resolve market");
+            }
+        } catch (err) {
+            console.log("%c⧭ Error resolve market", "color: #917399", err);
+        } finally {
+            setIsPageLoading(false);
+        }
+    };
+
     const handleEdit = (e) => {
         e.stopPropagation();
         router.push({
@@ -112,7 +112,7 @@ export default function AdminMarketCard({ id, market }) {
 
     return (
         <>
-            <div className="w-full overflow-hidden my-2" style={{ backgroundColor: isResolved ? "#E4E9F0" : "#fff" }}>
+            <div className="w-full overflow-hidden my-2" style={{ backgroundColor: "#fff" }}>
                 <div className="flex flex-col border border-gray-300 rounded-lg p-5 hover:border-blue-700 cursor-pointer">
                     {isTest && <TestDataMark />}
                     <div className="flex flex-row space-x-5 pb-4">
@@ -147,28 +147,19 @@ export default function AdminMarketCard({ id, market }) {
                             <span className="text-xs text-gray-500 font-light">Ending In</span>
                             <span className="text-base">{market.endTimestamp}</span>
                         </div>
-                        {!isResolved ? (
-                            <div className="flex flex-row space-x-2 items-end">
-                                <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.YES)}>
-                                    Resolve YES
-                                </button>
-                                <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.NO)}>
-                                    Resolve No
-                                </button>
-                            </div>
-                        ) : (
-                            <Box>
-                                <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", mb: "3px", lineHeight: 1, pt: "5px" }}>
-                                    Outcome
-                                </Typography>
-                                <Typography
-                                    variant="body1"
-                                    sx={{ color: market.hasResolved ? (outcome === BET_TYPE.YES ? "#3FB06B" : "#E84D4D") : "#1A84F2", fontWeight: "bold" }}
-                                >
-                                    {market.hasResolved ? outcome.toString() : "In progress"}
-                                </Typography>
-                            </Box>
-                        )}
+                    </div>
+                    <div className="flex flex-row flex-nowrap justify-between items-center">
+                        <div className="flex flex-row space-x-2 items-end">
+                            <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.YES)}>
+                                Resolve YES
+                            </button>
+                            <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.NO)}>
+                                Resolve No
+                            </button>
+                            <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.DRAW)}>
+                                Resolve Draw
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
