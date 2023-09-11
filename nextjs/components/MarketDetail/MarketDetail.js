@@ -1,10 +1,7 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
-import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
-import { useMarketDetailStore } from "@/store/useMarketDetailStore";
+import { getMarketDetail } from "@/hooks/useGetMarketDetail";
 import { useMarketsStore } from "@/store/useMarketsStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
@@ -14,7 +11,7 @@ import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/system";
 import moment from "moment";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./MarketDetail.module.scss";
 
 const CustomTypography = styled(Typography)({
@@ -113,10 +110,7 @@ const MarketDescription = (props) => {
 };
 
 export default function MarketDetail() {
-    const { marketDetail } = useMarketDetailStore();
-    const { updateMarketDetail } = useGetMarketDetail();
-    const { account } = useAccountStore();
-    const { predictionWorldContract } = useContractStore();
+    const [marketDetail, setMarketDetail] = useState();
     const { currentMarketID } = useMenuStore();
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
@@ -125,9 +119,12 @@ export default function MarketDetail() {
     const yesAmount = yesInfo.reduce((prev, current) => (prev += current.amount), 0);
     const noAmount = noInfo.reduce((prev, current) => (prev += current.amount), 0);
     const totalAmount = yesAmount + noAmount;
-
+    const fetchMarketDetail = async () => {
+        const data = await getMarketDetail(currentMarketID);
+        setMarketDetail(data);
+    };
     useEffect(() => {
-        updateMarketDetail(currentMarketID, predictionWorldContract);
+        fetchMarketDetail();
     }, []);
 
     return (
@@ -148,7 +145,13 @@ export default function MarketDetail() {
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && !isMarketSuspended && !isTimeOver && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
-                                <BetArea id={marketDetail?.id} market={marketDetail} yesAmount={yesAmount} noAmount={noAmount} />
+                                <BetArea
+                                    id={marketDetail?.id}
+                                    market={marketDetail}
+                                    yesAmount={yesAmount}
+                                    noAmount={noAmount}
+                                    fetchMarketDetail={fetchMarketDetail}
+                                />
                             </Grid>
                         )}
                         <Grid item xs={12} md={isMarketClose || isMarketSuspended || isTimeOver ? 12 : 6} className={styles.chartContainer}>

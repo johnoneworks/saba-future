@@ -1,11 +1,10 @@
-import { BACKUP_IMAGE, BET_TYPE } from "@/constants/Constant";
-import syncMarketDetail from "@/service/market/getMarketDetail";
+import { BET_TYPE } from "@/constants/Constant";
 import syncCustomerTickets from "@/service/ticket/getCustomerTickets";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { useStatementStore } from "@/store/useStatementStore";
-import moment from "moment";
 import { useCallback, useEffect } from "react";
+import { getMarketDetail } from "./useGetMarketDetail";
 
 const useGetUserStatement = () => {
     const { setHasGetFirstInformation } = usePlayerInfoStore();
@@ -13,35 +12,10 @@ const useGetUserStatement = () => {
     const { setIsMarketLoading } = useLoadingStore();
 
     let getMarket = [];
-    const getMarketDetail = async (currentMarketID) => {
-        try {
-            const response = await syncMarketDetail({
-                marketId: currentMarketID
-            });
-            if (!!response && response.ErrorCode === 0) {
-                const detail = response.Result.MarketDetail;
-                const responseEndTime = detail.EndTime;
-                const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
-                const dateFormat = moment.unix(responseEndTime / 1000);
-
-                const data = {
-                    id: detail.MarketId,
-                    title: detail.Title,
-                    imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
-                    endTimestamp: endTimeFormat,
-                    endDate: dateFormat,
-                    resolverUrl: detail.ResolveUrl,
-                    yesAmount: detail.BetInfo.Yes,
-                    noAmount: detail.BetInfo.No,
-                    createDate: detail.CreateTime,
-                    outcome: detail.Outcome
-                };
-                if (!getMarket.some((item) => item.id === data.id)) {
-                    getMarket.push(data);
-                }
-            }
-        } catch (error) {
-            console.error(`Error getting market detail ${error}`);
+    const fetchMarketDetail = async (currentMarketID) => {
+        const data = await getMarketDetail(currentMarketID);
+        if (!getMarket.some((item) => item.id === data.id)) {
+            getMarket.push(data);
         }
     };
     const updateStatements = useCallback(async () => {
@@ -54,7 +28,7 @@ const useGetUserStatement = () => {
                 const uniqueIds = [...new Set(response.Result.Tickets.map((item) => item.MarketId))];
                 await Promise.all(
                     uniqueIds.map(async (id) => {
-                        await getMarketDetail(id);
+                        await fetchMarketDetail(id);
                     })
                 );
                 response.Result.Tickets.map((item) => {

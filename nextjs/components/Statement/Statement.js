@@ -2,7 +2,6 @@ import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { Loading } from "@/components/Loading/Loading";
 import StatementMarketCard from "@/components/StatementMarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
-import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { useStatementStore } from "@/store/useStatementStore";
@@ -18,7 +17,6 @@ import { Box, Grid } from "@mui/material";
  */
 export const Statement = () => {
     const { userStatements } = useStatementStore();
-    const { account } = useAccountStore();
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading } = useLoadingStore();
 
@@ -30,7 +28,7 @@ export const Statement = () => {
                     {!isMarketLoading &&
                         (userStatements && userStatements.length > 0 ? (
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                {userStatements.map((market, i) => (
+                                {userStatements.map((market) => (
                                     <StatementMarketCard market={market} />
                                 ))}
                             </Grid>
