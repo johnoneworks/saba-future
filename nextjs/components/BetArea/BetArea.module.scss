@@ -46,6 +46,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    z-index: 0;
 
     + .volumeButton {
         margin-top: 8px;
