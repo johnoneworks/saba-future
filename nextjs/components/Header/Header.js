@@ -1,4 +1,5 @@
 import ProfileDialog from "@/components/ProfileDialog";
+import { MENU_TYPE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useGetUserStatement from "@/hooks/useGetUserStatement";
@@ -19,11 +20,11 @@ import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { Button } from "@mui/material";
 import classnames from "classnames";
-import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import HowToPlay from "../HowToPlay/HowToPlay";
 import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
@@ -46,6 +47,7 @@ const ProfileItem = ({ type, text }) => {
 const MenuTab = ({ tab }) => {
     const { currentMenu, setCurrentMenu } = useMenuStore();
     const router = useRouter();
+    const { t } = useTranslation();
     return (
         <div
             className={classnames(styles.tabItem, { [styles.active]: tab === currentMenu })}
@@ -57,7 +59,7 @@ const MenuTab = ({ tab }) => {
                 });
             }}
         >
-            <span>{tab}</span>
+            <span>{t(`${tab.toLowerCase()}`)}</span>
         </div>
     );
 };
@@ -238,8 +240,8 @@ export const Header = () => {
                     </div>
                     {!currentMarketID && (
                         <div className={styles.tab}>
-                            <MenuTab tab={t("market")} />
-                            <MenuTab tab={t("statement")} />
+                            <MenuTab tab={MENU_TYPE.MARKET} />
+                            <MenuTab tab={MENU_TYPE.STATEMENT} />
                         </div>
                     )}
                 </div>
