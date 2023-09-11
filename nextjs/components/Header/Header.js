@@ -20,7 +20,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { Button } from "@mui/material";
 import classnames from "classnames";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -28,10 +27,6 @@ import { useTranslation } from "react-i18next";
 import HowToPlay from "../HowToPlay/HowToPlay";
 import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
-
-const BiconomyWallet = dynamic(() => import("@/components/BiconomyWallet").then((res) => res.default), {
-    ssr: false
-});
 
 const ProfileItem = ({ type, text }) => {
     return (
@@ -77,7 +72,7 @@ export const Header = () => {
     const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isLanguageExpand, setIsLanguageExpand] = useState(false);
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
 
     const refreshMarkets = () => {
         updateMarkets();
@@ -86,18 +81,21 @@ export const Header = () => {
     };
 
     const handleRedirectToAdminMarkets = () => {
+        setIsDrawerOpen(false);
         router.push({
             pathname: `/admin/markets`
         });
     };
 
     const handleLogout = () => {
+        setIsDrawerOpen(false);
         if (account) {
             disconnectWallet();
         }
     };
 
     const handleLogin = async () => {
+        setIsDrawerOpen(false);
         if (!account && socialLoginSDK.web3auth.status !== "connected") {
             await socialLoginSDK.showWallet();
         }
@@ -123,6 +121,7 @@ export const Header = () => {
     };
 
     const handleSwitchHowToPlay = () => {
+        setIsDrawerOpen(false);
         setOpenHowToPlayDialog(!openHowToPlayDialog);
     };
 
@@ -138,6 +137,8 @@ export const Header = () => {
     };
 
     const handleSwitchLanguage = (lan) => {
+        setIsDrawerOpen(false);
+        setIsLanguageExpand(false);
         i18n.changeLanguage(lan);
     };
 
@@ -203,7 +204,6 @@ export const Header = () => {
 
     return (
         <>
-            <BiconomyWallet />
             <div className={styles.root}>
                 <div className={styles.header}>
                     <div onClick={currentMarketID ? handleReturnBack : refreshMarkets}>{currentMarketID ? <ArrowBackIcon /> : <RefreshIcon />}</div>
