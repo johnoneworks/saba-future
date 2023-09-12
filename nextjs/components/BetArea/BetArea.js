@@ -2,7 +2,6 @@ import { predictionWorldAddress, sureTokenAddress } from "@/config";
 import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
-import useGetUserStatement from "@/hooks/useGetUserStatement";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
@@ -42,7 +41,6 @@ export const BetArea = (props) => {
 
     const { updateBalance } = useGetUserBalance();
     const { updateBetsInfo } = useGetBetsInfo();
-    const { updateStatements } = useGetUserStatement();
 
     const [selected, setSelected] = useState();
     const [input, setInput] = useState("");
@@ -82,7 +80,6 @@ export const BetArea = (props) => {
         } finally {
             handleFetchMarketDetail(currentMarketID);
             updateBalance();
-            updateStatements();
             updateBetsInfo(currentMarketID);
             setInput("");
             setIsPageLoading(false);

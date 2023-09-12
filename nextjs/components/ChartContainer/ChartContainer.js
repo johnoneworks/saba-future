@@ -1,3 +1,4 @@
+import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import { useMarketsStore } from "@/store/useMarketsStore";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
@@ -6,8 +7,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import classnames from "classnames";
 import { useEffect, useState } from "react";
 import styles from "./ChartContainer.module.scss";
-
 export default function ChartContainer() {
+    const { updateBetsInfo } = useGetBetsInfo();
     const { yesInfo, noInfo } = useMarketsStore();
 
     const InfoTable = ({ info, title, buttonStyle }) => {
@@ -54,6 +55,10 @@ export default function ChartContainer() {
             </ThemeProvider>
         );
     };
+
+    useEffect(() => {
+        updateBetsInfo();
+    }, []);
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", position: "relative", width: "100%" }}>

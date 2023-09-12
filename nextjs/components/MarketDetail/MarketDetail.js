@@ -13,7 +13,7 @@ import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/system";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./MarketDetail.module.scss";
 
 const CustomTypography = styled(Typography)({
@@ -134,7 +134,8 @@ export default function MarketDetail() {
     const yesAmount = yesInfo.reduce((prev, current) => (prev += current.amount), 0);
     const noAmount = noInfo.reduce((prev, current) => (prev += current.amount), 0);
     const totalAmount = yesAmount + noAmount;
-    const handleFetchMarketDetail = async () => {
+
+    const handleFetchMarketDetail = useCallback(async () => {
         const response = await syncMarketDetail({ marketId: currentMarketID });
         if (!!response && response.ErrorCode === 0) {
             const detail = response.Result.MarketDetail;
@@ -156,10 +157,11 @@ export default function MarketDetail() {
                 isSuspended: detail.Status === API_MARKET_STATUS.SUSPENDED
             });
         }
-    };
+    });
+
     useEffect(() => {
         currentMarketID && handleFetchMarketDetail();
-    }, []);
+    }, [currentMarketID]);
 
     return (
         <>
@@ -179,13 +181,7 @@ export default function MarketDetail() {
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && !isMarketSuspended && !isTimeOver && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
-                                <BetArea
-                                    id={marketDetail?.id}
-                                    market={marketDetail}
-                                    yesAmount={yesAmount}
-                                    noAmount={noAmount}
-                                    handleFetchMarketDetail={handleFetchMarketDetail}
-                                />
+                                <BetArea id={marketDetail.id} yesAmount={yesAmount} noAmount={noAmount} handleFetchMarketDetail={handleFetchMarketDetail} />
                             </Grid>
                         )}
                         <Grid item xs={12} md={isMarketClose || isMarketSuspended || isTimeOver ? 12 : 6} className={styles.chartContainer}>

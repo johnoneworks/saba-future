@@ -2,7 +2,6 @@ import ProfileDialog from "@/components/ProfileDialog";
 import { MENU_TYPE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
-import useGetUserStatement from "@/hooks/useGetUserStatement";
 import useLogout from "@/hooks/useLogout";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
@@ -25,7 +24,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import HowToPlay from "../HowToPlay/HowToPlay";
-import { NewbieDialog } from "../NewbieDialog/NewbieDialog";
 import styles from "./Header.module.scss";
 
 const ProfileItem = ({ type, text }) => {
@@ -65,7 +63,6 @@ export const Header = () => {
     const { email, balance } = usePlayerInfoStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
-    const { updateStatements } = useGetUserStatement();
     const { updateBalance } = useGetUserBalance();
     const { disconnectWallet } = useLogout();
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
@@ -75,8 +72,8 @@ export const Header = () => {
     const { i18n } = useTranslation();
 
     const refreshMarkets = () => {
+        // TODO: Market 跟 statement 要分開 refresh
         updateMarkets();
-        updateStatements();
         updateBalance();
     };
 
@@ -255,7 +252,6 @@ export const Header = () => {
             {smartAccount && (
                 <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
             )}
-            <NewbieDialog />
             {openHowToPlayDialog && <HowToPlay onClose={handleSwitchHowToPlay} />}
         </>
     );
