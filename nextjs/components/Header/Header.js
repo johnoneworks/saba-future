@@ -126,9 +126,7 @@ export const Header = () => {
     };
 
     const handleDrawer = () => {
-        if (isDrawerOpen === true) {
-            setIsLanguageExpand(false);
-        }
+        setIsLanguageExpand(isDrawerOpen);
         setIsDrawerOpen(!isDrawerOpen);
     };
 
@@ -145,60 +143,26 @@ export const Header = () => {
     // 測試 是否登入, 是否為manage
     let isLogin = false;
     let isManage = false;
-    const menuList = [
+    const languages = [
         {
-            icon: isLogin && isManage ? <ManageAccountsIcon sx={{ color: "#1A84F2" }} /> : <LightbulbIcon sx={{ color: "#1A84F2" }} />,
-            menuTitle: isLogin && isManage ? "Manage markets" : "How To Play",
-            clickAction: isLogin && isManage ? handleRedirectToAdminMarkets : handleSwitchHowToPlay
+            language: "en",
+            languageName: "English"
         },
         {
-            icon: <LanguageIcon sx={{ color: "#1A84F2" }} />,
-            menuTitle: "Language",
-            clickAction: handleLanguageArea,
-            languageArea: (
-                <div className={classnames(styles.languageArea)}>
-                    <button
-                        onClick={() => {
-                            handleSwitchLanguage("en");
-                        }}
-                    >
-                        English
-                    </button>
-                    <button
-                        onClick={() => {
-                            handleSwitchLanguage("ind");
-                        }}
-                    >
-                        English(India)
-                    </button>
-                    <button
-                        onClick={() => {
-                            handleSwitchLanguage("vn");
-                        }}
-                    >
-                        Tiếng Việt
-                    </button>
-                    <button
-                        onClick={() => {
-                            handleSwitchLanguage("th");
-                        }}
-                    >
-                        ภาษาไทย
-                    </button>
-                    <button
-                        onClick={() => {
-                            handleSwitchLanguage("idn");
-                        }}
-                    >
-                        Indonesian
-                    </button>
-                </div>
-            )
+            language: "ind",
+            languageName: "English(India)"
         },
         {
-            icon: isLogin ? <LogoutIcon sx={{ color: "#1A84F2" }} /> : <LoginIcon sx={{ color: "#1A84F2" }} />,
-            menuTitle: isLogin ? "Logout" : "Login",
-            clickAction: isLogin ? handleLogout : handleLogin
+            language: "vn",
+            languageName: "Tiếng Việt"
+        },
+        {
+            language: "th",
+            languageName: "ภาษาไทย"
+        },
+        {
+            language: "idn",
+            languageName: "Indonesian"
         }
     ];
 
@@ -219,15 +183,55 @@ export const Header = () => {
                                 <div className={classnames(styles.closeDrawer)}>
                                     <CloseIcon onClick={handleDrawer} sx={{ color: "#1A84F2" }} />
                                 </div>
-                                {menuList.map((item) => (
+                                {isLogin && isManage ? (
                                     <div className={classnames(styles.list)}>
-                                        <div className={classnames(styles.listItem)} onClick={item.clickAction}>
-                                            {item.icon}
-                                            <span className={classnames(styles.listItemName)}>{item.menuTitle}</span>
+                                        <div className={classnames(styles.listItem)} onClick={handleRedirectToAdminMarkets}>
+                                            <ManageAccountsIcon sx={{ color: "#1A84F2" }} />
+                                            <span className={classnames(styles.listItemName)}>Manage markets</span>
                                         </div>
-                                        {isLanguageExpand ? item.languageArea : <></>}
                                     </div>
-                                ))}
+                                ) : (
+                                    <div className={classnames(styles.list)}>
+                                        <div className={classnames(styles.listItem)} onClick={handleSwitchHowToPlay}>
+                                            <LightbulbIcon sx={{ color: "#1A84F2" }} />
+                                            <span className={classnames(styles.listItemName)}>How To Play</span>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className={classnames(styles.list)}>
+                                    <div className={classnames(styles.listItem)} onClick={handleLanguageArea}>
+                                        <LanguageIcon sx={{ color: "#1A84F2" }} />
+                                        <span className={classnames(styles.listItemName)}>Language</span>
+                                    </div>
+                                    {isLanguageExpand && (
+                                        <div className={classnames(styles.languageArea)}>
+                                            {languages.map((item) => (
+                                                <button
+                                                    onClick={() => {
+                                                        handleSwitchLanguage(item.language);
+                                                    }}
+                                                >
+                                                    {item.languageName}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                                {isLogin ? (
+                                    <div className={classnames(styles.list)}>
+                                        <div className={classnames(styles.listItem)} onClick={handleLogout}>
+                                            <LogoutIcon sx={{ color: "#1A84F2" }} />
+                                            <span className={classnames(styles.listItemName)}>Logout</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={classnames(styles.list)}>
+                                        <div className={classnames(styles.listItem)} onClick={handleLogin}>
+                                            <LoginIcon sx={{ color: "#1A84F2" }} />
+                                            <span className={classnames(styles.listItemName)}>Login</span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
