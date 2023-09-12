@@ -77,6 +77,46 @@
     }
 }
 
+.drawerContainer{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 244px;
+    padding: 12px 16px;
+    background-color: #000;
+    z-index: 100;
+    border-radius: 8px 0px 0px 8px;
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(3px);
+    .closeDrawer{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .list{
+        display: flex;
+        flex-direction: column;
+        .listItem{
+            padding: 12px 20px;
+            display: flex;
+            cursor: pointer;
+            .listItemName{
+                color: #1A84F2;
+                margin-left: 16px;
+            }
+        }
+    }
+}
+
+.languageArea{
+    button{
+        width: 100%;
+        text-align: left;
+        padding: 8px 0 8px 66px;
+        color: #585353;
+    }
+}
+
 @media (min-width: 768px) {
     .profileItem {
         margin: 0 14px;
