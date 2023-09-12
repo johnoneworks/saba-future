@@ -238,6 +238,7 @@ export const Header = () => {
                 </div>
                 {/* {account && ( */}
                 <div className={styles.headerInfo}>
+                    {/* TODO: 轉 Web2.0 先拿掉account判斷 */}
                     <div className={styles.profile} onClick={handleClickProfile}>
                         <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
                         <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />

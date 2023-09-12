@@ -33,7 +33,7 @@ const SelectButton = (props) => {
 };
 
 export const BetArea = (props) => {
-    const { id, yesAmount, noAmount, fetchMarketDetail } = props;
+    const { id, yesAmount, noAmount, handleFetchMarketDetail } = props;
     const totalAmount = Number(yesAmount) + Number(noAmount);
     const { smartAccount } = useAccountStore();
     const { predictionWorldInterface, sureTokenInterface } = useContractStore();
@@ -80,7 +80,7 @@ export const BetArea = (props) => {
             setIsPageLoading(false);
             console.error(`Error trading: ${error}`);
         } finally {
-            fetchMarketDetail(currentMarketID);
+            handleFetchMarketDetail(currentMarketID);
             updateBalance();
             updateStatements();
             updateBetsInfo(currentMarketID);

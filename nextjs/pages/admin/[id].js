@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header/Header";
 import MarketEditForm from "@/components/MarketEditForm/MarketEditForm";
 import { API_EDIT_MARKET } from "@/constants/api";
-import { getMarketDetail } from "@/hooks/useGetMarketDetail";
+import syncMarketDetail from "@/service/market/getMarketDetail";
 import { Box, Button, Container, Link } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -19,17 +19,26 @@ const EditMarket = () => {
     const { id } = router.query;
     const [marketDetail, setMarketDetail] = useState({});
     const getMarket = async () => {
-        const response = await getMarketDetail(id);
+        const response = await syncMarketDetail({ marketId: id });
 
-        const editPropsData = {
-            title: response.title,
-            description: response.description,
-            imageUrl: response.imageHash,
-            resolverUrl: response.resolverUrl,
-            timestamp: response.endTimestamp,
-            isTest: response.isTest
-        };
-        setMarketDetail(editPropsData);
+        if (response && response.ErrorCode !== 0) {
+            router.push("/admin/markets");
+        }
+        if (response && response.ErrorCode === 0) {
+            const {
+                Result: { MarketDetail }
+            } = response;
+
+            const editPropsData = {
+                title: MarketDetail.Title,
+                description: MarketDetail.Description,
+                imageUrl: MarketDetail.ImageUrl,
+                resolverUrl: MarketDetail.ResolveUrl,
+                timestamp: MarketDetail.EndTime,
+                isTest: MarketDetail.IsTest
+            };
+            setMarketDetail(editPropsData);
+        }
     };
 
     useEffect(() => {

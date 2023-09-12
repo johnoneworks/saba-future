@@ -1,10 +1,11 @@
-import { BET_TYPE } from "@/constants/Constant";
+import { BACKUP_IMAGE, BET_TYPE } from "@/constants/Constant";
+import syncMarketDetail from "@/service/market/getMarketDetail";
 import syncCustomerTickets from "@/service/ticket/getCustomerTickets";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { useStatementStore } from "@/store/useStatementStore";
+import moment from "moment";
 import { useCallback, useEffect } from "react";
-import { getMarketDetail } from "./useGetMarketDetail";
 
 const useGetUserStatement = () => {
     const { setHasGetFirstInformation } = usePlayerInfoStore();
@@ -12,12 +13,29 @@ const useGetUserStatement = () => {
     const { setIsMarketLoading } = useLoadingStore();
 
     let getMarket = [];
-    const fetchMarketDetail = async (currentMarketID) => {
-        const data = await getMarketDetail(currentMarketID);
-        if (!getMarket.some((item) => item.id === data.id)) {
-            getMarket.push(data);
+    const handleFetchMarketDetail = async (currentMarketID) => {
+        const response = await syncMarketDetail({ marketId: currentMarketID });
+        if (!!response && response.ErrorCode == 0) {
+            const detail = response.Result.MarketDetail;
+            const endTimeFormat = moment(detail.EndTime).format("MMMM D, YYYY");
+            const createTimeFormat = moment(detail.CreateTime).format("MMMM D, YYYY");
+            const data = {
+                id: detail.MarketId,
+                title: detail.Title,
+                resolverUrl: detail.ResolveUrl,
+                imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
+                endTimestamp: endTimeFormat,
+                totalYesAmount: detail.BetInfo.Yes,
+                totalNoAmount: detail.BetInfo.No,
+                createDate: createTimeFormat,
+                outcome: detail.Outcome
+            };
+            if (!getMarket.some((item) => item.id === data.id)) {
+                getMarket.push(data);
+            }
         }
     };
+
     const updateStatements = useCallback(async () => {
         try {
             setIsMarketLoading(true);
@@ -28,7 +46,7 @@ const useGetUserStatement = () => {
                 const uniqueIds = [...new Set(response.Result.Tickets.map((item) => item.MarketId))];
                 await Promise.all(
                     uniqueIds.map(async (id) => {
-                        await fetchMarketDetail(id);
+                        await handleFetchMarketDetail(id);
                     })
                 );
                 response.Result.Tickets.map((item) => {
@@ -40,8 +58,8 @@ const useGetUserStatement = () => {
                         hasResolved: !!market.resolverUrl,
                         imageHash: market.imageHash,
                         title: market.title,
-                        totalYesAmount: market.yesAmount,
-                        totalNoAmount: market.noAmount,
+                        totalYesAmount: market.totalYesAmount,
+                        totalNoAmount: market.totalNoAmount,
                         timestamp: market.createDate,
                         endTimestamp: market.endTimestamp,
                         win: item.Win,

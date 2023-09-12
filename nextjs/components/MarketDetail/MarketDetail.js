@@ -1,7 +1,9 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { getMarketDetail } from "@/hooks/useGetMarketDetail";
+import { BACKUP_IMAGE } from "@/constants/Constant";
+import { API_MARKET_STATUS } from "@/constants/MarketCondition";
+import syncMarketDetail from "@/service/market/getMarketDetail";
 import { useMarketsStore } from "@/store/useMarketsStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
@@ -110,7 +112,20 @@ const MarketDescription = (props) => {
 };
 
 export default function MarketDetail() {
-    const [marketDetail, setMarketDetail] = useState();
+    const [marketDetail, setMarketDetail] = useState({
+        id: 0,
+        title: "",
+        imageHash: BACKUP_IMAGE,
+        endTimestamp: "",
+        endDate: "",
+        resolverUrl: "",
+        description: "",
+        yesAmount: 0,
+        noAmount: 0,
+        isClose: false,
+        isTest: false,
+        isSuspended: false
+    });
     const { currentMarketID } = useMenuStore();
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
@@ -119,12 +134,31 @@ export default function MarketDetail() {
     const yesAmount = yesInfo.reduce((prev, current) => (prev += current.amount), 0);
     const noAmount = noInfo.reduce((prev, current) => (prev += current.amount), 0);
     const totalAmount = yesAmount + noAmount;
-    const fetchMarketDetail = async () => {
-        const data = await getMarketDetail(currentMarketID);
-        setMarketDetail(data);
+    const handleFetchMarketDetail = async () => {
+        const response = await syncMarketDetail({ marketId: currentMarketID });
+        if (!!response && response.ErrorCode === 0) {
+            const detail = response.Result.MarketDetail;
+            const responseEndTime = detail.EndTime;
+            const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
+            const dateFormat = moment.unix(responseEndTime / 1000);
+            setMarketDetail({
+                id: detail.MarketId,
+                title: detail.Title,
+                imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
+                endTimestamp: endTimeFormat,
+                endDate: dateFormat,
+                resolverUrl: detail.ResolveUrl,
+                description: detail.Description,
+                yesAmount: detail.BetInfo.Yes,
+                noAmount: detail.BetInfo.No,
+                isClose: detail.Status === API_MARKET_STATUS.CLOSED,
+                isTest: detail.IsTest,
+                isSuspended: detail.Status === API_MARKET_STATUS.SUSPENDED
+            });
+        }
     };
     useEffect(() => {
-        fetchMarketDetail();
+        currentMarketID && handleFetchMarketDetail();
     }, []);
 
     return (
@@ -150,7 +184,7 @@ export default function MarketDetail() {
                                     market={marketDetail}
                                     yesAmount={yesAmount}
                                     noAmount={noAmount}
-                                    fetchMarketDetail={fetchMarketDetail}
+                                    handleFetchMarketDetail={handleFetchMarketDetail}
                                 />
                             </Grid>
                         )}
