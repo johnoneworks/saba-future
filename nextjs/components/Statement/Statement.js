@@ -2,11 +2,11 @@ import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { Loading } from "@/components/Loading/Loading";
 import StatementMarketCard from "@/components/StatementMarketCard";
 import { BACKUP_IMAGE, BET_TYPE, MENU_TYPE } from "@/constants/Constant";
+import { API_MARKET_STATUS } from "@/constants/MarketCondition";
 import syncMarketDetail from "@/service/market/getMarketDetail";
 import syncCustomerTickets from "@/service/ticket/getCustomerTickets";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMenuStore } from "@/store/useMenuStore";
-import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { Box, Grid } from "@mui/material";
 import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
@@ -20,15 +20,14 @@ import { useCallback, useEffect, useState } from "react";
  *
  */
 export const Statement = () => {
-    const { setHasGetFirstInformation } = usePlayerInfoStore();
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading, setIsMarketLoading } = useLoadingStore();
     const [userStatements, setUserStatements] = useState([]);
     const [marketsDetail, setMarketsDetail] = useState([]);
 
-    const handleFetchMarketDetail = useCallback(
-        async (currentMarketID) => {
-            const response = await syncMarketDetail({ marketId: currentMarketID });
+    const handleFetchMarketDetail = useCallback(async (marketId) => {
+        try {
+            const response = await syncMarketDetail({ marketId: marketId });
             if (!!response && response.ErrorCode === 0) {
                 const detail = response.Result.MarketDetail;
                 const endTimeFormat = moment(detail.EndTime).format("MMMM D, YYYY");
@@ -42,65 +41,50 @@ export const Statement = () => {
                     totalYesAmount: detail.BetInfo.Yes,
                     totalNoAmount: detail.BetInfo.No,
                     createDate: createTimeFormat,
+                    hasResolved: detail.Status === API_MARKET_STATUS.CLOSED,
                     outcome: detail.Outcome
                 };
-                if (!marketsDetail.some((item) => item.id === data.id)) {
-                    let array = marketsDetail;
-                    array.push(data);
-                    setMarketsDetail(array);
-                }
+                return data;
             }
-        },
-        [marketsDetail]
-    );
+        } catch (error) {
+            console.error(`Error getting market detail, ${error}`);
+        }
+    }, []);
 
-    const getMarketDetailById = async (item) => {
-        const uniqueIds = [...new Set(item.map((item) => item.MarketId))];
-        await Promise.all(
-            uniqueIds.map(async (id) => {
-                await handleFetchMarketDetail(id);
-            })
-        );
+    const getMarketDetailById = async () => {
+        const uniqueIds = userStatements.reduce((prev, current) => {
+            if (!prev.includes(current.MarketId)) {
+                prev.push(current.MarketId);
+            }
+            return prev;
+        }, []);
+
+        const marketDetails = await Promise.all(uniqueIds.map((id) => handleFetchMarketDetail(id)));
+        setMarketsDetail(marketDetails);
+        setIsMarketLoading(false);
     };
 
-    const getStatements = useCallback(async () => {
+    const handleFetchStatements = useCallback(async () => {
         try {
-            setIsMarketLoading(true);
             let response = await syncCustomerTickets();
             if (!!response && response.ErrorCode === 0) {
-                await getMarketDetailById(response.Result.Tickets);
-                let formatTickets = [];
-                response.Result.Tickets.map((item) => {
-                    const newData = {
-                        id: item.MarketId,
-                        yesAmount: item.BetTypeName === BET_TYPE.YES ? item.Stake : 0,
-                        noAmount: item.BetTypeName === BET_TYPE.NO ? item.Stake : 0,
-                        win: item.Win
-                    };
-                    formatTickets.push(newData);
-                });
-                statementInfo(formatTickets);
+                setIsMarketLoading(true);
+                setUserStatements(response.Result.Tickets);
             }
-            setHasGetFirstInformation(true);
-            setIsMarketLoading(false);
         } catch (error) {
             console.error(`Error getting statement, ${error}`);
         }
     }, []);
 
-    const statementInfo = useCallback(async (formatTickets) => {
-        const allData = formatTickets.reduce((prev, current) => {
-            const detail = marketsDetail.find((market) => market.id === current.id);
-            const mergeData = { ...current, ...detail };
-            prev.push(mergeData);
-            return prev;
-        }, []);
-        setUserStatements(allData);
+    useEffect(() => {
+        handleFetchStatements();
     }, []);
 
     useEffect(() => {
-        getStatements();
-    }, []);
+        if (userStatements && userStatements.length > 0) {
+            getMarketDetailById();
+        }
+    }, [userStatements]);
 
     return (
         <>
@@ -109,11 +93,19 @@ export const Statement = () => {
                 <>
                     {isMarketLoading && <Loading />}
                     {!isMarketLoading &&
-                        (userStatements && userStatements.length > 0 ? (
+                        (userStatements && userStatements.length > 0 && marketsDetail && marketsDetail.length > 0 ? (
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                {userStatements.map((market) => (
-                                    <StatementMarketCard market={market} />
-                                ))}
+                                {userStatements.map((ticket) => {
+                                    const ticketDetial = marketsDetail.find((detail) => detail.id === ticket.MarketId);
+                                    const ticketStatement = {
+                                        id: ticket.MarketId,
+                                        yesAmount: ticket.BetTypeName === BET_TYPE.YES ? ticket.Stake : 0,
+                                        noAmount: ticket.BetTypeName === BET_TYPE.NO ? ticket.Stake : 0,
+                                        win: ticket.Win
+                                    };
+                                    const ticketInfo = { ...ticketDetial, ...ticketStatement };
+                                    return <StatementMarketCard market={ticketInfo} />;
+                                })}
                             </Grid>
                         ) : (
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
