@@ -2,10 +2,10 @@
     "fpsLimit": 60,
     "particles": {
         "number": {
-            "value": 200,
+            "value": 50,
             "density": {
                 "enable": true,
-                "value_area": 800
+                "value_area": 200
             }
         },
         "color": {
@@ -27,7 +27,7 @@
             }
         },
         "opacity": {
-            "value": 0.7,
+            "value": 0.9,
             "random": false,
             "anim": {
                 "enable": true,
@@ -85,7 +85,7 @@
             "grab": {
                 "distance": 200,
                 "line_linked": {
-                    "opacity": 0.2
+                    "opacity": 0.7
                 }
             },
             "bubble": {
