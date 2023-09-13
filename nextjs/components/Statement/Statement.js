@@ -60,16 +60,16 @@ export const Statement = () => {
         }, []);
 
         const marketDetails = await Promise.all(uniqueIds.map((id) => handleFetchMarketDetail(id)));
-        setMarketsDetail(marketDetails);
+        setMarketsDetail([...marketsDetail, ...marketDetails]);
         setIsMarketLoading(false);
     };
 
     const handleFetchStatements = useCallback(async () => {
         try {
+            setIsMarketLoading(true);
             let response = await syncCustomerTickets();
             if (!!response && response.ErrorCode === 0) {
-                setIsMarketLoading(true);
-                setUserStatements(response.Result.Tickets);
+                setUserStatements([...userStatements, ...response.Result.Tickets]);
             }
         } catch (error) {
             console.error(`Error getting statement, ${error}`);
