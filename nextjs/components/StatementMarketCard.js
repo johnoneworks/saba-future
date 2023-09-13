@@ -3,7 +3,6 @@ import { useMenuStore } from "@/store/useMenuStore";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
-import { convertBigNumberToDate } from "../utils/ConvertDate";
 
 /**
  * TODO:
@@ -98,7 +97,7 @@ export default function StatementMarketCard({ market }) {
                                 Added On / Ending In
                             </Typography>
                             <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
-                                {`${convertBigNumberToDate(market.timestamp)} / ${convertBigNumberToDate(market.endTimestamp)}`}
+                                {`${market.createDate} / ${market.endTimestamp}`}
                             </Typography>
                         </Box>
                     </CardContent>

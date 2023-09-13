@@ -1,11 +1,9 @@
 import { BetArea } from "@/components/BetArea/BetArea";
 import ChartContainer from "@/components/ChartContainer/ChartContainer";
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
-import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
-import { useMarketDetailStore } from "@/store/useMarketDetailStore";
-import { useMarketsStore } from "@/store/useMarketsStore";
+import { BACKUP_IMAGE } from "@/constants/Constant";
+import { API_MARKET_STATUS } from "@/constants/MarketCondition";
+import syncMarketDetail from "@/service/market/getMarketDetail";
 import { useMenuStore } from "@/store/useMenuStore";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -14,7 +12,7 @@ import { Avatar, Box, Grid, Link, Typography } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/system";
 import moment from "moment";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./MarketDetail.module.scss";
 
 const CustomTypography = styled(Typography)({
@@ -113,22 +111,53 @@ const MarketDescription = (props) => {
 };
 
 export default function MarketDetail() {
-    const { marketDetail } = useMarketDetailStore();
-    const { updateMarketDetail } = useGetMarketDetail();
-    const { account } = useAccountStore();
-    const { predictionWorldContract } = useContractStore();
+    const [marketDetail, setMarketDetail] = useState({
+        id: 0,
+        title: "",
+        imageHash: BACKUP_IMAGE,
+        endTimestamp: "",
+        endDate: "",
+        resolverUrl: "",
+        description: "",
+        yesAmount: 0,
+        noAmount: 0,
+        isClose: false,
+        isTest: false,
+        isSuspended: false
+    });
     const { currentMarketID } = useMenuStore();
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
-    const { yesInfo, noInfo } = useMarketsStore();
-    const yesAmount = yesInfo.reduce((prev, current) => (prev += current.amount), 0);
-    const noAmount = noInfo.reduce((prev, current) => (prev += current.amount), 0);
-    const totalAmount = yesAmount + noAmount;
+    const totalAmount = Number(marketDetail.yesAmount) + Number(marketDetail.noAmount);
+
+    const handleFetchMarketDetail = useCallback(async () => {
+        const response = await syncMarketDetail({ marketId: currentMarketID });
+        if (!!response && response.ErrorCode === 0) {
+            const detail = response.Result.MarketDetail;
+            const responseEndTime = detail.EndTime;
+            const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
+            const dateFormat = moment.unix(responseEndTime / 1000);
+            setMarketDetail({
+                id: detail.MarketId,
+                title: detail.Title,
+                imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
+                endTimestamp: endTimeFormat,
+                endDate: dateFormat,
+                resolverUrl: detail.ResolveUrl,
+                description: detail.Description,
+                yesAmount: detail.BetInfo.Yes,
+                noAmount: detail.BetInfo.No,
+                isClose: detail.Status === API_MARKET_STATUS.CLOSED,
+                isTest: detail.IsTest,
+                isSuspended: detail.Status === API_MARKET_STATUS.SUSPENDED
+            });
+        }
+    }, [currentMarketID]);
 
     useEffect(() => {
-        updateMarketDetail(currentMarketID, predictionWorldContract);
-    }, []);
+        handleFetchMarketDetail();
+    }, [currentMarketID]);
 
     return (
         <>
@@ -148,7 +177,12 @@ export default function MarketDetail() {
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && !isMarketSuspended && !isTimeOver && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
-                                <BetArea id={marketDetail?.id} market={marketDetail} yesAmount={yesAmount} noAmount={noAmount} />
+                                <BetArea
+                                    id={marketDetail.id}
+                                    yesAmount={marketDetail.yesAmount}
+                                    noAmount={marketDetail.noAmount}
+                                    handleFetchMarketDetail={handleFetchMarketDetail}
+                                />
                             </Grid>
                         )}
                         <Grid item xs={12} md={isMarketClose || isMarketSuspended || isTimeOver ? 12 : 6} className={styles.chartContainer}>

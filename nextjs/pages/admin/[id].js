@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header/Header";
 import MarketEditForm from "@/components/MarketEditForm/MarketEditForm";
-import { API_EDIT_MARKET, API_GET_MARKET_DETAIL } from "@/constants/api";
-import baseAxios from "@/service/baseAxios";
+import { API_EDIT_MARKET } from "@/constants/api";
+import syncMarketDetail from "@/service/market/getMarketDetail";
 import { Box, Button, Container, Link } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -19,17 +19,7 @@ const EditMarket = () => {
     const { id } = router.query;
     const [marketDetail, setMarketDetail] = useState({});
     const getMarket = async () => {
-        const data = {
-            Payload: {
-                MarketId: id
-            }
-        };
-
-        const response = await baseAxios({
-            method: "POST",
-            url: API_GET_MARKET_DETAIL,
-            data: data
-        });
+        const response = await syncMarketDetail({ marketId: id });
 
         if (response && response.ErrorCode !== 0) {
             router.push("/admin/markets");

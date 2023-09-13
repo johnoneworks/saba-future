@@ -1,9 +1,7 @@
 import { predictionWorldAddress, sureTokenAddress } from "@/config";
 import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
-import { useGetMarketDetail } from "@/hooks/useGetMarketDetail";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
-import useGetUserStatement from "@/hooks/useGetUserStatement";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useContractStore } from "@/store/useContractStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
@@ -34,17 +32,15 @@ const SelectButton = (props) => {
 };
 
 export const BetArea = (props) => {
-    const { id, yesAmount, noAmount } = props;
+    const { id, yesAmount, noAmount, handleFetchMarketDetail } = props;
     const totalAmount = Number(yesAmount) + Number(noAmount);
     const { smartAccount } = useAccountStore();
     const { predictionWorldInterface, sureTokenInterface } = useContractStore();
-    const { updateMarketDetail } = useGetMarketDetail();
     const { currentMarketID } = useMenuStore();
     const { setIsPageLoading } = useLoadingStore();
 
     const { updateBalance } = useGetUserBalance();
     const { updateBetsInfo } = useGetBetsInfo();
-    const { updateStatements } = useGetUserStatement();
 
     const [selected, setSelected] = useState();
     const [input, setInput] = useState("");
@@ -82,9 +78,8 @@ export const BetArea = (props) => {
             setIsPageLoading(false);
             console.error(`Error trading: ${error}`);
         } finally {
-            updateMarketDetail(currentMarketID);
+            handleFetchMarketDetail(currentMarketID);
             updateBalance();
-            updateStatements();
             updateBetsInfo(currentMarketID);
             setInput("");
             setIsPageLoading(false);
