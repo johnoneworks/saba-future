@@ -4,7 +4,6 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { API_MARKET_STATUS } from "@/constants/MarketCondition";
 import syncMarketDetail from "@/service/market/getMarketDetail";
-import { useMarketsStore } from "@/store/useMarketsStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -130,10 +129,7 @@ export default function MarketDetail() {
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
-    const { yesInfo, noInfo } = useMarketsStore();
-    const yesAmount = yesInfo.reduce((prev, current) => (prev += current.amount), 0);
-    const noAmount = noInfo.reduce((prev, current) => (prev += current.amount), 0);
-    const totalAmount = yesAmount + noAmount;
+    const totalAmount = Number(marketDetail.yesAmount) + Number(marketDetail.noAmount);
 
     const handleFetchMarketDetail = useCallback(async () => {
         const response = await syncMarketDetail({ marketId: currentMarketID });
@@ -157,10 +153,10 @@ export default function MarketDetail() {
                 isSuspended: detail.Status === API_MARKET_STATUS.SUSPENDED
             });
         }
-    });
+    }, [currentMarketID]);
 
     useEffect(() => {
-        currentMarketID && handleFetchMarketDetail();
+        handleFetchMarketDetail();
     }, [currentMarketID]);
 
     return (
@@ -181,7 +177,12 @@ export default function MarketDetail() {
                     <Grid container spacing={2} className={styles.marketContainer}>
                         {!isMarketClose && !isMarketSuspended && !isTimeOver && (
                             <Grid item xs={12} md={6} className={styles.betAreaContainer}>
-                                <BetArea id={marketDetail.id} yesAmount={yesAmount} noAmount={noAmount} handleFetchMarketDetail={handleFetchMarketDetail} />
+                                <BetArea
+                                    id={marketDetail.id}
+                                    yesAmount={marketDetail.yesAmount}
+                                    noAmount={marketDetail.noAmount}
+                                    handleFetchMarketDetail={handleFetchMarketDetail}
+                                />
                             </Grid>
                         )}
                         <Grid item xs={12} md={isMarketClose || isMarketSuspended || isTimeOver ? 12 : 6} className={styles.chartContainer}>
