@@ -1,12 +1,12 @@
 import { API_PLACE_BET } from "@/constants/api";
 import baseAxios from "../baseAxios";
 
-const syncPlaceBet = async ({ marketId, BetType, Stake }) => {
+const syncPlaceBet = async ({ marketId, betType, stake }) => {
     const data = {
         Payload: {
             MarketId: marketId,
-            BetTypeName: BetType,
-            Stake: Stake
+            BetTypeName: betType,
+            Stake: stake
         }
     };
     const response = await baseAxios({
