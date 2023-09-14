@@ -9,3 +9,4 @@ export const API_SUSPEND_MARKET = "Market/SetSuspendMarket";
 export const API_EDIT_MARKET = "Market/EditMarket";
 export const API_RESOLVE_MARKET = "Market/ResolveMarket";
 export const API_GET_CUSTOMER_TICKETS = "Ticket/GetCustomerTickets";
+export const API_PLACE_BET = "Ticket/PlaceBet";

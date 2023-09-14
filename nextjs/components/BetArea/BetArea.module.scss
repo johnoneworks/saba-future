@@ -46,12 +46,13 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    z-index: 0;
 
     + .volumeButton {
         margin-top: 8px;
     }
 
-    &.isYES {
+    &.isYes {
         color: #3fb06b; 
         &.selected {
             color:#fff;
@@ -60,7 +61,7 @@
         }
     }
 
-    &.isNO {
+    &.isNo {
         color: #e84d4d;
         &.selected{
             color:#fff;
@@ -98,13 +99,13 @@
     left: 0;
     top:0;
     z-index: 0;
-    &.isYES {
+    &.isYes {
         background-color: #DFF7E8;
         &.selected{
             background-color: #339A5B;
         }
     }
-    &.isNO {
+    &.isNo {
         background-color: #FDEDED;
         &.selected{
             background-color: #E84D4D;

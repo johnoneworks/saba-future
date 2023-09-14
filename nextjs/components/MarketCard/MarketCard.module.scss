@@ -85,6 +85,7 @@
     font-weight: bold;
     line-height: 1;
     border-radius: 4px;
+    z-index: 0;
 
     .isClosed & {
         padding: 0;

@@ -1,9 +1,7 @@
-import { predictionWorldAddress, sureTokenAddress } from "@/config";
-import { BET_TYPE, CONTRACTS_NAME } from "@/constants/Constant";
+import { BET_TYPE } from "@/constants/Constant";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
-import { useAccountStore } from "@/store/useAccountStore";
-import { useContractStore } from "@/store/useContractStore";
+import syncPlaceBet from "@/service/ticket/placeBet";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
@@ -34,8 +32,6 @@ const SelectButton = (props) => {
 export const BetArea = (props) => {
     const { id, yesAmount, noAmount, handleFetchMarketDetail } = props;
     const totalAmount = Number(yesAmount) + Number(noAmount);
-    const { smartAccount } = useAccountStore();
-    const { predictionWorldInterface, sureTokenInterface } = useContractStore();
     const { currentMarketID } = useMenuStore();
     const { setIsPageLoading } = useLoadingStore();
 
@@ -43,35 +39,19 @@ export const BetArea = (props) => {
     const { updateBetsInfo } = useGetBetsInfo();
 
     const [selected, setSelected] = useState();
-    const [input, setInput] = useState("");
+    const [stakeAmount, setStakeAmount] = useState("");
 
     const handleTrade = async () => {
-        if (input === "") return;
         try {
-            const betFunctionName = selected === BET_TYPE.YES ? CONTRACTS_NAME.ADD_YES_BET : CONTRACTS_NAME.ADD_NO_BET;
+            setIsPageLoading(true);
+            const response = await syncPlaceBet({
+                marketId: id,
+                betType: selected,
+                stake: stakeAmount
+            });
 
-            try {
-                setIsPageLoading(true);
-                const approveEncodedData = sureTokenInterface.encodeFunctionData("approve", [predictionWorldAddress, input]);
-                const addYesBetEncodedData = predictionWorldInterface.encodeFunctionData(betFunctionName, [id, input]);
-                const transactions = [
-                    {
-                        to: sureTokenAddress,
-                        data: approveEncodedData,
-                        gasLimit: 500000
-                    },
-                    {
-                        to: predictionWorldAddress,
-                        data: addYesBetEncodedData
-                    }
-                ];
-
-                const txResponse = await smartAccount.sendTransactionBatch({ transactions });
-                console.log("UserOp hash", txResponse.hash);
-                const txReceipt = await txResponse.wait();
-                console.log("Tx hash", txReceipt.transactionHash);
-            } catch (error) {
-                setIsPageLoading(false);
+            if (!!response && response.ErrorCode !== 0) {
+                // TODO: 可能錢不夠的狀況，要顯示 Error.Msg
                 console.error(error);
             }
         } catch (error) {
@@ -81,7 +61,7 @@ export const BetArea = (props) => {
             handleFetchMarketDetail(currentMarketID);
             updateBalance();
             updateBetsInfo(currentMarketID);
-            setInput("");
+            setStakeAmount("");
             setIsPageLoading(false);
         }
     };
@@ -111,8 +91,8 @@ export const BetArea = (props) => {
                     className={classnames(styles.betInput)}
                     type="number"
                     name="q"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    value={stakeAmount}
+                    onChange={(e) => setStakeAmount(e.target.value)}
                     sx={{ width: "100%", pt: 0.5, pb: 2, color: "#4B5563", borderColor: "#D1D5DB", borderRadius: 1, "&:focus": { outline: "none" } }}
                     placeholder="0"
                     autoComplete="off"
@@ -126,7 +106,7 @@ export const BetArea = (props) => {
                     }}
                 />
             </Box>
-            <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !input}>
+            <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !stakeAmount}>
                 Trade
             </Button>
         </Box>

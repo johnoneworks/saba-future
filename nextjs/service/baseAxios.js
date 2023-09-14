@@ -15,7 +15,8 @@ const baseAxios = async ({ method, url, header = {}, data = {} }) => {
             data: {
                 TimeStamp: currentDate(),
                 Seq: uuidv4(),
-                Token: "", // TODO: Jim 說要做成 token
+                // 要有字串才有 test 的 Market
+                Token: "testToken", // TODO: Jim 說要做成 token
                 ...data
             } // 注意這裡
         });
