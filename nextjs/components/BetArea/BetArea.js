@@ -46,12 +46,9 @@ export const BetArea = (props) => {
             setIsPageLoading(true);
             const response = await syncPlaceBet({
                 marketId: id,
-                BetType: selected,
-                Stake: stakeAmount
+                betType: selected,
+                stake: stakeAmount
             });
-            if (!!response && response.ErrorCode === 0) {
-                setIsPageLoading(false);
-            }
 
             if (!!response && response.ErrorCode !== 0) {
                 // TODO: 可能錢不夠的狀況，要顯示 Error.Msg
