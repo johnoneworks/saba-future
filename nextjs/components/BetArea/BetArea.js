@@ -53,6 +53,10 @@ export const BetArea = (props) => {
             if (!!response && response.ErrorCode === 0) {
                 setIsPageLoading(false);
             }
+
+            // TODO: 可能錢不夠的狀況，要顯示 Error.Msg
+            if (response.ErrorCode !== 0) {
+            }
         } catch (error) {
             setIsPageLoading(false);
             console.error(`Error trading: ${error}`);
