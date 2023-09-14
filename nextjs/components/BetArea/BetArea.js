@@ -44,10 +44,9 @@ export const BetArea = (props) => {
     const handleTrade = async () => {
         try {
             setIsPageLoading(true);
-            const placeBetType = selected === BET_TYPE.YES ? "Yes" : "No";
             const response = await syncPlaceBet({
                 marketId: id,
-                BetType: placeBetType,
+                BetType: selected,
                 Stake: stakeAmount
             });
             if (!!response && response.ErrorCode === 0) {
