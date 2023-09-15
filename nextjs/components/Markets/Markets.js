@@ -90,7 +90,6 @@ export const Markets = () => {
                     {isMarketLoading && marketCount != 0 && <Loading />}
                     {!isMarketLoading && markets && (
                         <>
-                            {/* 轉 Web2.0 先註解 */}
                             {account && isAdmin && (
                                 <>
                                     <div className={classnames(styles.buttonContainer)}>

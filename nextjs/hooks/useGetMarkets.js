@@ -15,10 +15,9 @@ const useGetMarkets = () => {
         try {
             const response = await syncAllMarkets();
             if (!!response && response.ErrorCode === 0) {
-                let tempMarkets = [];
                 if (!!response.Result.Markets) {
-                    response.Result.Markets.reduce((markets, market) => {
-                        markets.push({
+                    const tempMarkets = response.Result.Markets.reduce((markets, market) => {
+                        const data = {
                             id: market.MarketId,
                             question: market.Title,
                             imageHash: market.ImageUrl ? market.ImageUrl : BACKUP_IMAGE,
@@ -32,12 +31,12 @@ const useGetMarkets = () => {
                             endTimestamp: market.EndTime,
                             winnerCount: market.WinnerCount,
                             winnerProfit: market.WinnerProfit
-                        });
-                        return markets;
-                    }, tempMarkets);
+                        };
+                        return [...markets, data];
+                    }, []);
+                    setMarkets(tempMarkets);
+                    setMarketCount(tempMarkets.length);
                 }
-                setMarkets(tempMarkets);
-                setMarketCount(tempMarkets.length);
             }
         } catch (error) {
             // TODO: 這邊炸掉應該是要做一些處理
