@@ -1,8 +1,9 @@
 import ProfileDialog from "@/components/ProfileDialog";
-import { MENU_TYPE } from "@/constants/Constant";
+import { CLIENT_ID, MENU_TYPE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useLogout from "@/hooks/useLogout";
+import syncLogin from "@/service/login";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
@@ -21,7 +22,7 @@ import { Button } from "@mui/material";
 import classnames from "classnames";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import HowToPlay from "../HowToPlay/HowToPlay";
 import styles from "./Header.module.scss";
@@ -59,8 +60,8 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, smartAccount, socialLoginSDK } = useAccountStore();
-    const { email, balance } = usePlayerInfoStore();
+    const { account, smartAccount, setAccount, setIsAdmin, isAdmin, setIsNew } = useAccountStore();
+    const { email, balance, setEmail } = usePlayerInfoStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateBalance } = useGetUserBalance();
@@ -70,6 +71,7 @@ export const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isLanguageExpand, setIsLanguageExpand] = useState(false);
     const { i18n } = useTranslation();
+    const [userCode, setUserCode] = useState();
 
     const refreshMarkets = () => {
         // TODO: Market 跟 statement 要分開 refresh
@@ -88,15 +90,65 @@ export const Header = () => {
         setIsDrawerOpen(false);
         if (account) {
             disconnectWallet();
+            localStorage.removeItem("saba_web2_login_info");
+            setAccount(undefined);
+            setEmail(undefined);
+            setIsAdmin(undefined);
+            setIsNew(undefined);
         }
     };
 
     const handleLogin = async () => {
-        setIsDrawerOpen(false);
-        if (!account && socialLoginSDK.web3auth.status !== "connected") {
-            await socialLoginSDK.showWallet();
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:3000`;
+    };
+
+    const setUserInfo = () => {
+        if (typeof window !== "undefined" && JSON.parse(localStorage.getItem("saba_web2_login_info"))) {
+            setAccount(JSON.parse(localStorage.getItem("saba_web2_login_info")).name);
+            setEmail(JSON.parse(localStorage.getItem("saba_web2_login_info")).email);
+            setIsAdmin(JSON.parse(localStorage.getItem("saba_web2_login_info")).isAdmin);
+            setIsNew(JSON.parse(localStorage.getItem("saba_web2_login_info")).isNew);
         }
     };
+
+    const handleFetchLogin = async () => {
+        try {
+            const response = await syncLogin({
+                code: userCode,
+                redirectUrl: "http://localhost:3000"
+            });
+
+            if (!!response && response.ErrorCode === 0) {
+                const userData = {
+                    email: response.Result.Email,
+                    token: response.Result.Token,
+                    name: response.Result.NickName,
+                    isAdmin: response.Result.IsAdmin,
+                    isNew: response.Result.IsNewUser
+                };
+                localStorage.setItem("saba_web2_login_info", JSON.stringify(userData));
+                setUserInfo();
+                updateBalance();
+            }
+        } catch (error) {
+            console.error(`Error Log in: ${error}`);
+        }
+    };
+
+    useEffect(() => {
+        setUserInfo();
+        updateBalance();
+    }, []);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get("code");
+        if (!!code) setUserCode(code);
+    }, [router.asPath]);
+
+    useEffect(() => {
+        handleFetchLogin();
+    }, [userCode]);
 
     const handleReturnBack = () => {
         if (currentMarketID) {
@@ -138,8 +190,6 @@ export const Header = () => {
     };
 
     // 測試 是否登入, 是否為manage
-    let isLogin = false;
-    let isManage = false;
     const languages = [
         {
             language: "en",
@@ -180,7 +230,7 @@ export const Header = () => {
                                 <div className={classnames(styles.closeDrawer)}>
                                     <CloseIcon onClick={handleDrawer} sx={{ color: "#1A84F2" }} />
                                 </div>
-                                {isLogin && isManage ? (
+                                {account && isAdmin ? (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleRedirectToAdminMarkets}>
                                             <ManageAccountsIcon sx={{ color: "#1A84F2" }} />
@@ -214,7 +264,7 @@ export const Header = () => {
                                         </div>
                                     )}
                                 </div>
-                                {isLogin ? (
+                                {account ? (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleLogout}>
                                             <LogoutIcon sx={{ color: "#1A84F2" }} />
@@ -233,21 +283,20 @@ export const Header = () => {
                         )}
                     </div>
                 </div>
-                {/* {account && ( */}
-                <div className={styles.headerInfo}>
-                    {/* TODO: 轉 Web2.0 先拿掉account判斷 */}
-                    <div className={styles.profile} onClick={handleClickProfile}>
-                        <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
-                        <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
-                    </div>
-                    {!currentMarketID && (
-                        <div className={styles.tab}>
-                            <MenuTab tab={MENU_TYPE.MARKET} />
-                            <MenuTab tab={MENU_TYPE.STATEMENT} />
+                {account && (
+                    <div className={styles.headerInfo}>
+                        <div className={styles.profile} onClick={handleClickProfile}>
+                            <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
+                            <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
                         </div>
-                    )}
-                </div>
-                {/* )} */}
+                        {!currentMarketID && (
+                            <div className={styles.tab}>
+                                <MenuTab tab={MENU_TYPE.MARKET} />
+                                <MenuTab tab={MENU_TYPE.STATEMENT} />
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
             {smartAccount && (
                 <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />

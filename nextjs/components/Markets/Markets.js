@@ -69,7 +69,7 @@ const ShowMarkets = (props) => {
 
 export const Markets = () => {
     const router = useRouter();
-    const { account, smartAccount } = useAccountStore();
+    const { account, isAdmin } = useAccountStore();
     const { markets, marketCount } = useMarketsStore();
 
     const { currentMenu, currentMarketID } = useMenuStore();
@@ -91,25 +91,25 @@ export const Markets = () => {
                     {!isMarketLoading && markets && (
                         <>
                             {/* 轉 Web2.0 先註解 */}
-                            {/* {account && smartAccount && smartAccount.isAdminUser && ( */}
-                            <>
-                                <div className={classnames(styles.buttonContainer)}>
-                                    <div className={classnames(styles.creatMarketButton)} onClick={handleRedirectToAdmin}>
-                                        <AddIcon />
-                                        <span>Create Market</span>
+                            {account && isAdmin && (
+                                <>
+                                    <div className={classnames(styles.buttonContainer)}>
+                                        <div className={classnames(styles.creatMarketButton)} onClick={handleRedirectToAdmin}>
+                                            <AddIcon />
+                                            <span>Create Market</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <FormControlLabel
-                                        label="Show Test Markets"
-                                        sx={{ mt: 2, mb: 1 }}
-                                        control={<Checkbox checked={showTest} onChange={(e) => setShowTest(!showTest)} />}
-                                    />
-                                </div>
-                            </>
-                            {/* )} */}
+                                    <div>
+                                        <FormControlLabel
+                                            label="Show Test Markets"
+                                            sx={{ mt: 2, mb: 1 }}
+                                            control={<Checkbox checked={showTest} onChange={(e) => setShowTest(!showTest)} />}
+                                        />
+                                    </div>
+                                </>
+                            )}
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                <ShowMarkets account={account} showTest={showTest} isEditable={hasLogin ? smartAccount.isAdminUser : false} />
+                                <ShowMarkets account={account} showTest={showTest} isEditable={hasLogin ? isAdmin : false} />
                             </Grid>
                         </>
                     )}

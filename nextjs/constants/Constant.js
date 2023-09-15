@@ -20,3 +20,5 @@ export const CONTRACTS_NAME = {
 };
 
 export const BACKUP_IMAGE = "/placeholder.jpg";
+
+export const CLIENT_ID = "998041040341-2lbq325g9238esd80epg00qqpqiam0ni.apps.googleusercontent.com";

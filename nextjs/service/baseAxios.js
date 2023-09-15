@@ -3,6 +3,12 @@ import uuidv4 from "@/utils/Uuid";
 import axios from "axios";
 import { API_URL_DOMAIN } from "../constants/api.js";
 
+const localstorageToken = () => {
+    if (typeof window !== "undefined" && JSON.parse(localStorage.getItem("saba_web2_login_info"))) {
+        return JSON.parse(localStorage.getItem("saba_web2_login_info")).token;
+    } else return "";
+};
+
 const baseAxios = async ({ method, url, header = {}, data = {} }) => {
     try {
         const response = await axios({
@@ -16,7 +22,7 @@ const baseAxios = async ({ method, url, header = {}, data = {} }) => {
                 TimeStamp: currentDate(),
                 Seq: uuidv4(),
                 // 要有字串才有 test 的 Market
-                Token: "testToken", // TODO: Jim 說要做成 token
+                Token: localstorageToken(), // TODO: Jim 說要做成 token
                 ...data
             } // 注意這裡
         });
