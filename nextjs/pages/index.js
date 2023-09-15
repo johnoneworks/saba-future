@@ -31,9 +31,7 @@ export default function Home() {
             <Box className={styles.homeContent}>
                 <Markets />
                 <Statement />
-                {/* 轉 Web2.0 先註解 account */}
-                {/* {account && currentMarketID && <MarketDetail />} */}
-                {currentMarketID && <MarketDetail />}
+                {account && currentMarketID && <MarketDetail />}
             </Box>
             <Footer />
         </Box>

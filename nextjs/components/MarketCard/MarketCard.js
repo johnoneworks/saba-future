@@ -1,4 +1,5 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
+import { CLIENT_ID } from "@/constants/Constant";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -46,7 +47,7 @@ const CustomTypography = styled(Typography)({
 export default function MarketCard({ market, currentUser, isClosed, isTest, isEditable }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useMenuStore();
-    const { account, socialLoginSDK } = useAccountStore();
+    const { account } = useAccountStore();
 
     let win = false;
     let lost = false;
@@ -96,9 +97,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     const handleLogin = async () => {
-        if (!account && socialLoginSDK.web3auth.status !== "connected") {
-            await socialLoginSDK.showWallet();
-        }
+        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:3000`;
     };
 
     const handleSelectMarket = () => {
@@ -120,9 +119,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     return (
-        // 轉 Web2.0 先註解 account
-        // <Box sx={{ height: "100%" }} onClick={account ? handleSelectMarket : handleLogin}>
-        <Box sx={{ height: "100%" }} onClick={handleSelectMarket}>
+        <Box sx={{ height: "100%" }} onClick={account ? handleSelectMarket : handleLogin}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
                 <Box sx={{ display: "flex" }}>

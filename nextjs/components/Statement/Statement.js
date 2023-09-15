@@ -5,6 +5,7 @@ import { BACKUP_IMAGE, BET_TYPE, MENU_TYPE } from "@/constants/Constant";
 import { API_MARKET_STATUS } from "@/constants/MarketCondition";
 import syncMarketDetail from "@/service/market/getMarketDetail";
 import syncCustomerTickets from "@/service/ticket/getCustomerTickets";
+import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { Box, Grid } from "@mui/material";
@@ -22,6 +23,7 @@ import { useCallback, useEffect, useState } from "react";
 export const Statement = () => {
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading, setIsMarketLoading } = useLoadingStore();
+    const { account } = useAccountStore();
     const [userStatements, setUserStatements] = useState([]);
     const [marketsDetail, setMarketsDetail] = useState([]);
 
@@ -88,8 +90,7 @@ export const Statement = () => {
 
     return (
         <>
-            {/* TODO: 轉 Web2.0 account login logic */}
-            {currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
+            {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
                 <>
                     {isMarketLoading && <Loading />}
                     {!isMarketLoading &&

@@ -2,7 +2,6 @@ import ProfileDialog from "@/components/ProfileDialog";
 import { CLIENT_ID, MENU_TYPE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
-import useLogout from "@/hooks/useLogout";
 import syncLogin from "@/service/login";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
@@ -65,7 +64,6 @@ export const Header = () => {
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateBalance } = useGetUserBalance();
-    const { disconnectWallet } = useLogout();
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
     const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -88,14 +86,14 @@ export const Header = () => {
 
     const handleLogout = () => {
         setIsDrawerOpen(false);
-        if (account) {
-            disconnectWallet();
-            localStorage.removeItem("saba_web2_login_info");
-            setAccount(undefined);
-            setEmail(undefined);
-            setIsAdmin(undefined);
-            setIsNew(undefined);
-        }
+        localStorage.removeItem("saba_web2_login_info");
+        setAccount(undefined);
+        setEmail(undefined);
+        setIsAdmin(undefined);
+        setIsNew(undefined);
+        router.push({
+            pathname: `/`
+        });
     };
 
     const handleLogin = async () => {
@@ -137,7 +135,6 @@ export const Header = () => {
 
     useEffect(() => {
         setUserInfo();
-        updateBalance();
     }, []);
 
     useEffect(() => {
@@ -189,7 +186,6 @@ export const Header = () => {
         i18n.changeLanguage(lan);
     };
 
-    // 測試 是否登入, 是否為manage
     const languages = [
         {
             language: "en",
@@ -286,8 +282,8 @@ export const Header = () => {
                 {account && (
                     <div className={styles.headerInfo}>
                         <div className={styles.profile} onClick={handleClickProfile}>
-                            <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
-                            <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
+                            <ProfileItem type="person" text={account} />
+                            <ProfileItem type="wallet" text={`${balance} SURE`} />
                         </div>
                         {!currentMarketID && (
                             <div className={styles.tab}>
@@ -298,9 +294,7 @@ export const Header = () => {
                     </div>
                 )}
             </div>
-            {smartAccount && (
-                <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
-            )}
+            {isAdmin && openProfileDialog && <ProfileDialog onClose={handleCloseProfileDialog} />}
             {openHowToPlayDialog && <HowToPlay onClose={handleSwitchHowToPlay} />}
         </>
     );

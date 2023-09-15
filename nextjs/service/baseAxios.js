@@ -21,10 +21,9 @@ const baseAxios = async ({ method, url, header = {}, data = {} }) => {
             data: {
                 TimeStamp: currentDate(),
                 Seq: uuidv4(),
-                // 要有字串才有 test 的 Market
-                Token: localstorageToken(), // TODO: Jim 說要做成 token
+                Token: localstorageToken(),
                 ...data
-            } // 注意這裡
+            }
         });
         return response.data;
     } catch (error) {
