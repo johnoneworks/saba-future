@@ -17,8 +17,8 @@ const useGetUserBalance = () => {
     };
 
     useEffect(() => {
-        updateBalance();
-    }, [nickName]);
+        if (!!account) updateBalance();
+    }, [account]);
 
     return { updateBalance };
 };

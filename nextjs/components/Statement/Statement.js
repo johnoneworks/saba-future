@@ -20,8 +20,9 @@ import { useCallback, useEffect, useState } from "react";
  * 4. refresh statement √
  *
  */
+
 export const Statement = () => {
-    const { currentMenu, currentMarketID } = useMenuStore();
+    const { currentMenu, currentMarketID, refreshStatement } = useMenuStore();
     const { isMarketLoading, setIsMarketLoading } = useLoadingStore();
     const { nickName, token } = useAccountStore();
     const [userStatements, setUserStatements] = useState([]);
@@ -80,7 +81,7 @@ export const Statement = () => {
 
     useEffect(() => {
         handleFetchStatements();
-    }, []);
+    }, [refreshStatement]);
 
     useEffect(() => {
         if (userStatements && userStatements.length > 0) {
