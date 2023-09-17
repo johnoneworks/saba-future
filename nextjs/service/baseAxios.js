@@ -19,6 +19,17 @@ const baseAxios = async ({ method, url, header = {}, token, data = {} }) => {
                 ...data
             }
         });
+
+        if (response.data.ErrorCode === 1012) {
+            if (typeof window !== "undefined" && JSON.parse(localStorage.removeItem("saba_web2_login_info"))) {
+                setAccount(null);
+                setEmail("");
+                setIsAdmin(null);
+                setIsNew(null);
+            }
+            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:3000`;
+        }
+
         return response.data;
     } catch (error) {
         console.error(`api is ${method} method and api url is ${API_URL_DOMAIN + url} and error is ${error}`);
