@@ -1,5 +1,5 @@
 import ProfileDialog from "@/components/ProfileDialog/ProfileDialog";
-import { MENU_TYPE, SESSIONSTORAGE } from "@/constants/Constant";
+import { MENU_TYPE, SESSION_STORAGE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useLogin from "@/hooks/useLogin";
@@ -85,7 +85,7 @@ export const Header = () => {
 
     const handleLogout = () => {
         setIsDrawerOpen(false);
-        sessionStorage.removeItem(SESSIONSTORAGE.LOGIN_INFO);
+        sessionStorage.removeItem(SESSION_STORAGE.LOGIN_INFO);
         setCleanSessionStorage();
         router.push({
             pathname: `/`

@@ -26,6 +26,6 @@ export const GOOGLE_LOGIN = {
     SCOPE: "https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email"
 };
 
-export const SESSIONSTORAGE = {
+export const SESSION_STORAGE = {
     LOGIN_INFO: "saba_web2_login_info"
 };

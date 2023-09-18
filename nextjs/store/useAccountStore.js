@@ -1,10 +1,10 @@
-import { SESSIONSTORAGE } from "@/constants/Constant";
+import { SESSION_STORAGE } from "@/constants/Constant";
 import { create } from "zustand";
 
-const sessionStorageToken = () => {
-    if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO))) {
-        return JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO)).token;
-    } else return null;
+const getInitialToken = () => {
+    if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
+        return JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO)).token;
+    } else return "";
 };
 
 export const useAccountStore = create((set) => ({
@@ -16,7 +16,7 @@ export const useAccountStore = create((set) => ({
     provider: null,
     smartAccount: null,
     isNew: null,
-    token: sessionStorageToken(),
+    token: getInitialToken(),
     setSocialLoginSDK: (socialLoginSDK) => set((state) => ({ ...state, socialLoginSDK })),
     setAccount: (account) => set((state) => ({ ...state, account })),
     setEmail: (email) => set((state) => ({ ...state, email })),

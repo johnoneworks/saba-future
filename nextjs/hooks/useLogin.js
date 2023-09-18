@@ -1,4 +1,4 @@
-import { GOOGLE_LOGIN, SESSIONSTORAGE } from "@/constants/Constant";
+import { GOOGLE_LOGIN, SESSION_STORAGE } from "@/constants/Constant";
 import syncLogin from "@/service/login";
 import { useAccountStore } from "@/store/useAccountStore";
 import "@biconomy/web3-auth/dist/src/style.css";
@@ -14,8 +14,8 @@ const useLogin = () => {
     });
 
     const setUserInfo = useCallback(() => {
-        if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO))) {
-            const localUserData = JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO));
+        if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
+            const localUserData = JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO));
             setAccount(localUserData.name);
             setEmail(localUserData.email);
             setIsAdmin(localUserData.isAdmin);
@@ -39,7 +39,7 @@ const useLogin = () => {
                     isAdmin: response.Result.IsAdmin,
                     isNew: response.Result.IsNewUser
                 };
-                sessionStorage.setItem(SESSIONSTORAGE.LOGIN_INFO, JSON.stringify(userData));
+                sessionStorage.setItem(SESSION_STORAGE.LOGIN_INFO, JSON.stringify(userData));
                 setUserInfo();
                 updateBalance();
             }
