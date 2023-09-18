@@ -127,14 +127,14 @@ export default function MarketDetail() {
         isSuspended: false
     });
     const { currentMarketID } = useMenuStore();
-    const { account } = useAccountStore();
+    const { account, token } = useAccountStore();
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
     const totalAmount = Number(marketDetail.yesAmount) + Number(marketDetail.noAmount);
 
     const handleFetchMarketDetail = useCallback(async () => {
-        const response = await syncMarketDetail({ marketId: currentMarketID });
+        const response = await syncMarketDetail({ marketId: currentMarketID, token: token });
         if (!!response && response.ErrorCode === 0) {
             const detail = response.Result.MarketDetail;
             const responseEndTime = detail.EndTime;

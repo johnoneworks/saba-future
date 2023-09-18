@@ -8,12 +8,12 @@ import { useEffect } from "react";
 
 const useGetMarkets = () => {
     const { markets, setMarkets } = useMarketsStore();
-    const { account } = useAccountStore();
+    const { account, token } = useAccountStore();
     const { setIsMarketLoading } = useLoadingStore();
 
     const updateMarkets = async () => {
         try {
-            const response = await syncAllMarkets();
+            const response = await syncAllMarkets(token);
             if (!!response && response.ErrorCode === 0) {
                 if (!!response.Result.Markets) {
                     const tempMarkets = response.Result.Markets.reduce((markets, market) => {

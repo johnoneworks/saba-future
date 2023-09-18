@@ -3,11 +3,11 @@ import { useAccountStore } from "@/store/useAccountStore";
 import { useEffect } from "react";
 
 const useGetUserBalance = () => {
-    const { account, setBalance } = useAccountStore();
+    const { account, setBalance, token } = useAccountStore();
 
     const updateBalance = async () => {
         try {
-            const response = await syncGetBalance();
+            const response = await syncGetBalance(token);
             if (!!response && response.ErrorCode === 0) {
                 setBalance(response.Result.Balance);
             }

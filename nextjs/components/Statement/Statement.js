@@ -23,13 +23,13 @@ import { useCallback, useEffect, useState } from "react";
 export const Statement = () => {
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading, setIsMarketLoading } = useLoadingStore();
-    const { account } = useAccountStore();
+    const { account, token } = useAccountStore();
     const [userStatements, setUserStatements] = useState([]);
     const [marketsDetail, setMarketsDetail] = useState([]);
 
     const handleFetchMarketDetail = useCallback(async (marketId) => {
         try {
-            const response = await syncMarketDetail({ marketId: marketId });
+            const response = await syncMarketDetail({ marketId: marketId, token: token });
             if (!!response && response.ErrorCode === 0) {
                 const detail = response.Result.MarketDetail;
                 const endTimeFormat = moment(detail.EndTime).format("MMMM D, YYYY");
@@ -69,7 +69,7 @@ export const Statement = () => {
     const handleFetchStatements = useCallback(async () => {
         try {
             setIsMarketLoading(true);
-            let response = await syncCustomerTickets();
+            let response = await syncCustomerTickets(token);
             if (!!response && response.ErrorCode === 0) {
                 setUserStatements([...userStatements, ...response.Result.Tickets]);
             }

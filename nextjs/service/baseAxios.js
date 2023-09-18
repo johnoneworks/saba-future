@@ -1,16 +1,9 @@
-import { SESSIONSTORAGE } from "@/constants/Constant.js";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
 import axios from "axios";
 import { API_URL_DOMAIN } from "../constants/api.js";
 
-const sessionStorageToken = () => {
-    if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO))) {
-        return JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO)).token;
-    } else return "";
-};
-
-const baseAxios = async ({ method, url, header = {}, data = {} }) => {
+const baseAxios = async ({ method, url, header = {}, token, data = {} }) => {
     try {
         const response = await axios({
             method: method,
@@ -22,7 +15,7 @@ const baseAxios = async ({ method, url, header = {}, data = {} }) => {
             data: {
                 TimeStamp: currentDate(),
                 Seq: uuidv4(),
-                Token: sessionStorageToken(),
+                Token: token,
                 ...data
             }
         });

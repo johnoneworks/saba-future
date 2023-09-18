@@ -6,14 +6,15 @@ import { useCallback, useEffect } from "react";
 
 const useGetBetsInfo = () => {
     const { setYesInfo, setNoInfo } = useMarketsStore();
-    const { account } = useAccountStore();
+    const { account, token } = useAccountStore();
     const { currentMarketID } = useMenuStore();
 
     const updateBetsInfo = useCallback(
         async (currentMarketID) => {
             try {
                 let response = await syncMarketTickets({
-                    marketId: Number(currentMarketID)
+                    marketId: Number(currentMarketID),
+                    token: token
                 });
                 let yesBets = [];
                 let noBets = [];
