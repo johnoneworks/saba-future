@@ -1,4 +1,4 @@
-import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
+import { useAccountStore } from "@/store/useAccountStore";
 import PersonIcon from "@mui/icons-material/Person";
 import Avatar from "@mui/material/Avatar";
 import Dialog from "@mui/material/Dialog";
@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 export default function ProfileDialog(props) {
     const { onClose } = props;
-    const { email, balance } = usePlayerInfoStore();
+    const { email, balance } = useAccountStore();
 
     return (
         <Dialog onClose={() => onClose()} open>

@@ -1,11 +1,10 @@
-import ProfileDialog from "@/components/ProfileDialog";
-import { CLIENT_ID, MENU_TYPE } from "@/constants/Constant";
+import ProfileDialog from "@/components/ProfileDialog/ProfileDialog";
+import { MENU_TYPE, SESSIONSTORAGE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
-import syncLogin from "@/service/login";
+import useLogin from "@/hooks/useLogin";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
-import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -59,8 +58,7 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, smartAccount, setAccount, setIsAdmin, isAdmin, setIsNew } = useAccountStore();
-    const { email, balance, setEmail } = usePlayerInfoStore();
+    const { account, isAdmin, setCleanSessionStorage, balance } = useAccountStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateBalance } = useGetUserBalance();
@@ -70,6 +68,7 @@ export const Header = () => {
     const [isLanguageExpand, setIsLanguageExpand] = useState(false);
     const { i18n } = useTranslation();
     const [userCode, setUserCode] = useState();
+    const { googleLogin, handleFetchLogin, setUserInfo } = useLogin();
 
     const refreshMarkets = () => {
         // TODO: Market 跟 statement 要分開 refresh
@@ -86,51 +85,15 @@ export const Header = () => {
 
     const handleLogout = () => {
         setIsDrawerOpen(false);
-        localStorage.removeItem("saba_web2_login_info");
-        setAccount(undefined);
-        setEmail(undefined);
-        setIsAdmin(undefined);
-        setIsNew(undefined);
+        sessionStorage.removeItem(SESSIONSTORAGE.LOGIN_INFO);
+        setCleanSessionStorage();
         router.push({
             pathname: `/`
         });
     };
 
     const handleLogin = async () => {
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:3000`;
-    };
-
-    const setUserInfo = () => {
-        if (typeof window !== "undefined" && JSON.parse(localStorage.getItem("saba_web2_login_info"))) {
-            setAccount(JSON.parse(localStorage.getItem("saba_web2_login_info")).name);
-            setEmail(JSON.parse(localStorage.getItem("saba_web2_login_info")).email);
-            setIsAdmin(JSON.parse(localStorage.getItem("saba_web2_login_info")).isAdmin);
-            setIsNew(JSON.parse(localStorage.getItem("saba_web2_login_info")).isNew);
-        }
-    };
-
-    const handleFetchLogin = async () => {
-        try {
-            const response = await syncLogin({
-                code: userCode,
-                redirectUrl: "http://localhost:3000"
-            });
-
-            if (!!response && response.ErrorCode === 0) {
-                const userData = {
-                    email: response.Result.Email,
-                    token: response.Result.Token,
-                    name: response.Result.NickName,
-                    isAdmin: response.Result.IsAdmin,
-                    isNew: response.Result.IsNewUser
-                };
-                localStorage.setItem("saba_web2_login_info", JSON.stringify(userData));
-                setUserInfo();
-                updateBalance();
-            }
-        } catch (error) {
-            console.error(`Error Log in: ${error}`);
-        }
+        googleLogin();
     };
 
     useEffect(() => {
@@ -144,7 +107,7 @@ export const Header = () => {
     }, [router.asPath]);
 
     useEffect(() => {
-        handleFetchLogin();
+        handleFetchLogin(userCode);
     }, [userCode]);
 
     const handleReturnBack = () => {
@@ -294,7 +257,7 @@ export const Header = () => {
                     </div>
                 )}
             </div>
-            {isAdmin && openProfileDialog && <ProfileDialog onClose={handleCloseProfileDialog} />}
+            {openProfileDialog && <ProfileDialog onClose={handleCloseProfileDialog} />}
             {openHowToPlayDialog && <HowToPlay onClose={handleSwitchHowToPlay} />}
         </>
     );

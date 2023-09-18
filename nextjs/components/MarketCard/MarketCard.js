@@ -1,5 +1,5 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { CLIENT_ID } from "@/constants/Constant";
+import useLogin from "@/hooks/useLogin";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -48,6 +48,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useMenuStore();
     const { account } = useAccountStore();
+    const { googleLogin } = useLogin();
 
     let win = false;
     let lost = false;
@@ -97,7 +98,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     const handleLogin = async () => {
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:3000`;
+        googleLogin();
     };
 
     const handleSelectMarket = () => {

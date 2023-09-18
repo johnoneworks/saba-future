@@ -21,4 +21,11 @@ export const CONTRACTS_NAME = {
 
 export const BACKUP_IMAGE = "/placeholder.jpg";
 
-export const CLIENT_ID = "998041040341-2lbq325g9238esd80epg00qqpqiam0ni.apps.googleusercontent.com";
+export const GOOGLE_LOGIN = {
+    CLIENT_ID: "998041040341-2lbq325g9238esd80epg00qqpqiam0ni.apps.googleusercontent.com",
+    SCOPE: "https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email"
+};
+
+export const SESSIONSTORAGE = {
+    LOGIN_INFO: "saba_web2_login_info"
+};

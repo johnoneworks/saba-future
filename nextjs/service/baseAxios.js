@@ -1,11 +1,12 @@
+import { SESSIONSTORAGE } from "@/constants/Constant.js";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
 import axios from "axios";
 import { API_URL_DOMAIN } from "../constants/api.js";
 
-const localstorageToken = () => {
-    if (typeof window !== "undefined" && JSON.parse(localStorage.getItem("saba_web2_login_info"))) {
-        return JSON.parse(localStorage.getItem("saba_web2_login_info")).token;
+const sessionStorageToken = () => {
+    if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO))) {
+        return JSON.parse(sessionStorage.getItem(SESSIONSTORAGE.LOGIN_INFO)).token;
     } else return "";
 };
 
@@ -21,7 +22,7 @@ const baseAxios = async ({ method, url, header = {}, data = {} }) => {
             data: {
                 TimeStamp: currentDate(),
                 Seq: uuidv4(),
-                Token: localstorageToken(),
+                Token: sessionStorageToken(),
                 ...data
             }
         });

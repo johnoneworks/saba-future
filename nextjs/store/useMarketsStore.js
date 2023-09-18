@@ -16,12 +16,10 @@ const defaultMarket = {
 };
 
 export const useMarketsStore = create((set) => ({
-    marketCount: 0,
     markets: [defaultMarket],
     yesInfo: [],
     noInfo: [],
 
-    setMarketCount: (count) => set((state) => ({ ...state, marketCount: count })),
     setMarkets: (markets) => set((state) => ({ ...state, markets })),
     setYesInfo: (yesInfo) => set((state) => ({ ...state, yesInfo })),
     setNoInfo: (noInfo) => set((state) => ({ ...state, noInfo }))

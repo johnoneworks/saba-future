@@ -70,7 +70,7 @@ const ShowMarkets = (props) => {
 export const Markets = () => {
     const router = useRouter();
     const { account, isAdmin } = useAccountStore();
-    const { markets, marketCount } = useMarketsStore();
+    const { markets } = useMarketsStore();
 
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading } = useLoadingStore();
@@ -87,7 +87,7 @@ export const Markets = () => {
         <>
             {currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
                 <>
-                    {isMarketLoading && marketCount != 0 && <Loading />}
+                    {isMarketLoading && <Loading />}
                     {!isMarketLoading && markets && (
                         <>
                             {account && isAdmin && (

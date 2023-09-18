@@ -7,7 +7,7 @@ import { useMarketsStore } from "@/store/useMarketsStore";
 import { useEffect } from "react";
 
 const useGetMarkets = () => {
-    const { markets, setMarkets, setMarketCount } = useMarketsStore();
+    const { markets, setMarkets } = useMarketsStore();
     const { account } = useAccountStore();
     const { setIsMarketLoading } = useLoadingStore();
 
@@ -35,7 +35,6 @@ const useGetMarkets = () => {
                         return [...markets, data];
                     }, []);
                     setMarkets(tempMarkets);
-                    setMarketCount(tempMarkets.length);
                 }
             }
         } catch (error) {

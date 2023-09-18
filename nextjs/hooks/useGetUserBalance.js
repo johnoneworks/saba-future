@@ -1,11 +1,9 @@
 import syncGetBalance from "@/service/wallet/getBalance";
 import { useAccountStore } from "@/store/useAccountStore";
-import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { useEffect } from "react";
 
 const useGetUserBalance = () => {
-    const { account } = useAccountStore();
-    const { setBalance } = usePlayerInfoStore();
+    const { account, setBalance } = useAccountStore();
 
     const updateBalance = async () => {
         try {
