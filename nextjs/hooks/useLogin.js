@@ -2,14 +2,17 @@ import { GOOGLE_LOGIN, SESSION_STORAGE } from "@/constants/Constant";
 import syncLogin from "@/service/login";
 import { useAccountStore } from "@/store/useAccountStore";
 import "@biconomy/web3-auth/dist/src/style.css";
-import { useCallback } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import useGetUserBalance from "./useGetUserBalance";
 
 const useLogin = () => {
+    const router = useRouter();
     const { setAccount, setIsAdmin, setEmail, setIsNew, setToken } = useAccountStore();
     const { updateBalance } = useGetUserBalance();
+    const [userCode, setUserCode] = useState();
 
-    const googleLogin = useCallback(() => {
+    const redirectGoogleLogin = useCallback(() => {
         window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_LOGIN.CLIENT_ID}&response_type=code&scope=${GOOGLE_LOGIN.SCOPE}&redirect_uri=${location.origin}`;
     });
 
@@ -24,10 +27,10 @@ const useLogin = () => {
         }
     });
 
-    const handleFetchLogin = useCallback(async (usercode) => {
+    const handleFetchLogin = useCallback(async (userCode) => {
         try {
             const response = await syncLogin({
-                code: usercode,
+                code: userCode,
                 redirectUrl: location.origin
             });
 
@@ -48,7 +51,21 @@ const useLogin = () => {
         }
     });
 
-    return { googleLogin, handleFetchLogin, setUserInfo };
+    useEffect(() => {
+        setUserInfo();
+    }, []);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get("code");
+        if (!!code) setUserCode(code);
+    }, [router.asPath]);
+
+    useEffect(() => {
+        handleFetchLogin(userCode);
+    }, [userCode]);
+
+    return { redirectGoogleLogin, handleFetchLogin, setUserInfo };
 };
 
 export default useLogin;

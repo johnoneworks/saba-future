@@ -20,7 +20,7 @@ import { Button } from "@mui/material";
 import classnames from "classnames";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import HowToPlay from "../HowToPlay/HowToPlay";
 import styles from "./Header.module.scss";
@@ -58,7 +58,7 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, isAdmin, setCleanSessionStorage, balance } = useAccountStore();
+    const { account, isAdmin, setCleanAccountStorage, balance } = useAccountStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateBalance } = useGetUserBalance();
@@ -67,8 +67,7 @@ export const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isLanguageExpand, setIsLanguageExpand] = useState(false);
     const { i18n } = useTranslation();
-    const [userCode, setUserCode] = useState();
-    const { googleLogin, handleFetchLogin, setUserInfo } = useLogin();
+    const { redirectGoogleLogin } = useLogin();
 
     const refreshMarkets = () => {
         // TODO: Market 跟 statement 要分開 refresh
@@ -86,29 +85,15 @@ export const Header = () => {
     const handleLogout = () => {
         setIsDrawerOpen(false);
         sessionStorage.removeItem(SESSION_STORAGE.LOGIN_INFO);
-        setCleanSessionStorage();
+        setCleanAccountStorage();
         router.push({
             pathname: `/`
         });
     };
 
     const handleLogin = async () => {
-        googleLogin();
+        redirectGoogleLogin();
     };
-
-    useEffect(() => {
-        setUserInfo();
-    }, []);
-
-    useEffect(() => {
-        const searchParams = new URLSearchParams(window.location.search);
-        const code = searchParams.get("code");
-        if (!!code) setUserCode(code);
-    }, [router.asPath]);
-
-    useEffect(() => {
-        handleFetchLogin(userCode);
-    }, [userCode]);
 
     const handleReturnBack = () => {
         if (currentMarketID) {

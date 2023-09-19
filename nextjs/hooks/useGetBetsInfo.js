@@ -6,7 +6,7 @@ import { useCallback, useEffect } from "react";
 
 const useGetBetsInfo = () => {
     const { setYesInfo, setNoInfo } = useMarketsStore();
-    const { account, token } = useAccountStore();
+    const { token } = useAccountStore();
     const { currentMarketID } = useMenuStore();
 
     const updateBetsInfo = useCallback(

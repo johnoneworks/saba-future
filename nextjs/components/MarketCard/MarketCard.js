@@ -48,7 +48,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useMenuStore();
     const { account } = useAccountStore();
-    const { googleLogin } = useLogin();
+    const { redirectGoogleLogin } = useLogin();
 
     let win = false;
     let lost = false;
@@ -98,7 +98,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     const handleLogin = async () => {
-        googleLogin();
+        redirectGoogleLogin();
     };
 
     const handleSelectMarket = () => {
