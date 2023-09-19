@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
-import "./i18n.js";
+import "../utils/i18n.js";
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
