@@ -58,7 +58,7 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, isAdmin, setCleanAccountStorage, balance } = useAccountStore();
+    const { account, isAdmin, setClearAllAccount, balance } = useAccountStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateBalance } = useGetUserBalance();
@@ -85,7 +85,7 @@ export const Header = () => {
     const handleLogout = () => {
         setIsDrawerOpen(false);
         sessionStorage.removeItem(SESSION_STORAGE.LOGIN_INFO);
-        setCleanAccountStorage();
+        setClearAllAccount();
         router.push({
             pathname: `/`
         });

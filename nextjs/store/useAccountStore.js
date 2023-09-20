@@ -20,5 +20,5 @@ export const useAccountStore = create((set) => ({
     setIsAdmin: (isAdmin) => set((state) => ({ ...state, isAdmin })),
     setIsNew: (isNew) => set((state) => ({ ...state, isNew })),
     setToken: (token) => set((state) => ({ ...state, token })),
-    setCleanAccountStorage: () => set((state) => ({ ...state, account: null, email: null, isAdmin: null, isNew: null, token: "" }))
+    setClearAllAccount: () => set((state) => ({ ...state, account: null, email: null, isAdmin: null, isNew: null, token: "" }))
 }));

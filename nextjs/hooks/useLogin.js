@@ -8,7 +8,7 @@ import useGetUserBalance from "./useGetUserBalance";
 
 const useLogin = () => {
     const router = useRouter();
-    const { setAccount, setIsAdmin, setEmail, setIsNew, setToken } = useAccountStore();
+    const { setAccount, setIsAdmin, setEmail, setIsNew, setToken, account, token } = useAccountStore();
     const { updateBalance } = useGetUserBalance();
     const [userCode, setUserCode] = useState();
 
@@ -56,16 +56,14 @@ const useLogin = () => {
     }, []);
 
     useEffect(() => {
-        const searchParams = new URLSearchParams(window.location.search);
-        const code = searchParams.get("code");
-        if (!!code) setUserCode(code);
+        if (!account && !token) {
+            const searchParams = new URLSearchParams(window.location.search);
+            const code = searchParams.get("code");
+            if (!!code) handleFetchLogin(code);
+        }
     }, [router.asPath]);
 
-    useEffect(() => {
-        handleFetchLogin(userCode);
-    }, [userCode]);
-
-    return { redirectGoogleLogin, handleFetchLogin, setUserInfo };
+    return { redirectGoogleLogin };
 };
 
 export default useLogin;
