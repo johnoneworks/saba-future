@@ -2,6 +2,7 @@ import { BET_TYPE } from "@/constants/Constant";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import syncPlaceBet from "@/service/ticket/placeBet";
+import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
@@ -34,6 +35,7 @@ export const BetArea = (props) => {
     const totalAmount = Number(yesAmount) + Number(noAmount);
     const { currentMarketID } = useMenuStore();
     const { setIsPageLoading } = useLoadingStore();
+    const { token } = useAccountStore();
 
     const { updateBalance } = useGetUserBalance();
     const { updateBetsInfo } = useGetBetsInfo();
@@ -47,7 +49,8 @@ export const BetArea = (props) => {
             const response = await syncPlaceBet({
                 marketId: id,
                 betType: selected,
-                stake: stakeAmount
+                stake: stakeAmount,
+                token: token
             });
 
             if (!!response && response.ErrorCode !== 0) {

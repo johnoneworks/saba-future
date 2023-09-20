@@ -4,6 +4,7 @@ import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
 import { BACKUP_IMAGE } from "@/constants/Constant";
 import { API_MARKET_STATUS } from "@/constants/MarketCondition";
 import syncMarketDetail from "@/service/market/getMarketDetail";
+import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
@@ -126,13 +127,14 @@ export default function MarketDetail() {
         isSuspended: false
     });
     const { currentMarketID } = useMenuStore();
+    const { account, token } = useAccountStore();
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
     const totalAmount = Number(marketDetail.yesAmount) + Number(marketDetail.noAmount);
 
     const handleFetchMarketDetail = useCallback(async () => {
-        const response = await syncMarketDetail({ marketId: currentMarketID });
+        const response = await syncMarketDetail({ marketId: currentMarketID, token: token });
         if (!!response && response.ErrorCode === 0) {
             const detail = response.Result.MarketDetail;
             const responseEndTime = detail.EndTime;
@@ -161,9 +163,7 @@ export default function MarketDetail() {
 
     return (
         <>
-            {/* 轉 Web2.0 先註解 account */}
-            {/* {account && marketDetail && ( */}
-            {marketDetail && (
+            {account && marketDetail && (
                 <>
                     <MarketTitle
                         title={marketDetail?.title}

@@ -1,11 +1,10 @@
-import ProfileDialog from "@/components/ProfileDialog";
-import { MENU_TYPE } from "@/constants/Constant";
+import ProfileDialog from "@/components/ProfileDialog/ProfileDialog";
+import { MENU_TYPE, SESSION_STORAGE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
-import useLogout from "@/hooks/useLogout";
+import useLogin from "@/hooks/useLogin";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
-import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -59,17 +58,16 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, smartAccount, socialLoginSDK } = useAccountStore();
-    const { email, balance } = usePlayerInfoStore();
+    const { account, isAdmin, setClearAllAccount, balance } = useAccountStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateBalance } = useGetUserBalance();
-    const { disconnectWallet } = useLogout();
     const [openProfileDialog, setOpenProfileDialog] = useState(false);
     const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isLanguageExpand, setIsLanguageExpand] = useState(false);
     const { i18n } = useTranslation();
+    const { redirectGoogleLogin } = useLogin();
 
     const refreshMarkets = () => {
         // TODO: Market 跟 statement 要分開 refresh
@@ -86,16 +84,15 @@ export const Header = () => {
 
     const handleLogout = () => {
         setIsDrawerOpen(false);
-        if (account) {
-            disconnectWallet();
-        }
+        sessionStorage.removeItem(SESSION_STORAGE.LOGIN_INFO);
+        setClearAllAccount();
+        router.push({
+            pathname: `/`
+        });
     };
 
     const handleLogin = async () => {
-        setIsDrawerOpen(false);
-        if (!account && socialLoginSDK.web3auth.status !== "connected") {
-            await socialLoginSDK.showWallet();
-        }
+        redirectGoogleLogin();
     };
 
     const handleReturnBack = () => {
@@ -137,9 +134,6 @@ export const Header = () => {
         i18n.changeLanguage(lan);
     };
 
-    // 測試 是否登入, 是否為manage
-    let isLogin = false;
-    let isManage = false;
     const languages = [
         {
             language: "en",
@@ -180,7 +174,7 @@ export const Header = () => {
                                 <div className={classnames(styles.closeDrawer)}>
                                     <CloseIcon onClick={handleDrawer} sx={{ color: "#1A84F2" }} />
                                 </div>
-                                {isLogin && isManage ? (
+                                {account && isAdmin ? (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleRedirectToAdminMarkets}>
                                             <ManageAccountsIcon sx={{ color: "#1A84F2" }} />
@@ -214,7 +208,7 @@ export const Header = () => {
                                         </div>
                                     )}
                                 </div>
-                                {isLogin ? (
+                                {account ? (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleLogout}>
                                             <LogoutIcon sx={{ color: "#1A84F2" }} />
@@ -233,25 +227,22 @@ export const Header = () => {
                         )}
                     </div>
                 </div>
-                {/* {account && ( */}
-                <div className={styles.headerInfo}>
-                    {/* TODO: 轉 Web2.0 先拿掉account判斷 */}
-                    <div className={styles.profile} onClick={handleClickProfile}>
-                        <ProfileItem type="person" text={account ? email || `${account.substr(0, 10)}...` : ""} />
-                        <ProfileItem type="wallet" text={balance ? `${balance} SURE` : ""} />
-                    </div>
-                    {!currentMarketID && (
-                        <div className={styles.tab}>
-                            <MenuTab tab={MENU_TYPE.MARKET} />
-                            <MenuTab tab={MENU_TYPE.STATEMENT} />
+                {account && (
+                    <div className={styles.headerInfo}>
+                        <div className={styles.profile} onClick={handleClickProfile}>
+                            <ProfileItem type="person" text={account} />
+                            <ProfileItem type="wallet" text={`${balance} SURE`} />
                         </div>
-                    )}
-                </div>
-                {/* )} */}
+                        {!currentMarketID && (
+                            <div className={styles.tab}>
+                                <MenuTab tab={MENU_TYPE.MARKET} />
+                                <MenuTab tab={MENU_TYPE.STATEMENT} />
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
-            {smartAccount && (
-                <ProfileDialog open={openProfileDialog} smartAccount={smartAccount} email={email} balance={balance} onClose={handleCloseProfileDialog} />
-            )}
+            {openProfileDialog && <ProfileDialog onClose={handleCloseProfileDialog} />}
             {openHowToPlayDialog && <HowToPlay onClose={handleSwitchHowToPlay} />}
         </>
     );

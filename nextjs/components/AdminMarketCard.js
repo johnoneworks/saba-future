@@ -3,6 +3,7 @@ import { BET_TYPE } from "@/constants/Constant";
 import { API_RESOLVE_MARKET, API_SUSPEND_MARKET } from "@/constants/api";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import baseAxios from "@/service/baseAxios";
+import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
@@ -30,6 +31,7 @@ export default function AdminMarketCard({ id, market }) {
     const { setIsPageLoading } = useLoadingStore();
     const [selectedResolve, setSelectedResolve] = useState(null);
     const { updateMarkets } = useGetMarkets();
+    const { token } = useAccountStore();
     const router = useRouter();
     const isTest = market.isTest;
 
@@ -58,6 +60,7 @@ export default function AdminMarketCard({ id, market }) {
             const response = await baseAxios({
                 method: "POST",
                 url: API_SUSPEND_MARKET,
+                token: token,
                 data: {
                     Payload: {
                         MarketId: id,
@@ -83,6 +86,7 @@ export default function AdminMarketCard({ id, market }) {
             const response = await baseAxios({
                 method: "POST",
                 url: API_RESOLVE_MARKET,
+                token: token,
                 data: {
                     Payload: {
                         MarketId: id,

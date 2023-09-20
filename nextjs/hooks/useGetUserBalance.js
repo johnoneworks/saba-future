@@ -1,15 +1,13 @@
 import syncGetBalance from "@/service/wallet/getBalance";
 import { useAccountStore } from "@/store/useAccountStore";
-import { usePlayerInfoStore } from "@/store/usePlayerInfoStore";
 import { useEffect } from "react";
 
 const useGetUserBalance = () => {
-    const { account } = useAccountStore();
-    const { setBalance } = usePlayerInfoStore();
+    const { account, setBalance, token } = useAccountStore();
 
     const updateBalance = async () => {
         try {
-            const response = await syncGetBalance();
+            const response = await syncGetBalance(token);
             if (!!response && response.ErrorCode === 0) {
                 setBalance(response.Result.Balance);
             }

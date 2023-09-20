@@ -1,4 +1,5 @@
 import baseAxios from "@/service/baseAxios";
+import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { convertToDatetimeLocalFormat, formatDateToInput } from "@/utils/ConvertDate";
 import { Box, Button, Checkbox, FormControlLabel, TextField, Typography } from "@mui/material";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 export default function MarketEditForm({ marketId = null, apiPath, editPropsData }) {
     const router = useRouter();
     const { setIsPageLoading } = useLoadingStore();
+    const { token } = useAccountStore();
     const [submitButtonText, setSubmitButtonText] = useState("Create Market");
     const [title, setTitle] = useState(editPropsData?.title || "");
     const [description, setDescription] = useState(editPropsData?.description || "");
@@ -60,6 +62,7 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
             const response = await baseAxios({
                 method: "POST",
                 url: apiPath,
+                token: token,
                 data: data
             });
             if (response && response.ErrorCode === 0) {
