@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import bigBallParticle from "../../particle/bigBallParticle";
@@ -5,13 +6,13 @@ import smallBallParticle from "../../particle/smallBallParticle";
 import styles from "./LoadingAnimation.module.scss";
 
 const LoadingAnimation = ({ useComponentLoading }) => {
-    const particlesInit = async (main) => {
+    const particlesInit = useCallback(async (main) => {
         try {
             await loadFull(main);
         } catch (e) {
             console.error(e);
         }
-    };
+    }, []);
 
     return (
         <>
