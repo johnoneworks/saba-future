@@ -1,28 +1,24 @@
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { UserInfoContext } from "@/contexts/UserInfoContext";
-import { ethers } from "ethers";
-import { useContext, useEffect } from "react";
+import syncGetBalance from "@/service/wallet/getBalance";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useEffect } from "react";
 
 const useGetUserBalance = () => {
-    const { account, sureTokenContract, smartAccount } = useContext(BiconomyAccountContext);
-    const { setBalance } = useContext(UserInfoContext);
+    const { setBalance, token } = useAccountStore();
 
     const updateBalance = async () => {
         try {
-            if (!smartAccount.address) {
-                return;
+            const response = await syncGetBalance(token);
+            if (!!response && response.ErrorCode === 0) {
+                setBalance(response.Result.Balance);
             }
-            let count = await sureTokenContract.balanceOf(smartAccount.address);
-            console.error("hook Balance ", ethers.utils.commify(count));
-            setBalance(ethers.utils.commify(count));
         } catch (error) {
             console.error(`Error getting balance, ${error}`);
         }
     };
 
     useEffect(() => {
-        updateBalance();
-    }, [account]);
+        if (!!token) updateBalance();
+    }, [token]);
 
     return { updateBalance };
 };

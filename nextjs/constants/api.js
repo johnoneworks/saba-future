@@ -1,0 +1,13 @@
+export const API_URL_DOMAIN = "https://sabafuturecoreapi.azurewebsites.net/api/";
+export const API_SAVE_ACCOUNT = "SabaFutureInternal/SyncCustInfo";
+export const API_CREATE_MARKET = "Market/CreateMarket";
+export const API_GET_ALL_MARKET = "Market/GetAllMarkets";
+export const API_GET_MARKET_DETAIL = "Market/GetMarketDetail";
+export const API_GET_MARKET_TICKETS = "Ticket/GetMarketTickets";
+export const API_GET_BALANCE = "Wallet/GetBalance";
+export const API_SUSPEND_MARKET = "Market/SetSuspendMarket";
+export const API_EDIT_MARKET = "Market/EditMarket";
+export const API_RESOLVE_MARKET = "Market/ResolveMarket";
+export const API_GET_CUSTOMER_TICKETS = "Ticket/GetCustomerTickets";
+export const API_PLACE_BET = "Ticket/PlaceBet";
+export const API_LOGIN = "SabaFutureInternal/Login";

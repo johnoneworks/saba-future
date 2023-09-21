@@ -1,0 +1,34 @@
+
+
+.buttonContainer{
+    padding: 10px 8px;
+    display: flex;
+    justify-content: center;
+
+    .creatMarketButton {
+        border-radius: 4px;
+        padding: 10px;
+        width: 100%;
+        background-color: #1a84f2;
+        color: #fff;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+
+        :first-child{
+            padding-right: 4px;
+        }
+
+        &:hover {
+            background-color: #4fa4ff;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px){
+            &{
+                width:176px;
+            }
+        }
+
+    }
+}

@@ -9,8 +9,9 @@ export const MARKET_STATUS = {
 };
 
 export const BET_TYPE = {
-    YES: "YES",
-    NO: "NO"
+    YES: "Yes",
+    NO: "No",
+    DRAW: "Draw"
 };
 
 export const CONTRACTS_NAME = {
@@ -18,7 +19,22 @@ export const CONTRACTS_NAME = {
     ADD_NO_BET: "addNoBet"
 };
 
+export const LANGUAGES = {
+    EN: "en",
+    IN: "ind",
+    VN: "vn",
+    TH: "th",
+    ID: "id"
+};
+
 export const BACKUP_IMAGE = "/placeholder.jpg";
 
-const API_URL_DOMAIN = "https://sabafuturecoreapi.azurewebsites.net/api";
-export const API_SAVE_ACCOUNT = `${API_URL_DOMAIN}/SabaFutureInternal/SyncCustInfo`;
+export const GOOGLE_LOGIN = {
+    CLIENT_ID: "998041040341-2lbq325g9238esd80epg00qqpqiam0ni.apps.googleusercontent.com",
+    SCOPE: "https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/userinfo.email"
+};
+
+export const SESSION_STORAGE = {
+    LOGIN_INFO: "saba_web2_login_info",
+    DEFAULT_LANGUAGE: "saba_web2_lang"
+};

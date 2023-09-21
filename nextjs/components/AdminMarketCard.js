@@ -1,14 +1,18 @@
 import { TestDataMark } from "@/components/TestDataMark/TestDataMark";
-import { predictionWorldAddress } from "@/config";
 import { BET_TYPE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { LoadingContext } from "@/contexts/LoadingContext";
-import { convertBigNumberToDate } from "@/utils/ConvertDate";
-import PauseCircleIcon from '@mui/icons-material/PauseCircle';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { API_RESOLVE_MARKET, API_SUSPEND_MARKET } from "@/constants/api";
+import useGetMarkets from "@/hooks/useGetMarkets";
+import baseAxios from "@/service/baseAxios";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import { Avatar, Box, IconButton, Tooltip } from "@mui/material";
 import { styled } from "@mui/system";
-import { useContext, useState } from "react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AdminConfirmPage } from "./ConfirmPage/AdminConfirmPage";
 
 /**
@@ -24,13 +28,14 @@ const CustomAvatar = styled(Avatar)({
     height: "56px"
 });
 
-export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
-    const { setIsPageLoading } = useContext(LoadingContext);
-    const { smartAccount, predictionWorldInterface } = useContext(BiconomyAccountContext);
+export default function AdminMarketCard({ id, market }) {
+    const { setIsPageLoading } = useLoadingStore();
     const [selectedResolve, setSelectedResolve] = useState(null);
-    const isResolved = market.hasResolved;
-    const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
+    const { updateMarkets } = useGetMarkets();
+    const { token } = useAccountStore();
+    const router = useRouter();
     const isTest = market.isTest;
+    const { t } = useTranslation();
 
     const onCancelResolve = () => {
         setSelectedResolve(null);
@@ -40,123 +45,127 @@ export default function AdminMarketCard({ id, market, onUpdateMarkets }) {
         if (selectedResolve === null) return;
         try {
             setIsPageLoading(true);
-            await distributeWithGasless(selectedResolve === BET_TYPE.YES);
+            await handleResolveMarket(selectedResolve);
             alert("Success!");
         } catch (err) {
             console.error(err);
             alert("Error!!");
         } finally {
-            onUpdateMarkets();
             setIsPageLoading(false);
             setSelectedResolve(null);
         }
-    };
-
-    const distributeWithGasless = async (result) => {
-        let transactions = [];
-        const transactionData = predictionWorldInterface.encodeFunctionData("distributeWinningAmount", [id, result]);
-
-        transactions = [
-            {
-                to: predictionWorldAddress,
-                data: transactionData
-            }
-        ];
-
-        const txResponse = await smartAccount.sendTransactionBatch({ transactions });
-        console.log("UserOp hash", txResponse.hash);
-        const txReceipt = await txResponse.wait();
-        console.log("Tx hash", txReceipt.transactionHash);
     };
 
     const handleSuspend = async (isSuspended) => {
         try {
             setIsPageLoading(true);
-            await setIsSuspended(isSuspended);
-            alert("Success!");
-        } catch (err) {
-            console.error(err);
-            alert("Error!!");
-        } finally {
-            onUpdateMarkets();
-            setIsPageLoading(false);
-            setSelectedResolve(null);
-        }
-    }
-
-    const setIsSuspended = async (isSuspended) => {
-        let transactions = [];
-        const transactionData = predictionWorldInterface.encodeFunctionData("setMarketIsSuspended", [id, isSuspended]);
-
-        transactions = [
-            {
-                to: predictionWorldAddress,
-                data: transactionData
+            const response = await baseAxios({
+                method: "POST",
+                url: API_SUSPEND_MARKET,
+                token: token,
+                data: {
+                    Payload: {
+                        MarketId: id,
+                        IsSuspend: isSuspended
+                    }
+                }
+            });
+            if (response && response.ErrorCode === 0) {
+                updateMarkets();
+            } else {
+                throw new Error("Error suspend market");
             }
-        ];
+        } catch (err) {
+            console.log("%c⧭ Error suspend market", "color: #917399", err);
+        } finally {
+            setIsPageLoading(false);
+        }
+    };
 
-        const txResponse = await smartAccount.sendTransactionBatch({ transactions });
-        console.log("UserOp hash", txResponse.hash);
-        const txReceipt = await txResponse.wait();
-        console.log("Tx hash", txReceipt.transactionHash);
-    }
+    const handleResolveMarket = async (selectedResolve) => {
+        try {
+            setIsPageLoading(true);
+            const response = await baseAxios({
+                method: "POST",
+                url: API_RESOLVE_MARKET,
+                token: token,
+                data: {
+                    Payload: {
+                        MarketId: id,
+                        Outcome: selectedResolve
+                    }
+                }
+            });
+            if (response && response.ErrorCode === 0) {
+                updateMarkets();
+            } else {
+                throw new Error("Error resolve market");
+            }
+        } catch (err) {
+            console.log("%c⧭ Error resolve market", "color: #917399", err);
+        } finally {
+            setIsPageLoading(false);
+        }
+    };
+
+    const handleEdit = (e) => {
+        e.stopPropagation();
+        router.push({
+            pathname: `/admin/${id}`
+        });
+        return false;
+    };
 
     return (
         <>
-            <div className="w-full overflow-hidden my-2" style={{ backgroundColor: isResolved ? "#E4E9F0" : "#fff" }}>
+            <div className="w-full overflow-hidden my-2" style={{ backgroundColor: "#fff" }}>
                 <div className="flex flex-col border border-gray-300 rounded-lg p-5 hover:border-blue-700 cursor-pointer">
                     {isTest && <TestDataMark />}
                     <div className="flex flex-row space-x-5 pb-4">
+                        <Tooltip title="Edit">
+                            <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
+                                <BorderColorOutlinedIcon />
+                            </IconButton>
+                        </Tooltip>
                         <div className="h-w-15">
                             <CustomAvatar>
                                 <Box component="img" src={market.imageHash} alt="marketImage" sx={{ width: 55, height: 55 }} />
                             </CustomAvatar>
                         </div>
                         <span className="text-lg font-semibold w-full">{market.question}</span>
-                        {
-                            !market.hasResolved && (
-                                market.isSuspended ?
-                                    <IconButton className="h-w-15 text-right" color="primary" aria-label="add to shopping cart" onClick={() => handleSuspend(false)}>
-                                        <PlayCircleIcon />
-                                    </IconButton>
-                                    :
-                                    <IconButton className="h-w-15 text-right" color="primary" aria-label="add to shopping cart" onClick={() => handleSuspend(true)}>
-                                        <PauseCircleIcon />
-                                    </IconButton>
-                            )
-                        }
+                        {!market.hasResolved &&
+                            (market.isSuspended ? (
+                                <IconButton className="h-w-15 text-right" color="primary" onClick={() => handleSuspend(false)}>
+                                    <PlayCircleIcon />
+                                </IconButton>
+                            ) : (
+                                <IconButton className="h-w-15 text-right" color="primary" onClick={() => handleSuspend(true)}>
+                                    <PauseCircleIcon />
+                                </IconButton>
+                            ))}
                     </div>
                     <div className="flex flex-row flex-nowrap justify-between items-center">
                         <div className="flex flex-col space-y-1">
-                            <span className="text-xs text-gray-500 font-light">Total Liquidity</span>
-                            <span className="text-base">{`${market.totalAmount} SURE`}</span>
+                            <span className="text-xs text-gray-500 font-light">{t("total_liquidity")}</span>
+                            <span className="text-base">{`${market.totalAmount} ${t("stake_unit")}`}</span>
                         </div>
                         <div className="flex flex-col space-y-1">
-                            <span className="text-xs text-gray-500 font-light">Ending In</span>
-                            <span className="text-base">{convertBigNumberToDate(market.endTimestamp)}</span>
+                            <span className="text-xs text-gray-500 font-light">{t("ending_in")}</span>
+                            <span className="text-base">{market.endTimestamp}</span>
                         </div>
-                        {!isResolved ? (
-                            <div className="flex flex-row space-x-2 items-end">
-                                <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.YES)}>
-                                    Resolve YES
-                                </button>
-                                <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.NO)}>
-                                    Resolve No
-                                </button>
-                            </div>
-                        ) : (
-                            <Box>
-                                <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", mb: "3px", lineHeight: 1, pt: "5px" }}>
-                                    Outcome
-                                </Typography>
-                                <Typography
-                                    variant="body1"
-                                    sx={{ color: market.hasResolved ? (outcome === BET_TYPE.YES ? "#3FB06B" : "#E84D4D") : "#1A84F2", fontWeight: "bold" }}
-                                >
-                                    {market.hasResolved ? outcome.toString() : "In progress"}
-                                </Typography>
-                            </Box>
-                        )}
+                    </div>
+                    <div className="flex flex-row flex-nowrap justify-between items-center">
+                        <div className="flex flex-row space-x-2 items-end">
+                            <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.YES)}>
+                                {t("resolve_yes")}
+                            </button>
+                            <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.NO)}>
+                                {t("resolve_no")}
+                            </button>
+                            <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.DRAW)}>
+                                {t("resolve_draw")}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

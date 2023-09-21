@@ -13,3 +13,10 @@ export const MARKET_ORDER = {
     ASC: false,
     DESC: true
 };
+
+export const API_MARKET_STATUS = {
+    OPEN: "00",
+    CLOSED: "10",
+    SUSPENDED: "20",
+    REFUND: "30"
+};

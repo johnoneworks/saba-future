@@ -2,22 +2,27 @@ import { EmptyPage } from "@/components/EmptyPage/EmptyPage";
 import { Loading } from "@/components/Loading/Loading";
 import MarketCard from "@/components/MarketCard/MarketCard";
 import { MENU_TYPE } from "@/constants/Constant";
-import { BiconomyAccountContext } from "@/contexts/BiconomyAccountContext";
-import { LoadingContext } from "@/contexts/LoadingContext";
-import { MarketContext } from "@/contexts/MarketContext";
-import { PageContext } from "@/contexts/PageContext";
-import styles from "@/styles/Home.module.scss";
+import { useAccountStore } from "@/store/useAccountStore";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import { useMarketsStore } from "@/store/useMarketsStore";
+import { useMenuStore } from "@/store/useMenuStore";
+import AddIcon from "@mui/icons-material/Add";
 import { Box, Checkbox, FormControlLabel, Grid, Typography } from "@mui/material";
+import classnames from "classnames";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import styles from "./Markets.module.scss";
 
 const ShowMarkets = (props) => {
     const router = useRouter();
-    const { markets } = useContext(MarketContext);
-    const { account, showTest, isEditable } = props;
+    const { markets } = useMarketsStore();
+    const { nickName, showTest, isEditable } = props;
 
     const [openMarkets, setOpenMarkets] = useState([]);
     const [closedMarkets, setClosedMarkets] = useState([]);
+
+    const { t } = useTranslation();
 
     const filterMarkets = () => {
         const openMarkets = markets.filter((market) => !market.marketClosed && (!market.isTest || (showTest && market.isTest)));
@@ -36,7 +41,7 @@ const ShowMarkets = (props) => {
                 openMarkets.reduce((accumulator, market) => {
                     accumulator.push(
                         <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                            <MarketCard market={market} currentUser={account} isClosed={false} isTest={market.isTest} isEditable={isEditable} />
+                            <MarketCard market={market} currentUser={nickName} isClosed={false} isTest={market.isTest} isEditable={isEditable} />
                         </Grid>
                     );
                     return accumulator;
@@ -44,12 +49,12 @@ const ShowMarkets = (props) => {
             {closedMarkets && closedMarkets.length > 0 && (
                 <>
                     <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1, mt: 2 }}>
-                        Closed Markets
+                        {t("closed_markets")}
                     </Typography>
                     {closedMarkets.reduce((accumulator, market) => {
                         accumulator.push(
                             <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                                <MarketCard market={market} currentUser={account} isClosed={true} isTest={market.isTest} />
+                                <MarketCard market={market} currentUser={nickName} isClosed={true} isTest={market.isTest} />
                             </Grid>
                         );
                         return accumulator;
@@ -66,31 +71,48 @@ const ShowMarkets = (props) => {
 };
 
 export const Markets = () => {
-    const { account, smartAccount } = useContext(BiconomyAccountContext);
-    const { currentMenu, currentMarketID } = useContext(PageContext);
-    const { isMarketLoading } = useContext(LoadingContext);
-    const { marketCount, markets } = useContext(MarketContext);
+    const router = useRouter();
+    const { nickName, isAdmin } = useAccountStore();
+    const { markets } = useMarketsStore();
+
+    const { currentMenu, currentMarketID } = useMenuStore();
+    const { isMarketLoading } = useLoadingStore();
     const [showTest, setShowTest] = useState(false);
-    const hasLogin = !!account;
+    const hasLogin = !!nickName;
+    const { t } = useTranslation();
+
+    const handleRedirectToAdmin = () => {
+        router.push({
+            pathname: `/admin`
+        });
+    };
 
     return (
         <>
             {currentMenu === MENU_TYPE.MARKET && !currentMarketID && (
                 <>
-                    {isMarketLoading && marketCount != 0 && <Loading />}
+                    {isMarketLoading && <Loading />}
                     {!isMarketLoading && markets && (
                         <>
-                            {account && smartAccount && smartAccount.isAdminUser && (
-                                <div>
-                                    <FormControlLabel
-                                        label="Show Test Markets"
-                                        sx={{ mt: 2, mb: 1 }}
-                                        control={<Checkbox checked={showTest} onChange={(e) => setShowTest(!showTest)} />}
-                                    />
-                                </div>
+                            {nickName && isAdmin && (
+                                <>
+                                    <div className={classnames(styles.buttonContainer)}>
+                                        <div className={classnames(styles.creatMarketButton)} onClick={handleRedirectToAdmin}>
+                                            <AddIcon />
+                                            <span>{t("createmarket")}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <FormControlLabel
+                                            label={t("show_test_markets")}
+                                            sx={{ mt: 2, mb: 1 }}
+                                            control={<Checkbox checked={showTest} onChange={(e) => setShowTest(!showTest)} />}
+                                        />
+                                    </div>
+                                </>
                             )}
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                <ShowMarkets account={account} showTest={showTest} isEditable={hasLogin ? smartAccount.isAdminUser : false} />
+                                <ShowMarkets nickName={nickName} showTest={showTest} isEditable={hasLogin ? isAdmin : false} />
                             </Grid>
                         </>
                     )}
