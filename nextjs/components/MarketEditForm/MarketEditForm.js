@@ -1,16 +1,16 @@
 import baseAxios from "@/service/baseAxios";
-import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { convertToDatetimeLocalFormat, formatDateToInput } from "@/utils/ConvertDate";
 import { Box, Button, Checkbox, FormControlLabel, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function MarketEditForm({ marketId = null, apiPath, editPropsData }) {
     const router = useRouter();
+    const { t } = useTranslation();
     const { setIsPageLoading } = useLoadingStore();
-    const { token } = useAccountStore();
-    const [submitButtonText, setSubmitButtonText] = useState("Create Market");
+    const [submitButtonText, setSubmitButtonText] = useState("createmarket");
     const [title, setTitle] = useState(editPropsData?.title || "");
     const [description, setDescription] = useState(editPropsData?.description || "");
     const [imageUrl, setImageUrl] = useState(editPropsData?.imageUrl || "");
@@ -37,7 +37,7 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
     const handleSubmit = async () => {
         try {
             setIsPageLoading(true);
-            setSubmitButtonText("Creating");
+            setSubmitButtonText("creating");
             const toEndTimestamp = new Date(timestamp);
             const utcString = toEndTimestamp.toISOString();
             let data = {
@@ -81,7 +81,7 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
             console.error(error);
         } finally {
             setIsPageLoading(false);
-            setSubmitButtonText("Create Market");
+            setSubmitButtonText("createmarket");
             router.push("/admin/markets");
         }
     };
@@ -100,26 +100,34 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
             }}
         >
             <Typography variant="h6" component="div" sx={{ mt: 1 }}>
-                Add New Market
+                {t("admin_add_new_market")}
             </Typography>
             <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                Market Title
+                {t("admin_market_title")}
             </Typography>
-            <TextField type="input" name="title" value={title} onChange={(e) => setTitle(e.target.value)} fullWidth placeholder="Title" autoComplete="off" />
+            <TextField
+                type="input"
+                name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                fullWidth
+                placeholder={t("admin_title")}
+                autoComplete="off"
+            />
             <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                Market Description
+                {t("admin_market_description")}
             </Typography>
             <TextField
                 name="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 fullWidth
-                placeholder="Description"
+                placeholder={t("admin_description")}
                 autoComplete="off"
                 multiline
             />
             <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                Market Image URL
+                {t("admin_image_url")}
             </Typography>
             <TextField
                 type="input"
@@ -131,7 +139,7 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
                 autoComplete="off"
             />
             <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                Resolve URL
+                {t("admin_resolve_url")}
             </Typography>
             <TextField
                 type="input"
@@ -143,7 +151,7 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
                 autoComplete="off"
             />
             <Typography variant="subtitle1" component="div" sx={{ mt: 2, mb: 1 }}>
-                End Date
+                {t("admin_end_date")}
             </Typography>
             <TextField
                 type="datetime-local"
@@ -158,9 +166,13 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
                 // defaultValue={timestamp}
                 value={formatDateToInput(new Date(timestamp))}
             />
-            <FormControlLabel label="Is this for testing?" sx={{ mt: 2, mb: 1 }} control={<Checkbox checked={isTest} onChange={(e) => setIsTest(!isTest)} />} />
+            <FormControlLabel
+                label={t("admin_is_testing")}
+                sx={{ mt: 2, mb: 1 }}
+                control={<Checkbox checked={isTest} onChange={(e) => setIsTest(!isTest)} />}
+            />
             <Button variant="contained" color="success" fullWidth style={{ backgroundColor: "#2e7d32" }} sx={{ mt: 2 }} onClick={handleSubmit}>
-                {submitButtonText}
+                {t(submitButtonText)}
             </Button>
         </Box>
     );

@@ -8,6 +8,7 @@ import { useMenuStore } from "@/store/useMenuStore";
 import { Box, Button, InputAdornment, TextField, Typography } from "@mui/material";
 import classnames from "classnames";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./BetArea.module.scss";
 
 const SelectButton = (props) => {
@@ -15,15 +16,16 @@ const SelectButton = (props) => {
     const buttonName = type;
     const buttonClass = `is${buttonName}`;
     const volumeWidth = totalAmount == 0 ? `50%` : `${(selectedAmount / totalAmount) * 100}%`;
+    const { t } = useTranslation();
 
     return (
         <Box id={buttonName} className={classnames(styles.volumeButton, styles[buttonClass], { [styles.selected]: selected === type })} onClick={onClick}>
             <Typography sx={{ fontWeight: "bold", mr: "4px", zIndex: 1 }} variant="subtitle1" component="span">
-                {buttonName}
+                {t(buttonName.toLowerCase())}
             </Typography>
             <span style={{ display: "flex", flexDirection: "column", zIndex: 1 }}>
                 <span className={classnames(styles.amount)}>{selectedAmount}</span>
-                <span className={classnames(styles.amountUnit)}>SURE</span>
+                <span className={classnames(styles.amountUnit)}>{t("stake_unit")}</span>
             </span>
             <div className={classnames(styles.volume, styles[buttonClass], { [styles.selected]: selected === type })} style={{ width: volumeWidth }}></div>
         </Box>
@@ -43,6 +45,8 @@ export const BetArea = (props) => {
     const [selected, setSelected] = useState();
     const [stakeAmount, setStakeAmount] = useState("");
     const [isStakeValid, setIsStakeValid] = useState(false);
+
+    const { t } = useTranslation();
 
     const handleTrade = async () => {
         try {
@@ -81,11 +85,11 @@ export const BetArea = (props) => {
     return (
         <Box className={styles.betArea}>
             <Typography variant="subtitle1" className={styles.title}>
-                Buy
+                {t("buy")}
             </Typography>
             <hr className="text-black w-full py-2" />
             <Typography variant="body2" sx={{ width: "100%", mb: 1 }}>
-                Pick Outcome
+                {t("pick_outcome")}
             </Typography>
             <SelectButton
                 type={BET_TYPE.YES}
@@ -96,7 +100,7 @@ export const BetArea = (props) => {
             />
             <SelectButton type={BET_TYPE.NO} selected={selected} selectedAmount={noAmount} totalAmount={totalAmount} onClick={() => setSelected(BET_TYPE.NO)} />
             <Typography variant="body2" sx={{ m: 1, fontWeight: "bold", width: "100%" }}>
-                How much?
+                {t("how_much")}
             </Typography>
             <Box sx={{ width: "100%", display: "flex", alignItems: "center" }}>
                 <TextField
@@ -112,14 +116,14 @@ export const BetArea = (props) => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <span className={classnames(styles.amountUnit)}>SURE</span>
+                                <span className={classnames(styles.amountUnit)}>{t("stake_unit")}</span>
                             </InputAdornment>
                         )
                     }}
                 />
             </Box>
             <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !stakeAmount || !isStakeValid}>
-                Trade
+                {t("trade")}
             </Button>
         </Box>
     );

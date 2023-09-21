@@ -1,28 +1,30 @@
 import { Dialog } from "@mui/material";
 import Image from "next/image";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import styles from "./HowToPlay.module.scss";
 
 export default function HowToPlay({ onClose }) {
+    const { t } = useTranslation();
     const steps = [
         {
-            title: "Sign In",
-            description: "Sign in through Gmail or Facebook to start placing your bets and making predictions.",
+            title: t("how_to_play_step_1_title"),
+            description: t("how_to_play_step_1_description"),
             imageURL: "/howToPlay/step_1.png"
         },
         {
-            title: "Choose Market",
-            description: "Once logged in, click on any market to make predictions on current events.",
+            title: t("how_to_play_step_2_title"),
+            description: t("how_to_play_step_2_description"),
             imageURL: "/howToPlay/step_2.png"
         },
         {
-            title: "Place Your Bet",
-            description: "On the betting page, choose YES or NO and specify the amount you want to make your prediction.",
+            title: t("how_to_play_step_3_title"),
+            description: t("how_to_play_step_3_description"),
             imageURL: "/howToPlay/step_3.png"
         },
         {
-            title: "Earn Prize",
-            description: "If your bet matches the market outcome, you can earn the prize.",
+            title: t("how_to_play_step_4_title"),
+            description: t("how_to_play_step_4_description"),
             imageURL: "/howToPlay/step_4.png"
         }
     ];
@@ -32,11 +34,8 @@ export default function HowToPlay({ onClose }) {
             <div className={styles.dialogContainer}>
                 <div className={styles.introduce}>
                     <Image src="/howToPlay/orb_ball.svg" alt="SabaOrbIntroduce" width={140} height={92} />
-                    <div className={styles.title}>What is Saba Orb?</div>
-                    <div className={styles.description}>
-                        Saba Orb is a thrilling prediction platform. Here, you can bet on various current events, and even craft your own questions to challenge
-                        others. Through interaction and creativity, every prediction turns into an exciting adventure.
-                    </div>
+                    <div className={styles.title}>{t("how_to_play_introduce_title")}</div>
+                    <div className={styles.description}>{t("how_to_play_introduce_description")}</div>
                 </div>
                 {steps.map((step, index) => {
                     const stepNumber = index + 1;

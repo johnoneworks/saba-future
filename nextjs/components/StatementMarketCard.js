@@ -3,6 +3,7 @@ import { useMenuStore } from "@/store/useMenuStore";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 /**
  * TODO:
@@ -15,6 +16,7 @@ export default function StatementMarketCard({ market }) {
     const userBetType = !!market.yesAmount ? BET_TYPE.YES : BET_TYPE.NO;
     const amount = userBetType === BET_TYPE.YES ? market.yesAmount : market.noAmount;
     const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
+    const { t } = useTranslation();
 
     const handleSelectMarket = () => {
         const marketID = `${market.id}`;
@@ -63,38 +65,38 @@ export default function StatementMarketCard({ market }) {
                         >
                             <Box>
                                 <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", mb: "3px", lineHeight: 1, pt: "5px" }}>
-                                    Outcome
+                                    {t("statement_outcome")}
                                 </Typography>
                                 <Typography
                                     variant="body1"
                                     sx={{ color: market.hasResolved ? (outcome === BET_TYPE.YES ? "#3FB06B" : "#E84D4D") : "#1A84F2", fontWeight: "bold" }}
                                 >
-                                    {market.hasResolved ? outcome.toString() : "In progress"}
+                                    {market.hasResolved ? outcome.toString() : t("statement_progress")}
                                 </Typography>
                             </Box>
                             <Box sx={{ backgroundColor: userBetType === BET_TYPE.YES ? "#3FB06B" : "#E84D4D", pl: 2, pr: 3, borderRadius: "4px" }}>
                                 <Typography variant="caption" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold" }}>
-                                    Your Bet
+                                    {t("statement_your_bet")}
                                 </Typography>
                                 <Typography variant="body1" sx={{ color: "#fff", fontWeight: "bold", lineHeight: 1 }}>
-                                    {userBetType}: {amount}
+                                    {t(userBetType.toLowerCase())}: {amount}
                                 </Typography>
                             </Box>
                         </Box>
                         <Box sx={{ pb: "10px" }}>
                             <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", textAlign: "center", mb: 0 }}>
-                                Amount Added
+                                {t("statement_amount_add")}
                             </Typography>
                             <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
-                                {`${market.totalYesAmount.toString()} SURE on `}
-                                <Typography sx={{ color: "#3FB06B", display: "inline", fontWeight: "bold" }}>Yes</Typography>
-                                {` / ${market.totalNoAmount.toString()} SURE on `}
-                                <Typography sx={{ color: "#E84D4D", display: "inline", fontWeight: "bold" }}>No</Typography>
+                                {`${market.totalYesAmount.toString()} ${t("balance_on")}`}
+                                <Typography sx={{ color: "#3FB06B", display: "inline", fontWeight: "bold" }}>{t("yes")}</Typography>
+                                {` / ${market.totalNoAmount.toString()} ${t("balance_on")}`}
+                                <Typography sx={{ color: "#E84D4D", display: "inline", fontWeight: "bold" }}>{t("no")}</Typography>
                             </Typography>
                         </Box>
                         <Box>
                             <Typography variant="subtitle2" gutterBottom sx={{ color: "rgba(0, 0, 0, 0.3)", textAlign: "center", mb: 0 }}>
-                                Added On / Ending In
+                                {t("statement_period")}
                             </Typography>
                             <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
                                 {`${market.createDate} / ${market.endTimestamp}`}

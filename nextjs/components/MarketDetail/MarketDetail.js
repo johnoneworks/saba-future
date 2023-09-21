@@ -14,6 +14,7 @@ import Chip from "@mui/material/Chip";
 import { styled } from "@mui/system";
 import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./MarketDetail.module.scss";
 
 const CustomTypography = styled(Typography)({
@@ -33,6 +34,7 @@ const CustomAvatar = styled(Avatar)({
 const MarketTitle = (props) => {
     const { title, endTimestamp, totalAmount, imageHash, isTest, isMarketSuspended, isTimeOver } = props;
     const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
+    const { t } = useTranslation();
 
     return (
         <Box className={styles.marketTitle}>
@@ -40,7 +42,7 @@ const MarketTitle = (props) => {
             {isMarketSuspended && (
                 <Chip
                     icon={<BlockIcon fontSize="small" />}
-                    label="Suspended"
+                    label={t("suspended")}
                     variant="outlined"
                     size="small"
                     color="error"
@@ -50,7 +52,7 @@ const MarketTitle = (props) => {
             {isTimeOver && (
                 <Chip
                     icon={<AccessAlarmIcon fontSize="small" />}
-                    label="Time Over"
+                    label={t("time_over")}
                     variant="outlined"
                     size="small"
                     color="error"
@@ -68,7 +70,7 @@ const MarketTitle = (props) => {
             <Box sx={{ display: "flex", alignItems: "center", gap: 3, ml: 1 }}>
                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
                     <Typography sx={{ lineHeight: 1 }} variant="caption" color="grey.500" noWrap>
-                        Market Ends on
+                        {t("market_ends_on")}
                     </Typography>
                     <Typography variant="subtitle2" sx={{ fontWeight: "bold" }} noWrap color="grey.700">
                         {endTime}
@@ -76,13 +78,13 @@ const MarketTitle = (props) => {
                 </Box>
                 <Box className={styles.totalVolume}>
                     <Typography variant="subtitle2" sx={{ fontWeight: "bold", mr: 0.5 }} color="grey.700" noWrap>
-                        Total Volume
+                        {t("total_volume")}
                     </Typography>
                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", transform: "translateY(-3px)" }}>
                         <Typography variant="subtitle2" sx={{ fontWeight: "bold" }} noWrap color="grey.700">
                             {totalAmount}
                         </Typography>
-                        <CustomTypography color="grey.500">SURE</CustomTypography>
+                        <CustomTypography color="grey.500">{t("stake_unit")}</CustomTypography>
                     </Box>
                 </Box>
             </Box>
@@ -92,16 +94,17 @@ const MarketTitle = (props) => {
 
 const MarketDescription = (props) => {
     const { title, description, resolverUrl } = props;
+    const { t } = useTranslation();
 
     return (
         <Box sx={{ width: "100%" }}>
             <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                Description
+                {t("market_detail_description")}
             </Typography>
             {description && <Typography variant="body2">{description}</Typography>}
             <Box className={styles.descriptionBox} sx={{ my: 2, py: 2, bgcolor: "grey.200", borderRadius: 1 }}>
                 <Typography variant="subtitle2" component="" sx={{ px: 1 }}>
-                    Resolution Source :{" "}
+                    {t("market_detail_resolution")} :{" "}
                     <Link color="primary" sx={{ display: "block", wordBreak: "break-all" }} onClick={() => OpenNewWindow(resolverUrl, title)}>
                         {resolverUrl}
                     </Link>
@@ -139,7 +142,7 @@ export default function MarketDetail() {
             const detail = response.Result.MarketDetail;
             const responseEndTime = detail.EndTime;
             const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
-            const dateFormat = moment.unix(responseEndTime / 1000);
+            const dateFormat = moment(responseEndTime);
             setMarketDetail({
                 id: detail.MarketId,
                 title: detail.Title,

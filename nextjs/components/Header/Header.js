@@ -1,8 +1,9 @@
 import ProfileDialog from "@/components/ProfileDialog/ProfileDialog";
-import { MENU_TYPE, SESSION_STORAGE } from "@/constants/Constant";
+import { LANGUAGES, MENU_TYPE, SESSION_STORAGE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useLogin from "@/hooks/useLogin";
+import syncLogin from "@/service/login";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -20,7 +21,7 @@ import { Button } from "@mui/material";
 import classnames from "classnames";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import HowToPlay from "../HowToPlay/HowToPlay";
 import styles from "./Header.module.scss";
@@ -68,8 +69,9 @@ export const Header = (props) => {
     const [openHowToPlayDialog, setOpenHowToPlayDialog] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isLanguageExpand, setIsLanguageExpand] = useState(false);
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
     const { redirectGoogleLogin } = useLogin();
+    const [userCode, setUserCode] = useState();
 
     const refreshMarkets = () => {
         if (currentMenu === MENU_TYPE.MARKET) {
@@ -102,6 +104,44 @@ export const Header = (props) => {
         redirectGoogleLogin();
     };
 
+    const handleFetchLogin = async () => {
+        try {
+            const response = await syncLogin({
+                code: userCode,
+                redirectUrl: "http://localhost:3000"
+            });
+
+            if (!!response && response.ErrorCode === 0) {
+                const userData = {
+                    email: response.Result.Email,
+                    token: response.Result.Token,
+                    name: response.Result.NickName,
+                    isAdmin: response.Result.IsAdmin,
+                    isNew: response.Result.IsNewUser
+                };
+                localStorage.setItem("saba_web2_login_info", JSON.stringify(userData));
+                setUserInfo();
+                updateBalance();
+            }
+        } catch (error) {
+            console.error(`Error Log in: ${error}`);
+        }
+    };
+
+    useEffect(() => {
+        setUserInfo();
+    }, []);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get("code");
+        if (!!code) setUserCode(code);
+    }, [router.asPath]);
+
+    useEffect(() => {
+        handleFetchLogin();
+    }, [userCode]);
+
     const handleReturnBack = () => {
         setCurrentMarketID(null);
         router.back();
@@ -133,27 +173,28 @@ export const Header = (props) => {
         setIsDrawerOpen(false);
         setIsLanguageExpand(false);
         i18n.changeLanguage(lan);
+        sessionStorage.setItem(SESSION_STORAGE.DEFAULT_LANGUAGE, lan);
     };
 
     const languages = [
         {
-            language: "en",
+            language: LANGUAGES.EN,
             languageName: "English"
         },
         {
-            language: "ind",
+            language: LANGUAGES.IN,
             languageName: "English(India)"
         },
         {
-            language: "vn",
+            language: LANGUAGES.VN,
             languageName: "Tiếng Việt"
         },
         {
-            language: "th",
+            language: LANGUAGES.TH,
             languageName: "ภาษาไทย"
         },
         {
-            language: "idn",
+            language: LANGUAGES.ID,
             languageName: "Indonesian"
         }
     ];
@@ -179,21 +220,21 @@ export const Header = (props) => {
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleRedirectToAdminMarkets}>
                                             <ManageAccountsIcon sx={{ color: "#1A84F2" }} />
-                                            <span className={classnames(styles.listItemName)}>Manage markets</span>
+                                            <span className={classnames(styles.listItemName)}>{t("manage_markets")}</span>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleSwitchHowToPlay}>
                                             <LightbulbIcon sx={{ color: "#1A84F2" }} />
-                                            <span className={classnames(styles.listItemName)}>How To Play</span>
+                                            <span className={classnames(styles.listItemName)}>{t("how_to_play")}</span>
                                         </div>
                                     </div>
                                 )}
                                 <div className={classnames(styles.list)}>
                                     <div className={classnames(styles.listItem)} onClick={handleLanguageArea}>
                                         <LanguageIcon sx={{ color: "#1A84F2" }} />
-                                        <span className={classnames(styles.listItemName)}>Language</span>
+                                        <span className={classnames(styles.listItemName)}>{t("language")}</span>
                                     </div>
                                     {isLanguageExpand && (
                                         <div className={classnames(styles.languageArea)}>
@@ -213,14 +254,14 @@ export const Header = (props) => {
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleLogout}>
                                             <LogoutIcon sx={{ color: "#1A84F2" }} />
-                                            <span className={classnames(styles.listItemName)}>Logout</span>
+                                            <span className={classnames(styles.listItemName)}>{t("logout")}</span>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleLogin}>
                                             <LoginIcon sx={{ color: "#1A84F2" }} />
-                                            <span className={classnames(styles.listItemName)}>Login</span>
+                                            <span className={classnames(styles.listItemName)}>{t("login")}</span>
                                         </div>
                                     </div>
                                 )}
@@ -232,7 +273,7 @@ export const Header = (props) => {
                     <div className={styles.headerInfo}>
                         <div className={styles.profile} onClick={handleClickProfile}>
                             <ProfileItem type="person" text={nickName} />
-                            <ProfileItem type="wallet" text={`${balance} SURE`} />
+                            <ProfileItem type="wallet" text={`${balance} ${t("stake_unit")}`} />
                         </div>
                         {!currentMarketID && (
                             <div className={styles.tab}>

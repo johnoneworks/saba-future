@@ -11,6 +11,7 @@ import { styled } from "@mui/system";
 import classnames from "classnames";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./MarketCard.module.scss";
 
 /**
@@ -50,6 +51,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     const { currentMenu, setCurrentMarketID } = useMenuStore();
     const { nickName } = useAccountStore();
     const { redirectGoogleLogin } = useLogin();
+    const { t } = useTranslation();
 
     let win = false;
     let lost = false;
@@ -68,14 +70,14 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
         }
     }
 
-    const outcomeValue = market.outcome ? "Yes" : "No";
+    const outcomeValue = market.outcome ? t("yes") : t("no");
     const yesAmount = parseFloat(market.totalYesAmount.toString());
     const noAmount = parseFloat(market.totalNoAmount.toString());
     const totalAmount = parseFloat(market.totalAmount.toString());
     const cardValues = [
         {
-            openTitle: "No",
-            closeTitle: "Winners Count",
+            openTitle: t("no"),
+            closeTitle: t("card_winners_count"),
             openYesNoBgClass: "isNo",
             openOutcome: noAmount,
             closeValue: market.winnerCount,
@@ -83,13 +85,13 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
             note: ""
         },
         {
-            openTitle: "Yes",
-            closeTitle: "Profit",
+            openTitle: t("yes"),
+            closeTitle: t("card_profit"),
             openYesNoBgClass: "isYes",
             openOutcome: yesAmount,
             closeValue: market.winnerProfit,
             YesNoColor: "#3FB06B",
-            note: "possible fee included"
+            note: t("possible_fee")
         }
     ];
 
@@ -144,21 +146,21 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                         )}
                     </Box>
                     {isEditable && (
-                        <Tooltip title="Edit">
+                        <Tooltip title={t("edit")}>
                             <IconButton className="float-right" color="primary" aria-label="go to edit" onClick={handleEdit} fontSize="small">
                                 <BorderColorOutlinedIcon />
                             </IconButton>
                         </Tooltip>
                     )}
                     {!isClosed && market.endTimestamp < Date.now() && (
-                        <Tooltip title="Time Over">
+                        <Tooltip title={t("time_over")}>
                             <IconButton className="float-right" color="warning" aria-label="go to edit" onClick={handleEdit} fontSize="small">
                                 <AccessAlarmIcon />
                             </IconButton>
                         </Tooltip>
                     )}
                     {!isClosed && market.isSuspended && (
-                        <Tooltip title="Suspended">
+                        <Tooltip title={t("suspended")}>
                             <IconButton className="float-right" color="warning" aria-label="go to edit" onClick={handleEdit} fontSize="small">
                                 <BlockIcon />
                             </IconButton>
@@ -168,7 +170,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                 {!isClosed && (
                     <Box>
                         <Typography variant="body1" sx={{ fontWeight: "bold", mr: "10px", color: "#585353" }}>
-                            {totalAmount} <Typography variant="caption">SURE BET</Typography>
+                            {totalAmount} <Typography variant="caption">{t("stake_unit")}</Typography>
                         </Typography>
                     </Box>
                 )}
@@ -176,7 +178,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                 {lost ? failIcon : null}
                 <Box className={classnames(styles.valueContainer, { [styles.isClosed]: isClosed })}>
                     {cardValues.map((value, index) => {
-                        const currentAmount = value.openTitle === `Yes` ? yesAmount : noAmount;
+                        const currentAmount = value.openYesNoBgClass === `isYes` ? yesAmount : noAmount;
                         return (
                             <Fragment key={`cardValue_${index}`}>
                                 {isClosed ? (
@@ -205,11 +207,11 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                                             <Typography variant="body1" sx={{ fontWeight: "bold", mr: "6px", color: value.YesNoColor }}>
                                                 {value.openTitle}
                                             </Typography>
-                                            <Box className={styles.sureGroup}>
+                                            <Box className={styles.unitGroup}>
                                                 <Typography variant="filled" sx={{ fontWeight: "bold" }}>
                                                     {value.openOutcome}
                                                 </Typography>
-                                                <CustomTypography variant="body2">SURE</CustomTypography>
+                                                <CustomTypography variant="body2">{t("stake_unit")}</CustomTypography>
                                             </Box>
                                         </Box>
                                     </Box>
