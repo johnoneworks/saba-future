@@ -24,6 +24,9 @@ export default function App({ Component, pageProps }) {
 
     useEffect(() => {
         if (router.pathname.startsWith("/admin")) {
+            if (!JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
+                router.push("/");
+            }
             if (JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
                 const userInfo = JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO));
                 const { isAdmin } = userInfo;

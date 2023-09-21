@@ -20,7 +20,8 @@ import { useCallback, useEffect, useState } from "react";
  * 4. refresh statement √
  *
  */
-export const Statement = () => {
+
+export const Statement = (refreshStatement) => {
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading, setIsMarketLoading } = useLoadingStore();
     const { nickName, token } = useAccountStore();
@@ -80,7 +81,7 @@ export const Statement = () => {
 
     useEffect(() => {
         handleFetchStatements();
-    }, []);
+    }, [refreshStatement]);
 
     useEffect(() => {
         if (userStatements && userStatements.length > 0) {
@@ -105,7 +106,7 @@ export const Statement = () => {
                                         win: ticket.Win
                                     };
                                     const ticketInfo = { ...ticketDetial, ...ticketStatement };
-                                    return <StatementMarketCard market={ticketInfo} />;
+                                    return <StatementMarketCard market={ticketInfo} key={`statementMarketCard_${ticketInfo.id}`} />;
                                 })}
                             </Grid>
                         ) : (

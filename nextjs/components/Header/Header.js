@@ -45,8 +45,9 @@ const MenuTab = ({ tab }) => {
             className={classnames(styles.tabItem, { [styles.active]: tab === currentMenu })}
             onClick={() => {
                 setCurrentMenu(tab);
+                const directPath = tab === MENU_TYPE.MARKET ? "/" : "/Statement";
                 router.push({
-                    pathname: `/`,
+                    pathname: directPath,
                     query: { menu: tab }
                 });
             }}
@@ -56,7 +57,8 @@ const MenuTab = ({ tab }) => {
     );
 };
 
-export const Header = () => {
+export const Header = (props) => {
+    const { refreshStatement } = props;
     const router = useRouter();
     const { nickName, isAdmin, setClearAllAccount, balance } = useAccountStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
@@ -70,9 +72,14 @@ export const Header = () => {
     const { redirectGoogleLogin } = useLogin();
 
     const refreshMarkets = () => {
-        // TODO: Market 跟 statement 要分開 refresh
-        updateMarkets();
-        updateBalance();
+        if (currentMenu === MENU_TYPE.MARKET) {
+            updateMarkets();
+        } else if (currentMenu === MENU_TYPE.STATEMENT) {
+            refreshStatement();
+        }
+        if (!!nickName) {
+            updateBalance();
+        }
     };
 
     const handleRedirectToAdminMarkets = () => {
@@ -96,14 +103,8 @@ export const Header = () => {
     };
 
     const handleReturnBack = () => {
-        if (currentMarketID) {
-            router.push({
-                pathname: `/`,
-                query: { menu: currentMenu }
-            });
-            refreshMarkets();
-            setCurrentMarketID(null);
-        }
+        setCurrentMarketID(null);
+        router.back();
     };
 
     const handleClickProfile = () => {

@@ -10,6 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/system";
 import classnames from "classnames";
 import { useRouter } from "next/router";
+import { Fragment } from "react";
 import styles from "./MarketCard.module.scss";
 
 /**
@@ -121,7 +122,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
 
     return (
         <Box sx={{ height: "100%" }} onClick={nickName ? handleSelectMarket : handleLogin}>
-            <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
+            <Box xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
                 <Box sx={{ display: "flex" }}>
                     <CustomAvatar>
@@ -177,7 +178,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                     {cardValues.map((value, index) => {
                         const currentAmount = value.openTitle === `Yes` ? yesAmount : noAmount;
                         return (
-                            <>
+                            <Fragment key={`cardValue_${index}`}>
                                 {isClosed ? (
                                     <Box key={index} sx={{ width: "50%" }} className={classnames(styles.valueBox)}>
                                         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
@@ -213,7 +214,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                                         </Box>
                                     </Box>
                                 )}
-                            </>
+                            </Fragment>
                         );
                     })}
                 </Box>

@@ -155,7 +155,7 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
                 InputLabelProps={{
                     shrink: true
                 }}
-                defaultValue={timestamp}
+                // defaultValue={timestamp}
                 value={formatDateToInput(new Date(timestamp))}
             />
             <FormControlLabel label="Is this for testing?" sx={{ mt: 2, mb: 1 }} control={<Checkbox checked={isTest} onChange={(e) => setIsTest(!isTest)} />} />

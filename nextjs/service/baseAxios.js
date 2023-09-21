@@ -1,3 +1,4 @@
+import { GOOGLE_LOGIN, SESSION_STORAGE } from "@/constants/Constant.js";
 import { currentDate } from "@/utils/ConvertDate";
 import uuidv4 from "@/utils/Uuid";
 import axios from "axios";
@@ -19,6 +20,14 @@ const baseAxios = async ({ method, url, header = {}, token, data = {} }) => {
                 ...data
             }
         });
+
+        if (response.data.ErrorCode === 1012) {
+            if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
+                JSON.parse(sessionStorage.removeItem(SESSION_STORAGE.LOGIN_INFO));
+            }
+            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_LOGIN.CLIENT_ID}&response_type=code&scope=${GOOGLE_LOGIN.SCOPE}&redirect_uri=${location.origin}`;
+        }
+
         return response.data;
     } catch (error) {
         console.error(`api is ${method} method and api url is ${API_URL_DOMAIN + url} and error is ${error}`);

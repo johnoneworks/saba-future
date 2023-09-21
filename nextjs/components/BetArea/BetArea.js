@@ -35,13 +35,14 @@ export const BetArea = (props) => {
     const totalAmount = Number(yesAmount) + Number(noAmount);
     const { currentMarketID } = useMenuStore();
     const { setIsPageLoading } = useLoadingStore();
-    const { token } = useAccountStore();
+    const { token, balance } = useAccountStore();
 
     const { updateBalance } = useGetUserBalance();
     const { updateBetsInfo } = useGetBetsInfo();
 
     const [selected, setSelected] = useState();
     const [stakeAmount, setStakeAmount] = useState("");
+    const [isStakeValid, setIsStakeValid] = useState(false);
 
     const handleTrade = async () => {
         try {
@@ -67,6 +68,14 @@ export const BetArea = (props) => {
             setStakeAmount("");
             setIsPageLoading(false);
         }
+    };
+
+    const handleConfirmStake = (e) => {
+        const stake = e.target.value;
+        if (stake <= 0 || stake > balance || Math.floor(stake) != stake) {
+            setIsStakeValid(false);
+        } else setIsStakeValid(true);
+        setStakeAmount(stake);
     };
 
     return (
@@ -95,7 +104,7 @@ export const BetArea = (props) => {
                     type="number"
                     name="q"
                     value={stakeAmount}
-                    onChange={(e) => setStakeAmount(e.target.value)}
+                    onChange={handleConfirmStake}
                     sx={{ width: "100%", pt: 0.5, pb: 2, color: "#4B5563", borderColor: "#D1D5DB", borderRadius: 1, "&:focus": { outline: "none" } }}
                     placeholder="0"
                     autoComplete="off"
@@ -109,7 +118,7 @@ export const BetArea = (props) => {
                     }}
                 />
             </Box>
-            <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !stakeAmount}>
+            <Button className={styles.betButton} onClick={handleTrade} disabled={!selected || !stakeAmount || !isStakeValid}>
                 Trade
             </Button>
         </Box>

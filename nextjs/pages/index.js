@@ -3,7 +3,6 @@ import { Header } from "@/components/Header/Header";
 import LoadingAnimation from "@/components/LoadingAnimation/LoadingAnimation";
 import MarketDetail from "@/components/MarketDetail/MarketDetail";
 import { Markets } from "@/components/Markets/Markets";
-import { Statement } from "@/components/Statement/Statement";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import styles from "@/styles/Home.module.scss";
@@ -46,7 +45,6 @@ export default function Home() {
                 <Header />
                 <Box className={styles.homeContent}>
                     <Markets />
-                    <Statement />
                     {nickName && currentMarketID && <MarketDetail />}
                 </Box>
                 <Footer />
