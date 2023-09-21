@@ -3,14 +3,13 @@ import syncLogin from "@/service/login";
 import { useAccountStore } from "@/store/useAccountStore";
 import "@biconomy/web3-auth/dist/src/style.css";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import useGetUserBalance from "./useGetUserBalance";
 
 const useLogin = () => {
     const router = useRouter();
     const { setNickName, setIsAdmin, setEmail, setIsNew, setToken, nickName, token } = useAccountStore();
     const { updateBalance } = useGetUserBalance();
-    const [userCode, setUserCode] = useState();
 
     const redirectGoogleLogin = useCallback(() => {
         window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_LOGIN.CLIENT_ID}&response_type=code&scope=${GOOGLE_LOGIN.SCOPE}&redirect_uri=${location.origin}`;

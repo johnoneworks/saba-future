@@ -21,8 +21,8 @@ import { useCallback, useEffect, useState } from "react";
  *
  */
 
-export const Statement = () => {
-    const { currentMenu, currentMarketID, refreshStatement } = useMenuStore();
+export const Statement = (refreshStatement) => {
+    const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading, setIsMarketLoading } = useLoadingStore();
     const { nickName, token } = useAccountStore();
     const [userStatements, setUserStatements] = useState([]);
