@@ -36,9 +36,11 @@
         "react-dom": "18.2.0",
         "react-i18next": "^13.2.2",
         "react-loader-spinner": "^5.3.4",
+        "react-tsparticles": "^2.12.2",
         "sass": "^1.63.4",
         "tailwindcss": "^3.3.2",
         "tls": "^0.0.1",
+        "tsparticles": "^2.12.0",
         "zustand": "^4.4.1"
     },
     "devDependencies": {
