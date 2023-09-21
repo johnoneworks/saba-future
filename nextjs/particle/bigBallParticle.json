@@ -2,10 +2,10 @@
     "fpsLimit": 30,
     "particles": {
         "number": {
-            "value": 70,
+            "value": 40,
             "density": {
                 "enable": true,
-                "value_area": 800
+                "value_area": 2000
             }
         },
         "color": {
@@ -37,7 +37,7 @@
             }
         },
         "size": {
-            "value": 45,
+            "value": 55,
             "random": true,
             "anim": {
                 "enable": true,
