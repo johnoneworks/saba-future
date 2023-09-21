@@ -106,7 +106,7 @@ export const Statement = (refreshStatement) => {
                                         win: ticket.Win
                                     };
                                     const ticketInfo = { ...ticketDetial, ...ticketStatement };
-                                    return <StatementMarketCard market={ticketInfo} />;
+                                    return <StatementMarketCard market={ticketInfo} key={`statementMarketCard_${ticketInfo.id}`} />;
                                 })}
                             </Grid>
                         ) : (
