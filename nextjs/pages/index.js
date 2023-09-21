@@ -37,7 +37,11 @@ export default function Home() {
 
     return (
         <>
-            {showLoading && <LoadingAnimation />}
+            {showLoading && (
+                <div className={styles["animation-container"]}>
+                    <LoadingAnimation />
+                </div>
+            )}
             <Box className={styles.homeContainer}>
                 <Header />
                 <Box className={styles.homeContent}>
