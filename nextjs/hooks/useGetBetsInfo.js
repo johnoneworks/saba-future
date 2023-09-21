@@ -22,11 +22,13 @@ const useGetBetsInfo = () => {
                     response.Result.Tickets.forEach((ticket) => {
                         if (ticket.BetTypeName === "Yes") {
                             yesBets.push({
+                                nickName: ticket.NickName,
                                 time: ticket.StartTime,
                                 amount: ticket.Stake
                             });
                         } else if (ticket.BetTypeName === "No") {
                             noBets.push({
+                                nickName: ticket.NickName,
                                 time: ticket.StartTime,
                                 amount: ticket.Stake
                             });
