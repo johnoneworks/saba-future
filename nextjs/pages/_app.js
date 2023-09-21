@@ -1,9 +1,10 @@
-import { MENU_TYPE } from "@/constants/Constant";
+import { MENU_TYPE, SESSION_STORAGE } from "@/constants/Constant";
 import { useMenuStore } from "@/store/useMenuStore";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+
 import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
 import "../utils/i18n.js";
@@ -20,6 +21,18 @@ export default function App({ Component, pageProps }) {
         setCurrentMenu(defaultMenu);
         setCurrentMarketID(defaultMarketID);
     }, [menu, marketid]);
+
+    useEffect(() => {
+        if (router.pathname.startsWith("/admin")) {
+            if (JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
+                const userInfo = JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO));
+                const { isAdmin } = userInfo;
+                if (!isAdmin) {
+                    router.push("/");
+                }
+            }
+        }
+    }, [router.pathname]);
 
     return (
         <>
