@@ -3,7 +3,6 @@ import { LANGUAGES, MENU_TYPE, SESSION_STORAGE } from "@/constants/Constant";
 import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import useLogin from "@/hooks/useLogin";
-import syncLogin from "@/service/login";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
@@ -21,7 +20,7 @@ import { Button } from "@mui/material";
 import classnames from "classnames";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import HowToPlay from "../HowToPlay/HowToPlay";
 import styles from "./Header.module.scss";
@@ -103,44 +102,6 @@ export const Header = (props) => {
     const handleLogin = async () => {
         redirectGoogleLogin();
     };
-
-    const handleFetchLogin = async () => {
-        try {
-            const response = await syncLogin({
-                code: userCode,
-                redirectUrl: "http://localhost:3000"
-            });
-
-            if (!!response && response.ErrorCode === 0) {
-                const userData = {
-                    email: response.Result.Email,
-                    token: response.Result.Token,
-                    name: response.Result.NickName,
-                    isAdmin: response.Result.IsAdmin,
-                    isNew: response.Result.IsNewUser
-                };
-                localStorage.setItem("saba_web2_login_info", JSON.stringify(userData));
-                setUserInfo();
-                updateBalance();
-            }
-        } catch (error) {
-            console.error(`Error Log in: ${error}`);
-        }
-    };
-
-    useEffect(() => {
-        setUserInfo();
-    }, []);
-
-    useEffect(() => {
-        const searchParams = new URLSearchParams(window.location.search);
-        const code = searchParams.get("code");
-        if (!!code) setUserCode(code);
-    }, [router.asPath]);
-
-    useEffect(() => {
-        handleFetchLogin();
-    }, [userCode]);
 
     const handleReturnBack = () => {
         setCurrentMarketID(null);
