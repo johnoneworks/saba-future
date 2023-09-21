@@ -7,11 +7,14 @@ import { useState } from "react";
 
 export default function StatementPage() {
     const [refreshStatement, setRefreshStatement] = useState(true);
+    const handleRefresh = () => {
+        setRefreshStatement(!refreshStatement);
+    };
     return (
         <Box className={styles.homeContainer}>
-            <Header refreshStatement={refreshStatement} setRefreshStatement={setRefreshStatement} />
+            <Header refreshStatement={handleRefresh} />
             <Box className={styles.homeContent}>
-                <Statement refreshStatement={refreshStatement} />
+                <Statement key={refreshStatement} />
             </Box>
             <Footer />
         </Box>
