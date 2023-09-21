@@ -8,7 +8,7 @@ import useGetUserBalance from "./useGetUserBalance";
 
 const useLogin = () => {
     const router = useRouter();
-    const { setAccount, setIsAdmin, setEmail, setIsNew, setToken, account, token } = useAccountStore();
+    const { setNickName, setIsAdmin, setEmail, setIsNew, setToken, nickName, token } = useAccountStore();
     const { updateBalance } = useGetUserBalance();
     const [userCode, setUserCode] = useState();
 
@@ -19,7 +19,7 @@ const useLogin = () => {
     const setUserInfo = useCallback(() => {
         if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
             const localUserData = JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO));
-            setAccount(localUserData.name);
+            setNickName(localUserData.name);
             setEmail(localUserData.email);
             setIsAdmin(localUserData.isAdmin);
             setIsNew(localUserData.isNew);
@@ -38,7 +38,7 @@ const useLogin = () => {
                 const userData = {
                     email: response.Result.Email,
                     token: response.Result.Token,
-                    name: response.Result.NickName,
+                    nickName: response.Result.NickName,
                     isAdmin: response.Result.IsAdmin,
                     isNew: response.Result.IsNewUser
                 };
@@ -56,7 +56,7 @@ const useLogin = () => {
     }, []);
 
     useEffect(() => {
-        if (!account && !token) {
+        if (!nickName && !token) {
             const searchParams = new URLSearchParams(window.location.search);
             const code = searchParams.get("code");
             if (!!code) handleFetchLogin(code);

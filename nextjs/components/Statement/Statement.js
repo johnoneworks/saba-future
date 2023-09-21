@@ -23,7 +23,7 @@ import { useCallback, useEffect, useState } from "react";
 export const Statement = () => {
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading, setIsMarketLoading } = useLoadingStore();
-    const { account, token } = useAccountStore();
+    const { nickName, token } = useAccountStore();
     const [userStatements, setUserStatements] = useState([]);
     const [marketsDetail, setMarketsDetail] = useState([]);
 
@@ -90,7 +90,7 @@ export const Statement = () => {
 
     return (
         <>
-            {account && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
+            {nickName && currentMenu === MENU_TYPE.STATEMENT && !currentMarketID && (
                 <>
                     {isMarketLoading && <Loading />}
                     {!isMarketLoading &&

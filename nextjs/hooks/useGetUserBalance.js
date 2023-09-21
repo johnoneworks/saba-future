@@ -3,7 +3,7 @@ import { useAccountStore } from "@/store/useAccountStore";
 import { useEffect } from "react";
 
 const useGetUserBalance = () => {
-    const { account, setBalance, token } = useAccountStore();
+    const { nickName, setBalance, token } = useAccountStore();
 
     const updateBalance = async () => {
         try {
@@ -18,7 +18,7 @@ const useGetUserBalance = () => {
 
     useEffect(() => {
         updateBalance();
-    }, [account]);
+    }, [nickName]);
 
     return { updateBalance };
 };

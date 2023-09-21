@@ -47,7 +47,7 @@ const CustomTypography = styled(Typography)({
 export default function MarketCard({ market, currentUser, isClosed, isTest, isEditable }) {
     const router = useRouter();
     const { currentMenu, setCurrentMarketID } = useMenuStore();
-    const { account } = useAccountStore();
+    const { nickName } = useAccountStore();
     const { redirectGoogleLogin } = useLogin();
 
     let win = false;
@@ -120,7 +120,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
     };
 
     return (
-        <Box sx={{ height: "100%" }} onClick={account ? handleSelectMarket : handleLogin}>
+        <Box sx={{ height: "100%" }} onClick={nickName ? handleSelectMarket : handleLogin}>
             <Box item xs={12} sm={6} md={4} className={classnames(styles.cardContainer, { [styles.isClosed]: isClosed })}>
                 {isTest && <TestDataMark />}
                 <Box sx={{ display: "flex" }}>
