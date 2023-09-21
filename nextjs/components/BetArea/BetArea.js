@@ -71,10 +71,11 @@ export const BetArea = (props) => {
     };
 
     const handleConfirmStake = (e) => {
-        if (e.target.value <= 0 || e.target.value > balance) {
+        const stake = e.target.value;
+        if (stake <= 0 || stake > balance || Math.floor(stake) != stake) {
             setIsStakeValid(false);
         } else setIsStakeValid(true);
-        setStakeAmount(e.target.value);
+        setStakeAmount(stake);
     };
 
     return (

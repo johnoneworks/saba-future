@@ -4,12 +4,10 @@ import { useAccountStore } from "@/store/useAccountStore";
 import "@biconomy/web3-auth/dist/src/style.css";
 import { useRouter } from "next/router";
 import { useCallback, useEffect } from "react";
-import useGetUserBalance from "./useGetUserBalance";
 
 const useLogin = () => {
     const router = useRouter();
     const { setNickName, setIsAdmin, setEmail, setIsNew, setToken, nickName, token } = useAccountStore();
-    const { updateBalance } = useGetUserBalance();
 
     const redirectGoogleLogin = useCallback(() => {
         window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_LOGIN.CLIENT_ID}&response_type=code&scope=${GOOGLE_LOGIN.SCOPE}&redirect_uri=${location.origin}`;
@@ -18,7 +16,7 @@ const useLogin = () => {
     const setUserInfo = useCallback(() => {
         if (typeof window !== "undefined" && JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO))) {
             const localUserData = JSON.parse(sessionStorage.getItem(SESSION_STORAGE.LOGIN_INFO));
-            setNickName(localUserData.name);
+            setNickName(localUserData.nickName);
             setEmail(localUserData.email);
             setIsAdmin(localUserData.isAdmin);
             setIsNew(localUserData.isNew);
@@ -43,7 +41,6 @@ const useLogin = () => {
                 };
                 sessionStorage.setItem(SESSION_STORAGE.LOGIN_INFO, JSON.stringify(userData));
                 setUserInfo();
-                updateBalance();
             }
         } catch (error) {
             console.error(`Error login: ${error}`);

@@ -58,7 +58,7 @@ const MenuTab = ({ tab }) => {
 };
 
 export const Header = (props) => {
-    const { refreshStatement, setRefreshStatement } = props;
+    const { refreshStatement } = props;
     const router = useRouter();
     const { nickName, isAdmin, setClearAllAccount, balance } = useAccountStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
@@ -75,9 +75,9 @@ export const Header = (props) => {
         if (currentMenu === MENU_TYPE.MARKET) {
             updateMarkets();
         } else if (currentMenu === MENU_TYPE.STATEMENT) {
-            setRefreshStatement(!refreshStatement);
+            refreshStatement();
         }
-        if (!!account) {
+        if (!!nickName) {
             updateBalance();
         }
     };
@@ -103,7 +103,6 @@ export const Header = (props) => {
     };
 
     const handleReturnBack = () => {
-        refreshMarkets();
         setCurrentMarketID(null);
         router.back();
     };
