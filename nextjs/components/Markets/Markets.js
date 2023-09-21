@@ -11,6 +11,7 @@ import { Box, Checkbox, FormControlLabel, Grid, Typography } from "@mui/material
 import classnames from "classnames";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "./Markets.module.scss";
 
 const ShowMarkets = (props) => {
@@ -20,6 +21,8 @@ const ShowMarkets = (props) => {
 
     const [openMarkets, setOpenMarkets] = useState([]);
     const [closedMarkets, setClosedMarkets] = useState([]);
+
+    const { t } = useTranslation();
 
     const filterMarkets = () => {
         const openMarkets = markets.filter((market) => !market.marketClosed && (!market.isTest || (showTest && market.isTest)));
@@ -46,7 +49,7 @@ const ShowMarkets = (props) => {
             {closedMarkets && closedMarkets.length > 0 && (
                 <>
                     <Typography variant="h6" sx={{ width: "100%", textAlign: "center", my: 1, mt: 2 }}>
-                        Closed Markets
+                        {t("closed_markets")}
                     </Typography>
                     {closedMarkets.reduce((accumulator, market) => {
                         accumulator.push(
@@ -76,6 +79,7 @@ export const Markets = () => {
     const { isMarketLoading } = useLoadingStore();
     const [showTest, setShowTest] = useState(false);
     const hasLogin = !!nickName;
+    const { t } = useTranslation();
 
     const handleRedirectToAdmin = () => {
         router.push({
@@ -95,12 +99,12 @@ export const Markets = () => {
                                     <div className={classnames(styles.buttonContainer)}>
                                         <div className={classnames(styles.creatMarketButton)} onClick={handleRedirectToAdmin}>
                                             <AddIcon />
-                                            <span>Create Market</span>
+                                            <span>{t("createmarket")}</span>
                                         </div>
                                     </div>
                                     <div>
                                         <FormControlLabel
-                                            label="Show Test Markets"
+                                            label={t("show_test_markets")}
                                             sx={{ mt: 2, mb: 1 }}
                                             control={<Checkbox checked={showTest} onChange={(e) => setShowTest(!showTest)} />}
                                         />

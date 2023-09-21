@@ -12,6 +12,7 @@ import { Avatar, Box, IconButton, Tooltip } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AdminConfirmPage } from "./ConfirmPage/AdminConfirmPage";
 
 /**
@@ -34,6 +35,7 @@ export default function AdminMarketCard({ id, market }) {
     const { token } = useAccountStore();
     const router = useRouter();
     const isTest = market.isTest;
+    const { t } = useTranslation();
 
     const onCancelResolve = () => {
         setSelectedResolve(null);
@@ -144,24 +146,24 @@ export default function AdminMarketCard({ id, market }) {
                     </div>
                     <div className="flex flex-row flex-nowrap justify-between items-center">
                         <div className="flex flex-col space-y-1">
-                            <span className="text-xs text-gray-500 font-light">Total Liquidity</span>
-                            <span className="text-base">{`${market.totalAmount} SURE`}</span>
+                            <span className="text-xs text-gray-500 font-light">{t("total_liquidity")}</span>
+                            <span className="text-base">{`${market.totalAmount} ${t("stake_unit")}`}</span>
                         </div>
                         <div className="flex flex-col space-y-1">
-                            <span className="text-xs text-gray-500 font-light">Ending In</span>
+                            <span className="text-xs text-gray-500 font-light">{t("ending_in")}</span>
                             <span className="text-base">{market.endTimestamp}</span>
                         </div>
                     </div>
                     <div className="flex flex-row flex-nowrap justify-between items-center">
                         <div className="flex flex-row space-x-2 items-end">
                             <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.YES)}>
-                                Resolve YES
+                                {t("resolve_yes")}
                             </button>
                             <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.NO)}>
-                                Resolve No
+                                {t("resolve_no")}
                             </button>
                             <button className="py-1 px-2 rounded-lg bg-blue-700 text-white" onClick={() => setSelectedResolve(BET_TYPE.DRAW)}>
-                                Resolve Draw
+                                {t("resolve_draw")}
                             </button>
                         </div>
                     </div>

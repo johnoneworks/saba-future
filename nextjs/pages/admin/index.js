@@ -4,6 +4,7 @@ import { API_CREATE_MARKET } from "@/constants/api";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { Box, Button, Container } from "@mui/material";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 /**
  * TODO:
@@ -15,6 +16,7 @@ import Link from "next/link";
 // 送 api
 export default function Admin() {
     const { isPageLoading } = useLoadingStore();
+    const { t } = useTranslation();
 
     return (
         <Box
@@ -31,7 +33,7 @@ export default function Admin() {
                 <Container maxWidth="md" component="main">
                     <Link href="/admin/markets">
                         <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
-                            See All Markets
+                            {t("admin_see_all")}
                         </Button>
                     </Link>
                     <MarketEditForm apiPath={API_CREATE_MARKET} />

@@ -4,9 +4,12 @@ import { useMarketsStore } from "@/store/useMarketsStore";
 import styles from "@/styles/Home.module.scss";
 import { Box, Button, Grid } from "@mui/material";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 const ShowMarkets = (props) => {
     const { markets } = props;
+    const { t } = useTranslation();
+
     return (
         <>
             {markets &&
@@ -15,7 +18,7 @@ const ShowMarkets = (props) => {
                     if (!isClosed) {
                         accumulator.push(
                             <div key={market.id} className={styles.adminMarketCard}>
-                                <div>{`isSuspended: ${!!market.isSuspended ? "true" : "false"}`}</div>
+                                <div>{`${t("is_suspend")}: ${!!market.isSuspended ? t("true") : t("false")}`}</div>
                                 <AdminMarketCard id={market.id} market={market} />
                             </div>
                         );
@@ -28,6 +31,7 @@ const ShowMarkets = (props) => {
 
 export default function Markets() {
     const { markets } = useMarketsStore();
+    const { t } = useTranslation();
 
     return (
         <>
@@ -36,7 +40,7 @@ export default function Markets() {
                 <Box className={styles.adminMarketContent}>
                     <Link href="/admin">
                         <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
-                            Create Market
+                            {t("createmarket")}
                         </Button>
                     </Link>
                     <Grid columns={{ xs: 12, sm: 12, md: 12 }}>

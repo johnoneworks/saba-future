@@ -5,6 +5,8 @@ import syncMarketDetail from "@/service/market/getMarketDetail";
 import { Box, Button, Container, Link } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
 /**
  * TODO:
  * 1. 暫時使用之編輯畫面，UI 團隊可以重新調整，目前感覺應該是 Dialog 更為適合
@@ -18,6 +20,8 @@ const EditMarket = () => {
     const router = useRouter();
     const { id } = router.query;
     const [marketDetail, setMarketDetail] = useState({});
+    const { t } = useTranslation();
+
     const getMarket = async () => {
         const response = await syncMarketDetail({ marketId: id });
 
@@ -61,7 +65,7 @@ const EditMarket = () => {
             <Container maxWidth="md" component="main">
                 <Link href="/?menu=Market">
                     <Button style={{ backgroundColor: "#1A84F2" }} variant="contained" fullWidth sx={{ mt: 2, mb: 2 }}>
-                        All Markets
+                        {t("all_markets")}
                     </Button>
                 </Link>
                 <MarketEditForm editPropsData={marketDetail} apiPath={API_EDIT_MARKET} marketId={id} />
