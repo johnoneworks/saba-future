@@ -8,17 +8,17 @@ const getInitialToken = () => {
 };
 
 export const useAccountStore = create((set) => ({
-    account: null,
+    nickName: null,
     balance: null,
     email: null,
     isAdmin: null,
     isNew: null,
     token: getInitialToken(),
-    setAccount: (account) => set((state) => ({ ...state, account })),
+    setNickName: (nickName) => set((state) => ({ ...state, nickName })),
     setEmail: (email) => set((state) => ({ ...state, email })),
     setBalance: (balance) => set((state) => ({ ...state, balance })),
     setIsAdmin: (isAdmin) => set((state) => ({ ...state, isAdmin })),
     setIsNew: (isNew) => set((state) => ({ ...state, isNew })),
     setToken: (token) => set((state) => ({ ...state, token })),
-    setClearAllAccount: () => set((state) => ({ ...state, account: null, email: null, isAdmin: null, isNew: null, token: "" }))
+    setClearAllAccount: () => set((state) => ({ ...state, nickName: null, email: null, isAdmin: null, isNew: null, token: "" }))
 }));

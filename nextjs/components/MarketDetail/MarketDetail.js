@@ -127,7 +127,7 @@ export default function MarketDetail() {
         isSuspended: false
     });
     const { currentMarketID } = useMenuStore();
-    const { account, token } = useAccountStore();
+    const { nickName, token } = useAccountStore();
     const isMarketClose = marketDetail?.isClose === true;
     const isMarketSuspended = marketDetail?.isSuspended === true;
     const isTimeOver = marketDetail?.endDate < moment();
@@ -163,7 +163,7 @@ export default function MarketDetail() {
 
     return (
         <>
-            {account && marketDetail && (
+            {nickName && marketDetail && (
                 <>
                     <MarketTitle
                         title={marketDetail?.title}

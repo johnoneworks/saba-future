@@ -58,7 +58,7 @@ const MenuTab = ({ tab }) => {
 
 export const Header = () => {
     const router = useRouter();
-    const { account, isAdmin, setClearAllAccount, balance } = useAccountStore();
+    const { nickName, isAdmin, setClearAllAccount, balance } = useAccountStore();
     const { currentMarketID, currentMenu, setCurrentMarketID } = useMenuStore();
     const { updateMarkets } = useGetMarkets();
     const { updateBalance } = useGetUserBalance();
@@ -174,7 +174,7 @@ export const Header = () => {
                                 <div className={classnames(styles.closeDrawer)}>
                                     <CloseIcon onClick={handleDrawer} sx={{ color: "#1A84F2" }} />
                                 </div>
-                                {account && isAdmin ? (
+                                {nickName && isAdmin ? (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleRedirectToAdminMarkets}>
                                             <ManageAccountsIcon sx={{ color: "#1A84F2" }} />
@@ -208,7 +208,7 @@ export const Header = () => {
                                         </div>
                                     )}
                                 </div>
-                                {account ? (
+                                {nickName ? (
                                     <div className={classnames(styles.list)}>
                                         <div className={classnames(styles.listItem)} onClick={handleLogout}>
                                             <LogoutIcon sx={{ color: "#1A84F2" }} />
@@ -227,10 +227,10 @@ export const Header = () => {
                         )}
                     </div>
                 </div>
-                {account && (
+                {nickName && (
                     <div className={styles.headerInfo}>
                         <div className={styles.profile} onClick={handleClickProfile}>
-                            <ProfileItem type="person" text={account} />
+                            <ProfileItem type="person" text={nickName} />
                             <ProfileItem type="wallet" text={`${balance} SURE`} />
                         </div>
                         {!currentMarketID && (

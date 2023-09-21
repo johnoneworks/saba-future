@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
     const router = useRouter();
     const { menu } = router.query;
-    const { account } = useAccountStore();
+    const { nickName } = useAccountStore();
     const { currentMenu, currentMarketID } = useMenuStore();
     const [showLoading, setShowLoading] = useState(true);
 
@@ -25,7 +25,7 @@ export default function Home() {
                 query: { menu: currentMenu }
             });
         }
-    }, [account, currentMenu, currentMarketID]);
+    }, [nickName, currentMenu, currentMarketID]);
 
     useEffect(() => {
         setShowLoading(true);
@@ -47,7 +47,7 @@ export default function Home() {
                 <Box className={styles.homeContent}>
                     <Markets />
                     <Statement />
-                    {account && currentMarketID && <MarketDetail />}
+                    {nickName && currentMarketID && <MarketDetail />}
                 </Box>
                 <Footer />
             </Box>

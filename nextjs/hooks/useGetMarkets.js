@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 const useGetMarkets = () => {
     const { markets, setMarkets } = useMarketsStore();
-    const { account, token } = useAccountStore();
+    const { nickName, token } = useAccountStore();
     const { setIsMarketLoading } = useLoadingStore();
 
     const updateMarkets = async () => {
@@ -47,7 +47,7 @@ const useGetMarkets = () => {
 
     useEffect(() => {
         updateMarkets();
-    }, [account]);
+    }, [nickName]);
 
     return { markets, updateMarkets };
 };

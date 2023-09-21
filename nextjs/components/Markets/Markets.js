@@ -16,7 +16,7 @@ import styles from "./Markets.module.scss";
 const ShowMarkets = (props) => {
     const router = useRouter();
     const { markets } = useMarketsStore();
-    const { account, showTest, isEditable } = props;
+    const { nickName, showTest, isEditable } = props;
 
     const [openMarkets, setOpenMarkets] = useState([]);
     const [closedMarkets, setClosedMarkets] = useState([]);
@@ -38,7 +38,7 @@ const ShowMarkets = (props) => {
                 openMarkets.reduce((accumulator, market) => {
                     accumulator.push(
                         <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                            <MarketCard market={market} currentUser={account} isClosed={false} isTest={market.isTest} isEditable={isEditable} />
+                            <MarketCard market={market} currentUser={nickName} isClosed={false} isTest={market.isTest} isEditable={isEditable} />
                         </Grid>
                     );
                     return accumulator;
@@ -51,7 +51,7 @@ const ShowMarkets = (props) => {
                     {closedMarkets.reduce((accumulator, market) => {
                         accumulator.push(
                             <Grid item xs={12} sm={6} md={4} key={market.id} className={styles.marketCard}>
-                                <MarketCard market={market} currentUser={account} isClosed={true} isTest={market.isTest} />
+                                <MarketCard market={market} currentUser={nickName} isClosed={true} isTest={market.isTest} />
                             </Grid>
                         );
                         return accumulator;
@@ -69,13 +69,13 @@ const ShowMarkets = (props) => {
 
 export const Markets = () => {
     const router = useRouter();
-    const { account, isAdmin } = useAccountStore();
+    const { nickName, isAdmin } = useAccountStore();
     const { markets } = useMarketsStore();
 
     const { currentMenu, currentMarketID } = useMenuStore();
     const { isMarketLoading } = useLoadingStore();
     const [showTest, setShowTest] = useState(false);
-    const hasLogin = !!account;
+    const hasLogin = !!nickName;
 
     const handleRedirectToAdmin = () => {
         router.push({
@@ -90,7 +90,7 @@ export const Markets = () => {
                     {isMarketLoading && <Loading />}
                     {!isMarketLoading && markets && (
                         <>
-                            {account && isAdmin && (
+                            {nickName && isAdmin && (
                                 <>
                                     <div className={classnames(styles.buttonContainer)}>
                                         <div className={classnames(styles.creatMarketButton)} onClick={handleRedirectToAdmin}>
@@ -108,7 +108,7 @@ export const Markets = () => {
                                 </>
                             )}
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                <ShowMarkets account={account} showTest={showTest} isEditable={hasLogin ? isAdmin : false} />
+                                <ShowMarkets nickName={nickName} showTest={showTest} isEditable={hasLogin ? isAdmin : false} />
                             </Grid>
                         </>
                     )}
