@@ -1,6 +1,7 @@
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMarketsStore } from "@/store/useMarketsStore";
+import { convertToDatetimeLocalFormat } from "@/utils/ConvertDate";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -41,21 +42,24 @@ export default function ChartContainer() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ width: "50%", textAlign: "center", fontSize: "12px", p: 0.5 }}>{t("chart_time")}</TableCell>
-                                        <TableCell sx={{ width: "33%", textAlign: "center", fontSize: "12px", p: 0.5 }}>{t("name")}</TableCell>
-                                        <TableCell sx={{ width: "50%", textAlign: "center", fontSize: "12px", p: 0.5 }}>{t("chart_amount")}</TableCell>
+                                        <TableCell sx={{ width: "30%", textAlign: "center", fontSize: "12px", p: 0.5 }}>{t("chart_date")}</TableCell>
+                                        <TableCell sx={{ width: "30%", textAlign: "center", fontSize: "12px", p: 0.5 }}>{t("chart_time")}</TableCell>
+                                        <TableCell sx={{ width: "20%", textAlign: "center", fontSize: "12px", p: 0.5 }}>{t("name")}</TableCell>
+                                        <TableCell sx={{ width: "20%", textAlign: "center", fontSize: "12px", p: 0.5 }}>{t("chart_amount")}</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {info.map((bet, i) => {
                                         const isUserBet = bet.nickName === nickName;
+                                        const localTime = convertToDatetimeLocalFormat(bet.timestamp);
+                                        const betDate = localTime.format("YYYY/MM/DD");
+                                        const betTime = localTime.format("A hh:mm:ss");
                                         return (
                                             <TableRow key={i} sx={{ backgroundColor: isUserBet ? "#ffffc7e0" : "#fff" }}>
-                                                <TableCell sx={{ width: "33%", textAlign: "center", borderBottom: "none" }}>
-                                                    {bet.time.toLocaleString()}
-                                                </TableCell>
-                                                <TableCell sx={{ width: "33%", textAlign: "center", borderBottom: "none" }}>{bet.nickName}</TableCell>
-                                                <TableCell sx={{ width: "33%", textAlign: "center", borderBottom: "none" }}>{bet.amount}</TableCell>
+                                                <TableCell sx={{ width: "30%", textAlign: "center", borderBottom: "none" }}>{betDate}</TableCell>
+                                                <TableCell sx={{ width: "30%", textAlign: "center", borderBottom: "none" }}>{betTime}</TableCell>
+                                                <TableCell sx={{ width: "20%", textAlign: "center", borderBottom: "none" }}>{bet.nickName}</TableCell>
+                                                <TableCell sx={{ width: "20%", textAlign: "center", borderBottom: "none" }}>{bet.amount}</TableCell>
                                             </TableRow>
                                         );
                                     })}

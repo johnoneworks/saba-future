@@ -1,5 +1,6 @@
 import { BET_TYPE } from "@/constants/Constant";
 import { useMenuStore } from "@/store/useMenuStore";
+import { convertToDatetimeLocalFormat } from "@/utils/ConvertDate";
 import { Avatar, Box, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { useRouter } from "next/router";
@@ -16,6 +17,8 @@ export default function StatementMarketCard({ market }) {
     const userBetType = !!market.yesAmount ? BET_TYPE.YES : BET_TYPE.NO;
     const amount = userBetType === BET_TYPE.YES ? market.yesAmount : market.noAmount;
     const outcome = market.outcome ? BET_TYPE.YES : BET_TYPE.NO;
+    const createTime = convertToDatetimeLocalFormat(market.createDate).format("MMMM D, YYYY");
+    const endTime = convertToDatetimeLocalFormat(market.endTimestamp).format("MMMM D, YYYY");
     const { t } = useTranslation();
 
     const handleSelectMarket = () => {
@@ -79,7 +82,7 @@ export default function StatementMarketCard({ market }) {
                                     {t("statement_your_bet")}
                                 </Typography>
                                 <Typography variant="body1" sx={{ color: "#fff", fontWeight: "bold", lineHeight: 1 }}>
-                                    {t(userBetType.toLowerCase())}: {amount}
+                                    {`${t(userBetType.toLowerCase())} : ${amount}`}
                                 </Typography>
                             </Box>
                         </Box>
@@ -88,10 +91,10 @@ export default function StatementMarketCard({ market }) {
                                 {t("statement_amount_add")}
                             </Typography>
                             <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
-                                {`${market.totalYesAmount.toString()} ${t("balance_on")}`}
-                                <Typography sx={{ color: "#3FB06B", display: "inline", fontWeight: "bold" }}>{t("yes")}</Typography>
-                                {` / ${market.totalNoAmount.toString()} ${t("balance_on")}`}
-                                <Typography sx={{ color: "#E84D4D", display: "inline", fontWeight: "bold" }}>{t("no")}</Typography>
+                                {`${market.totalYesAmount.toString()} ${t("balance_on")} `}
+                                <span style={{ color: "#3FB06B" }}>{t("yes")}</span>
+                                {` / ${market.totalNoAmount.toString()} ${t("balance_on")} `}
+                                <span style={{ color: "#E84D4D" }}>{t("no")}</span>
                             </Typography>
                         </Box>
                         <Box>
@@ -99,7 +102,7 @@ export default function StatementMarketCard({ market }) {
                                 {t("statement_period")}
                             </Typography>
                             <Typography variant="body1" sx={{ color: "rgba(0, 0, 0, 0.65)", fontWeight: "bold", textAlign: "center" }}>
-                                {`${market.createDate} / ${market.endTimestamp}`}
+                                {`${createTime} / ${endTime}`}
                             </Typography>
                         </Box>
                     </CardContent>

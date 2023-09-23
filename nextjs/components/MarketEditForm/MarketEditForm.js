@@ -1,4 +1,5 @@
 import baseAxios from "@/service/baseAxios";
+import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { convertToDatetimeLocalFormat, formatDateToInput } from "@/utils/ConvertDate";
 import { Box, Button, Checkbox, FormControlLabel, TextField, Typography } from "@mui/material";
@@ -17,6 +18,7 @@ export default function MarketEditForm({ marketId = null, apiPath, editPropsData
     const [resolverUrl, setResolverUrl] = useState(editPropsData?.resolverUrl || "");
     const [timestamp, setTimestamp] = useState(formatDateToInput(new Date()));
     const [isTest, setIsTest] = useState(editPropsData?.isTest || false);
+    const { token } = useAccountStore();
 
     useEffect(() => {
         if (editPropsData) {

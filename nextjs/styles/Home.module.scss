@@ -2,21 +2,17 @@
     display: flex;
     position: fixed;
     animation-name: fadeOut;
-    animation-duration: 3s;
+    animation-duration: 1s;
+    animation-delay: 2s;
     animation-fill-mode: forwards;
     z-index: 999;
 }
 
 @keyframes fadeOut {
-    0% {
+    from {
         opacity: 1;
     }
-
-    70% {
-        opacity: 1;
-    }
-
-    100% {
+    to {
         opacity: 0;
     }
 }

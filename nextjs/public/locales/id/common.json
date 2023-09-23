@@ -35,6 +35,7 @@
     "market_detail_resolution": "Sumber penyelesaian",
     "yes_info": "Info Ya",
     "no_info": "Info Tidak",
+    "chart_date": "Tanggal",
     "chart_time": "Waktu",
     "chart_amount": "Jumlah",
     "statement_outcome": "Hasil",
@@ -75,5 +76,6 @@
     "balance_on": "Saldo di",
     "test_data": "Data Uji",
     "suspended": "Ditangguhkan",
-    "all_markets": "Semua Pasar"
+    "all_markets": "Semua Pasar",
+    "name": "Nama"
 }

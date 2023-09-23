@@ -5,6 +5,7 @@ import useGetMarkets from "@/hooks/useGetMarkets";
 import baseAxios from "@/service/baseAxios";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
+import { convertToDatetimeLocalFormat } from "@/utils/ConvertDate";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
@@ -36,6 +37,7 @@ export default function AdminMarketCard({ id, market }) {
     const router = useRouter();
     const isTest = market.isTest;
     const { t } = useTranslation();
+    const endTime = convertToDatetimeLocalFormat(market.endTimestamp).format("YYYY-MM-DD HH:mm:ss");
 
     const onCancelResolve = () => {
         setSelectedResolve(null);
@@ -151,7 +153,7 @@ export default function AdminMarketCard({ id, market }) {
                         </div>
                         <div className="flex flex-col space-y-1">
                             <span className="text-xs text-gray-500 font-light">{t("ending_in")}</span>
-                            <span className="text-base">{market.endTimestamp}</span>
+                            <span className="text-base">{endTime}</span>
                         </div>
                     </div>
                     <div className="flex flex-row flex-nowrap justify-between items-center">

@@ -1,4 +1,6 @@
 import { ethers } from "ethers";
+import moment from "moment";
+
 export const convertBigNumberToDate = (time) => {
     if (!time) return "";
     // 转换 BigNumber 对象到 JavaScript 数字字符串
@@ -27,7 +29,7 @@ export const currentDate = () => {
 };
 
 export function convertToDatetimeLocalFormat(dateTimeStr) {
-    return dateTimeStr.substring(0, 16);
+    return moment.utc(dateTimeStr).local();
 }
 
 export function formatDateToInput(date) {

@@ -35,6 +35,7 @@
     "market_detail_resolution": "แหล่งข้อมูลในการตัดสินใจ",
     "yes_info": "ข้อมูลใช่",
     "no_info": "ข้อมูลไม่",
+    "chart_date": "วันที่",
     "chart_time": "เวลา",
     "chart_amount": "จำนวน",
     "statement_outcome": "ผลการแข่งขัน",
@@ -75,5 +76,6 @@
     "balance_on": "ยอดคงเหลือบน",
     "test_data": "ข้อมูลทดสอบ",
     "suspended": "ระงับ",
-    "all_markets": "ตลาดทั้งหมด"
+    "all_markets": "ตลาดทั้งหมด",
+    "name": "ชื่อ"
 }
