@@ -6,6 +6,7 @@ import { API_MARKET_STATUS } from "@/constants/MarketCondition";
 import syncMarketDetail from "@/service/market/getMarketDetail";
 import { useAccountStore } from "@/store/useAccountStore";
 import { useMenuStore } from "@/store/useMenuStore";
+import { convertToDatetimeLocalFormat } from "@/utils/ConvertDate";
 import { OpenNewWindow } from "@/utils/OpenNewWindow";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import BlockIcon from "@mui/icons-material/Block";
@@ -33,7 +34,7 @@ const CustomAvatar = styled(Avatar)({
 
 const MarketTitle = (props) => {
     const { title, endTimestamp, totalAmount, imageHash, isTest, isMarketSuspended, isTimeOver } = props;
-    const endTime = endTimestamp ? endTimestamp.toLocaleString() : "N/A";
+    const endTime = endTimestamp ? convertToDatetimeLocalFormat(endTimestamp).format("MMMM D, YYYY HH:mm") : "N/A";
     const { t } = useTranslation();
 
     return (
@@ -140,15 +141,14 @@ export default function MarketDetail() {
         const response = await syncMarketDetail({ marketId: currentMarketID, token: token });
         if (!!response && response.ErrorCode === 0) {
             const detail = response.Result.MarketDetail;
-            const responseEndTime = detail.EndTime;
-            const endTimeFormat = moment(responseEndTime).format("MMMM D, YYYY HH:mm");
-            const dateFormat = moment(responseEndTime);
+            const endTimestamp = detail.EndTime;
+            const localEndDate = moment.utc(detail.EndTime);
             setMarketDetail({
                 id: detail.MarketId,
                 title: detail.Title,
-                imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
-                endTimestamp: endTimeFormat,
-                endDate: dateFormat,
+                imageHash: detail.ImageUrl ? detail.ImageUrl : BACKUP_IMAGE,
+                endTimestamp: endTimestamp,
+                endDate: localEndDate,
                 resolverUrl: detail.ResolveUrl,
                 description: detail.Description,
                 yesAmount: detail.BetInfo.Yes,

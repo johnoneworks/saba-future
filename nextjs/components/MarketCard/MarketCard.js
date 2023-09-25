@@ -9,6 +9,7 @@ import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import { styled } from "@mui/system";
 import classnames from "classnames";
+import moment from "moment";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
@@ -152,7 +153,7 @@ export default function MarketCard({ market, currentUser, isClosed, isTest, isEd
                             </IconButton>
                         </Tooltip>
                     )}
-                    {!isClosed && market.endTimestamp < Date.now() && (
+                    {!isClosed && moment(market.endTimestamp) < moment(Date.now()) && (
                         <Tooltip title={t("time_over")}>
                             <IconButton className="float-right" color="warning" aria-label="go to edit" onClick={handleEdit} fontSize="small">
                                 <AccessAlarmIcon />

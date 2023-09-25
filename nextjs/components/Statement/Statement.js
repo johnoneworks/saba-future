@@ -9,7 +9,6 @@ import { useAccountStore } from "@/store/useAccountStore";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import { useMenuStore } from "@/store/useMenuStore";
 import { Box, Grid } from "@mui/material";
-import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
 
 /**
@@ -33,17 +32,15 @@ export const Statement = (refreshStatement) => {
             const response = await syncMarketDetail({ marketId: marketId, token: token });
             if (!!response && response.ErrorCode === 0) {
                 const detail = response.Result.MarketDetail;
-                const endTimeFormat = moment(detail.EndTime).format("MMMM D, YYYY");
-                const createTimeFormat = moment(detail.CreateTime).format("MMMM D, YYYY");
                 const data = {
                     id: detail.MarketId,
                     title: detail.Title,
                     resolverUrl: detail.ResolveUrl,
-                    imageHash: detail.ImageHash ? detail.ImageHash : BACKUP_IMAGE,
-                    endTimestamp: endTimeFormat,
+                    imageHash: detail.ImageUrl ? detail.ImageUrl : BACKUP_IMAGE,
+                    endTimestamp: detail.EndTime,
                     totalYesAmount: detail.BetInfo.Yes,
                     totalNoAmount: detail.BetInfo.No,
-                    createDate: createTimeFormat,
+                    createDate: detail.CreateTime,
                     hasResolved: detail.Status === API_MARKET_STATUS.CLOSED,
                     outcome: detail.Outcome
                 };
@@ -97,7 +94,7 @@ export const Statement = (refreshStatement) => {
                     {!isMarketLoading &&
                         (userStatements && userStatements.length > 0 && marketsDetail && marketsDetail.length > 0 ? (
                             <Grid container spacing={2} columns={{ xs: 12, sm: 12, md: 12 }}>
-                                {userStatements.map((ticket) => {
+                                {userStatements.map((ticket, index) => {
                                     const ticketDetial = marketsDetail.find((detail) => detail.id === ticket.MarketId);
                                     const ticketStatement = {
                                         id: ticket.MarketId,
@@ -106,7 +103,7 @@ export const Statement = (refreshStatement) => {
                                         win: ticket.Win
                                     };
                                     const ticketInfo = { ...ticketDetial, ...ticketStatement };
-                                    return <StatementMarketCard market={ticketInfo} key={`statementMarketCard_${ticketInfo.id}`} />;
+                                    return <StatementMarketCard market={ticketInfo} key={`statementMarketCard_${index}`} />;
                                 })}
                             </Grid>
                         ) : (

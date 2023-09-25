@@ -1,5 +1,6 @@
 import { BET_TYPE } from "@/constants/Constant";
 import useGetBetsInfo from "@/hooks/useGetBetsInfo";
+import useGetMarkets from "@/hooks/useGetMarkets";
 import useGetUserBalance from "@/hooks/useGetUserBalance";
 import syncPlaceBet from "@/service/ticket/placeBet";
 import { useAccountStore } from "@/store/useAccountStore";
@@ -41,6 +42,7 @@ export const BetArea = (props) => {
 
     const { updateBalance } = useGetUserBalance();
     const { updateBetsInfo } = useGetBetsInfo();
+    const { updateMarkets } = useGetMarkets();
 
     const [selected, setSelected] = useState();
     const [stakeAmount, setStakeAmount] = useState("");
@@ -68,6 +70,7 @@ export const BetArea = (props) => {
         } finally {
             handleFetchMarketDetail(currentMarketID);
             updateBalance();
+            updateMarkets();
             updateBetsInfo(currentMarketID);
             setStakeAmount("");
             setIsPageLoading(false);

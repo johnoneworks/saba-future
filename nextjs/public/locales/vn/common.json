@@ -35,6 +35,7 @@
     "market_detail_resolution": "Nguồn quyết định",
     "yes_info": "Thông tin Có",
     "no_info": "Thông tin Không",
+    "chart_date": "Ngày",
     "chart_time": "Thời gian",
     "chart_amount": "Số tiền",
     "statement_outcome": "Kết quả",
@@ -75,5 +76,6 @@
     "balance_on": "Số dư trên",
     "test_data": "Dữ liệu thử nghiệm",
     "suspended": "Tạm ngưng",
-    "all_markets": "Tất cả thị trường"
+    "all_markets": "Tất cả thị trường",
+    "name": "Tên"
 }

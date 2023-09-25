@@ -2,6 +2,7 @@ import { Header } from "@/components/Header/Header";
 import MarketEditForm from "@/components/MarketEditForm/MarketEditForm";
 import { API_EDIT_MARKET } from "@/constants/api";
 import syncMarketDetail from "@/service/market/getMarketDetail";
+import { useAccountStore } from "@/store/useAccountStore";
 import { Box, Button, Container, Link } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -21,9 +22,10 @@ const EditMarket = () => {
     const { id } = router.query;
     const [marketDetail, setMarketDetail] = useState({});
     const { t } = useTranslation();
+    const { token } = useAccountStore();
 
     const getMarket = async () => {
-        const response = await syncMarketDetail({ marketId: id });
+        const response = await syncMarketDetail({ marketId: id, token: token });
 
         if (response && response.ErrorCode !== 0) {
             router.push("/admin/markets");

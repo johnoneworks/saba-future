@@ -70,7 +70,6 @@ export const Header = (props) => {
     const [isLanguageExpand, setIsLanguageExpand] = useState(false);
     const { i18n, t } = useTranslation();
     const { redirectGoogleLogin } = useLogin();
-    const [userCode, setUserCode] = useState();
 
     const refreshMarkets = () => {
         if (currentMenu === MENU_TYPE.MARKET) {
@@ -104,8 +103,15 @@ export const Header = (props) => {
     };
 
     const handleReturnBack = () => {
-        setCurrentMarketID(null);
-        router.back();
+        const directPath = currentMenu === MENU_TYPE.MARKET ? "/" : "/Statement";
+        if (currentMarketID) {
+            router.push({
+                pathname: directPath,
+                query: { menu: currentMenu }
+            });
+            if (currentMenu === MENU_TYPE.MARKET) updateMarkets();
+            setCurrentMarketID(null);
+        }
     };
 
     const handleClickProfile = () => {

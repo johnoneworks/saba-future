@@ -35,6 +35,7 @@
     "market_detail_resolution": "Resolution Source",
     "yes_info": "Yes Info",
     "no_info": "No Info",
+    "chart_date": "Date",
     "chart_time": "Time",
     "chart_amount": "Amount",
     "statement_outcome": "Outcome",
@@ -75,5 +76,6 @@
     "balance_on": "Balance on",
     "test_data": "Test Data",
     "suspended": "Suspended",
-    "all_markets": "All Markets"
+    "all_markets": "All Markets",
+    "name": "Name"
 }
